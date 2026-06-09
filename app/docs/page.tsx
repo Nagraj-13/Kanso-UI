@@ -1,3 +1,4 @@
+//app/docs/page.tsx
 import { redirect } from "next/navigation"
 import { registry } from "@/lib/registry"
 
