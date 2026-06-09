@@ -119,7 +119,7 @@ export function DocsLayoutClient({
           {/* Items */}
           <ul className="space-y-px px-2">
             {group.items.map((item) => {
-              const isActive = pathname === item.href
+              const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
               return (
                 <li key={item.name}>
                   <Link
