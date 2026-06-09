@@ -38,6 +38,10 @@ export interface RegistryComponent {
   tags: string[]
   /** Component props documentation */
   props: RegistryComponentProp[]
+  /** Usage snippet showing how to import and use the component */
+  usage?: string
+  /** Custom CSS required to be added in globals.css (optional) */
+  cssCode?: string
 }
 
 /**
@@ -60,6 +64,17 @@ export const registry: RegistryComponent[] = [
     internalDeps: ["lib/utils"],
     filePath: "components/kanso/button.tsx",
     tags: ["button", "variants", "primary", "secondary", "outline", "ghost", "interactive"],
+    usage: `import { Button } from "@/components/kanso/button"
+
+export default function ButtonDemo() {
+  return (
+    <div className="flex gap-4">
+      <Button variant="primary">Primary</Button>
+      <Button variant="secondary" color="blue">Secondary Blue</Button>
+      <Button variant="outline">Outline</Button>
+    </div>
+  )
+}`,
     props: [
       {
         name: "variant",
@@ -108,6 +123,18 @@ export const registry: RegistryComponent[] = [
     internalDeps: ["lib/utils"],
     filePath: "components/kanso/magnetic-button.tsx",
     tags: ["button", "hover", "animation", "magnetic", "interactive"],
+    usage: `import { MagneticButton } from "@/components/kanso/magnetic-button"
+
+export default function MagneticButtonDemo() {
+  return (
+    <div className="flex gap-4">
+      <MagneticButton>Hover Me</MagneticButton>
+      <MagneticButton variant="outline" magneticStrength={0.4}>
+        Custom Strength
+      </MagneticButton>
+    </div>
+  )
+}`,
     props: [
       {
         name: "variant",
@@ -144,6 +171,16 @@ export const registry: RegistryComponent[] = [
     internalDeps: ["lib/utils", "components/ui/button"],
     filePath: "components/kanso/realism-button.tsx",
     tags: ["button", "glossy", "glassmorphism", "glow", "gradient", "realism"],
+    usage: `import { RealismButton } from "@/components/kanso/realism-button"
+
+export default function RealismButtonDemo() {
+  return (
+    <div className="flex gap-6">
+      <RealismButton variantColor="cyan">Cyan Glow</RealismButton>
+      <RealismButton variantColor="rose">Rose Glow</RealismButton>
+    </div>
+  )
+}`,
     props: [
       {
         name: "variantColor",
@@ -169,6 +206,16 @@ export const registry: RegistryComponent[] = [
     internalDeps: ["lib/utils", "components/ui/button"],
     filePath: "components/kanso/keyboard-button.tsx",
     tags: ["button", "keyboard", "keycap", "3d", "tactile", "shadow"],
+    usage: `import { KeyboardButton } from "@/components/kanso/keyboard-button"
+
+export default function KeyboardButtonDemo() {
+  return (
+    <div className="flex gap-4">
+      <KeyboardButton variantColor="dark">cmd</KeyboardButton>
+      <KeyboardButton variantColor="blue">enter</KeyboardButton>
+    </div>
+  )
+}`,
     props: [
       {
         name: "variantColor",
@@ -199,6 +246,16 @@ export const registry: RegistryComponent[] = [
     internalDeps: ["lib/utils", "components/ui/button"],
     filePath: "components/kanso/glow-line-button.tsx",
     tags: ["button", "glow", "dark", "outline", "line", "minimal"],
+    usage: `import { GlowLineButton } from "@/components/kanso/glow-line-button"
+
+export default function GlowLineButtonDemo() {
+  return (
+    <div className="flex gap-4">
+      <GlowLineButton glowColor="blue">Blue Glow</GlowLineButton>
+      <GlowLineButton glowColor="rose">Rose Glow</GlowLineButton>
+    </div>
+  )
+}`,
     props: [
       {
         name: "glowColor",
@@ -224,6 +281,62 @@ export const registry: RegistryComponent[] = [
     internalDeps: ["lib/utils", "components/ui/button"],
     filePath: "components/kanso/github-button.tsx",
     tags: ["button", "github", "social", "glow", "gradient", "tooltip", "animated"],
+    usage: `import { GithubButton } from "@/components/kanso/github-button"
+
+export default function GithubButtonDemo() {
+  return (
+    <div className="flex flex-col gap-4">
+      <GithubButton variantDesign="classic" href="https://github.com/Nagraj-13/Kanso-UI" />
+      <GithubButton variantDesign="rainbow" href="https://github.com/Nagraj-13/Kanso-UI" />
+      <GithubButton variantDesign="glow" href="https://github.com/Nagraj-13/Kanso-UI" glowColor="violet" />
+    </div>
+  )
+}`,
+    cssCode: `/* Add to app/globals.css */
+@theme inline {
+  --animate-rainbow: rainbow 3s linear infinite;
+  --animate-glow-translate: border-glow-translate 6s ease-in-out infinite alternate;
+  --animate-glow-translate-right: border-glow-translate-right 6s ease-in-out infinite alternate;
+  --animate-glow-scale: border-glow-scale 6s ease-in-out infinite alternate;
+  --animate-star-shine: star-shine 6s ease-in-out infinite alternate;
+
+  @keyframes rainbow {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  @keyframes border-glow-translate {
+    0% { transform: translate(-30%, -30%); }
+    100% { transform: translate(30%, 30%); }
+  }
+  @keyframes border-glow-translate-right {
+    0% { transform: translate(30%, 30%); }
+    100% { transform: translate(-30%, -30%); }
+  }
+  @keyframes border-glow-scale {
+    0% { transform: scale(0.8) translate(-50%, -50%); }
+    100% { transform: scale(1.2) translate(-50%, -50%); }
+  }
+  @keyframes star-shine {
+    0% { transform: scale(0.9) translate(-50%, -50%); opacity: 0.2; }
+    100% { transform: scale(1.3) translate(-50%, -50%); opacity: 0.5; }
+  }
+}
+
+.animate-rainbow-button {
+  background-image: linear-gradient(#fff, #fff),
+    linear-gradient(#fff 50%, rgba(255, 255, 255, 0.6) 80%, rgba(0, 0, 0, 0)),
+    linear-gradient(90deg, hsl(0, 100%, 63%), hsl(90, 100%, 63%), hsl(210, 100%, 63%), hsl(195, 100%, 63%), hsl(270, 100%, 63%)) !important;
+  background-size: 100% 100%, 100% 100%, 200% 100% !important;
+  background-clip: padding-box, border-box, border-box !important;
+  background-origin: border-box !important;
+  border: calc(0.08 * 1rem) solid transparent !important;
+}
+
+.dark .animate-rainbow-button {
+  background-image: linear-gradient(#121213, #121213),
+    linear-gradient(#121213 50%, rgba(18, 18, 19, 0.6) 80%, rgba(18, 18, 19, 0)),
+    linear-gradient(90deg, hsl(0, 100%, 63%), hsl(90, 100%, 63%), hsl(210, 100%, 63%), hsl(195, 100%, 63%), hsl(270, 100%, 63%)) !important;
+}`,
     props: [
       {
         name: "variantDesign",
@@ -264,6 +377,27 @@ export const registry: RegistryComponent[] = [
     internalDeps: ["lib/utils"],
     filePath: "components/kanso/shimmer-border.tsx",
     tags: ["border", "shimmer", "animation", "card", "glow", "css"],
+    usage: `import { ShimmerBorder } from "@/components/kanso/shimmer-border"
+
+export default function ShimmerBorderDemo() {
+  return (
+    <ShimmerBorder shimmerColor="rgba(255, 255, 255, 0.15)" borderRadius={12}>
+      <div className="p-6">
+        <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">Kanso UI</h3>
+        <p className="text-sm text-zinc-500 dark:text-zinc-400">Minimalist container.</p>
+      </div>
+    </ShimmerBorder>
+  )
+}`,
+    cssCode: `/* Add to app/globals.css */
+@keyframes shimmer-spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
+}`,
     props: [
       {
         name: "borderRadius",
@@ -318,6 +452,16 @@ export const registry: RegistryComponent[] = [
     internalDeps: ["lib/utils"],
     filePath: "components/kanso/text-reveal.tsx",
     tags: ["text", "reveal", "scroll", "animation", "typography", "stagger"],
+    usage: `import { TextReveal } from "@/components/kanso/text-reveal"
+
+export default function TextRevealDemo() {
+  return (
+    <TextReveal 
+      text="Simplicity, Engineered." 
+      className="text-2xl font-semibold text-zinc-900 dark:text-zinc-100" 
+    />
+  )
+}`,
     props: [
       {
         name: "text",

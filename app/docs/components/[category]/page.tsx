@@ -1,3 +1,4 @@
+//app/docs/components/[category]/page.tsx
 import * as React from "react"
 import { notFound } from "next/navigation"
 import { getComponentsByCategory, getCategories } from "@/lib/registry"
@@ -72,10 +73,12 @@ export default async function CategoryPage({ params }: PageProps) {
   }
 
   return (
-    <CategoryShowcase
-      categoryLabel={meta.label}
-      categoryDescription={meta.description}
-      components={components}
-    />
+    <div className="w-full">
+      <CategoryShowcase
+        categoryLabel={meta.label}
+        categoryDescription={meta.description}
+        components={components}
+      />
+    </div>
   )
 }

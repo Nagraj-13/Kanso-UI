@@ -6,6 +6,7 @@ import { createHighlighter } from "shiki"
 import { registry, getComponent } from "@/lib/registry"
 import { ComponentDemo } from "@/components/docs/component-demos"
 import { CodeBlock, TerminalBlock } from "@/components/docs/code-block"
+import { TableOfContents } from "@/components/docs/table-of-contents"
 import Link from "next/link"
 import { ArrowLeftIcon } from "lucide-react"
 import {
@@ -74,10 +75,10 @@ export default async function ComponentPage({ params }: PageProps) {
     rawSource = "// Source file not found"
   }
 
-  // Highlight with Shiki
+  // Highlight all code segments with Shiki in one go
   const highlighter = await createHighlighter({
     themes: ["github-light", "github-dark"],
-    langs: ["tsx"],
+    langs: ["tsx", "css"],
   })
 
   const highlightedHtml = highlighter.codeToHtml(rawSource, {
@@ -88,6 +89,26 @@ export default async function ComponentPage({ params }: PageProps) {
     },
   })
 
+  const highlightedUsageHtml = component.usage
+    ? highlighter.codeToHtml(component.usage, {
+        lang: "tsx",
+        themes: {
+          light: "github-light",
+          dark: "github-dark",
+        },
+      })
+    : ""
+
+  const highlightedCssHtml = component.cssCode
+    ? highlighter.codeToHtml(component.cssCode, {
+        lang: "css",
+        themes: {
+          light: "github-light",
+          dark: "github-dark",
+        },
+      })
+    : ""
+
   highlighter.dispose()
 
   // Build install command
@@ -96,168 +117,214 @@ export default async function ComponentPage({ params }: PageProps) {
     : null
 
   return (
-    <div className="max-w-3xl">
-      {/* ── Back Navigation ─────────────────────────── */}
-      <div className="mb-6">
-        <Link
-          href={`/docs/components/${category}`}
-          className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors"
-        >
-          <ArrowLeftIcon className="size-3.5" />
-          Back to {category.charAt(0).toUpperCase() + category.slice(1).replace("-", " ")}
-        </Link>
-      </div>
-
-      {/* ── Header ──────────────────────────────────── */}
-      <div className="mb-10">
-        <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-400">
-          {component.category}
+    <div className="flex flex-col-reverse xl:flex-row gap-10 xl:gap-16 w-full items-start">
+      {/* ── Main Content Column (Left) ─────────────────────────── */}
+      <div className="flex-1 w-full">
+        {/* Back Navigation */}
+        <div className="mb-6">
+          <Link
+            href={`/docs/components/${category}`}
+            className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors"
+          >
+            <ArrowLeftIcon className="size-3.5" />
+            Back to {category.charAt(0).toUpperCase() + category.slice(1).replace("-", " ")}
+          </Link>
         </div>
-        <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
-          {component.title}
-        </h1>
-        <p className="mt-2 text-base leading-relaxed text-zinc-500 dark:text-zinc-400">
-          {component.description}
-        </p>
 
-        {/* Tag pills */}
-        {component.tags.length > 0 && (
-          <div className="mt-4 flex flex-wrap gap-1.5">
-            {component.tags.map((tag) => (
-              <span
-                key={tag}
-                className="rounded-md bg-zinc-100 px-2 py-0.5 text-[11px] font-medium text-zinc-500 dark:bg-zinc-900 dark:text-zinc-500"
-              >
-                {tag}
-              </span>
-            ))}
+        {/* Header */}
+        <div className="mb-10">
+          <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-400">
+            {component.category}
           </div>
-        )}
-      </div>
+          <h1 className="text-3xl font-semibold tracking-tight text-zinc-900 dark:text-zinc-100">
+            {component.title}
+          </h1>
+          <p className="mt-2 text-base leading-relaxed text-zinc-500 dark:text-zinc-400">
+            {component.description}
+          </p>
 
-      {/* ── Live Preview ────────────────────────────── */}
-      <section className="mb-10">
-        <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-          <span className="flex size-5 items-center justify-center rounded bg-zinc-100 text-[10px] dark:bg-zinc-800">
-            ▶
-          </span>
-          Preview
-        </h2>
-        <div className="relative flex min-h-[260px] items-center justify-center overflow-hidden rounded-xl border border-zinc-200/80 bg-zinc-50/50 p-8 dark:border-zinc-800 dark:bg-zinc-900/20">
-          {/* Subtle grid pattern */}
-          <div
-            className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
-            style={{
-              backgroundImage: `radial-gradient(circle, currentColor 1px, transparent 1px)`,
-              backgroundSize: "24px 24px",
-            }}
-          />
-          <div className="relative z-10">
-            <ComponentDemo name={component.name} />
-          </div>
-        </div>
-      </section>
-
-      {/* ── Installation ────────────────────────────── */}
-      <section className="mb-10">
-        <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-          <span className="flex size-5 items-center justify-center rounded bg-zinc-100 text-[10px] dark:bg-zinc-800">
-            ↓
-          </span>
-          Installation
-        </h2>
-
-        <div className="space-y-4">
-          {/* Step 1: Copy source */}
-          <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900/30">
-            <div className="flex items-center gap-2 mb-2.5">
-              <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-[10px] font-bold text-white dark:bg-zinc-200 dark:text-zinc-900">
-                1
-              </span>
-              <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                Copy the source
-              </h3>
-            </div>
-            <p className="text-sm text-zinc-500 dark:text-zinc-400 ml-7">
-              Copy{" "}
-              <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">
-                {component.filePath}
-              </code>{" "}
-              into your project.
-            </p>
-          </div>
-
-          {/* Step 2: Install dependencies */}
-          {depList && (
-            <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900/30">
-              <div className="flex items-center gap-2 mb-3">
-                <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-[10px] font-bold text-white dark:bg-zinc-200 dark:text-zinc-900">
-                  2
+          {/* Tag pills */}
+          {component.tags.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-1.5">
+              {component.tags.map((tag) => (
+                <span
+                  key={tag}
+                  className="rounded-md bg-zinc-100 px-2 py-0.5 text-[11px] font-medium text-zinc-500 dark:bg-zinc-900 dark:text-zinc-505"
+                >
+                  {tag}
                 </span>
-                <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                  Install dependencies
-                </h3>
-              </div>
-              <div className="ml-7">
-                <TerminalBlock command={`pnpm add ${depList}`} />
-              </div>
+              ))}
             </div>
           )}
+        </div>
 
-          {/* Internal deps */}
-          {component.internalDeps.length > 0 && (
+        {/* Live Preview */}
+        <section id="preview" className="mb-12 scroll-mt-20">
+          <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+            <span className="flex size-5 items-center justify-center rounded bg-zinc-100 text-[10px] dark:bg-zinc-800">
+              ▶
+            </span>
+            Preview
+          </h2>
+          <div className="relative flex min-h-[260px] items-center justify-center overflow-hidden rounded-xl border border-zinc-200/80 bg-zinc-50/50 p-4 sm:p-8 dark:border-zinc-800 dark:bg-zinc-900/20">
+            {/* Subtle grid pattern */}
+            <div
+              className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
+              style={{
+                backgroundImage: `radial-gradient(circle, currentColor 1px, transparent 1px)`,
+                backgroundSize: "24px 24px",
+              }}
+            />
+            <div className="relative z-10 w-full flex justify-center">
+              <ComponentDemo name={component.name} />
+            </div>
+          </div>
+        </section>
+
+        {/* Usage section */}
+        {highlightedUsageHtml && (
+          <section id="usage" className="mb-12 scroll-mt-20">
+            <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+              <span className="flex size-5 items-center justify-center rounded bg-zinc-100 text-[10px] dark:bg-zinc-800">
+                🖲
+              </span>
+              Usage
+            </h2>
+            <CodeBlock
+              html={highlightedUsageHtml}
+              language="tsx"
+              rawCode={component.usage || ""}
+              filename="example-usage.tsx"
+            />
+          </section>
+        )}
+
+        {/* Installation */}
+        <section id="installation" className="mb-12 scroll-mt-20">
+          <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+            <span className="flex size-5 items-center justify-center rounded bg-zinc-100 text-[10px] dark:bg-zinc-800">
+              ↓
+            </span>
+            Installation
+          </h2>
+
+          <div className="space-y-4">
+            {/* Step 1: Create folder and Copy source */}
             <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900/30">
               <div className="flex items-center gap-2 mb-2.5">
                 <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-[10px] font-bold text-white dark:bg-zinc-200 dark:text-zinc-900">
-                  {depList ? "3" : "2"}
+                  1
                 </span>
                 <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
-                  Required files
+                  Create folder & copy source
                 </h3>
               </div>
-              <ul className="space-y-1.5 ml-7">
-                {component.internalDeps.map((dep) => (
-                  <li key={dep} className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-                    <span className="text-zinc-300 dark:text-zinc-700">→</span>
-                    <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">
-                      {dep}
-                    </code>
-                  </li>
-                ))}
-              </ul>
+              <p className="text-sm text-zinc-500 dark:text-zinc-400 ml-7 leading-relaxed">
+                Create a folder named <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">kanso</code> inside your project&apos;s <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">components</code> directory (i.e. <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">components/kanso/</code>). Copy the source code shown in the next section, and paste it into a file named <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">{component.filePath.split("/").pop()}</code> inside it.
+              </p>
             </div>
-          )}
-        </div>
-      </section>
 
-      {/* ── Source Code ─────────────────────────────── */}
-      <section className="mb-10">
-        <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
-          <span className="flex size-5 items-center justify-center rounded bg-zinc-100 text-[10px] dark:bg-zinc-800">
-            {"<>"}
-          </span>
-          Source Code
-        </h2>
-        <CodeBlock
-          html={highlightedHtml}
-          language="tsx"
-          rawCode={rawSource}
-          filename={component.filePath.split("/").pop()}
-        />
-      </section>
+            {/* Step 2: Install dependencies */}
+            {depList && (
+              <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900/30">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-[10px] font-bold text-white dark:bg-zinc-200 dark:text-zinc-900">
+                    2
+                  </span>
+                  <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                    Install dependencies
+                  </h3>
+                </div>
+                <div className="ml-7">
+                  <TerminalBlock command={`pnpm add ${depList}`} />
+                </div>
+              </div>
+            )}
 
-      {/* ── Props Table ─────────────────────────────── */}
-      {component.props.length > 0 && (
-        <section className="mb-10">
+            {/* Step 3: Add CSS animation styles if available */}
+            {component.cssCode && (
+              <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900/30">
+                <div className="flex items-center gap-2 mb-3">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-[10px] font-bold text-white dark:bg-zinc-200 dark:text-zinc-900">
+                    {depList ? "3" : "2"}
+                  </span>
+                  <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                    Add global styling
+                  </h3>
+                </div>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 ml-7 mb-3 leading-relaxed">
+                  Add the custom keyframe animations and styles to your global stylesheet (e.g. <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">app/globals.css</code>):
+                </p>
+                <div className="ml-7">
+                  <CodeBlock
+                    html={highlightedCssHtml}
+                    language="css"
+                    rawCode={component.cssCode}
+                    filename="globals.css"
+                    showLineNumbers={false}
+                    collapsible={true}
+                    maxCollapsedHeight={200}
+                  />
+                </div>
+              </div>
+            )}
+
+            {/* Internal deps */}
+            {component.internalDeps.length > 0 && (
+              <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900/30">
+                <div className="flex items-center gap-2 mb-2.5">
+                  <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-[10px] font-bold text-white dark:bg-zinc-200 dark:text-zinc-900">
+                    {component.cssCode ? (depList ? "4" : "3") : (depList ? "3" : "2")}
+                  </span>
+                  <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
+                    Required helper files
+                  </h3>
+                </div>
+                <p className="text-sm text-zinc-500 dark:text-zinc-400 ml-7 mb-2.5 leading-relaxed">
+                  Ensure your project has the following helper files configured:
+                </p>
+                <ul className="space-y-1.5 ml-7">
+                  {component.internalDeps.map((dep) => (
+                    <li key={dep} className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
+                      <span className="text-zinc-300 dark:text-zinc-700">→</span>
+                      <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">
+                        {dep}
+                      </code>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            )}
+          </div>
+        </section>
+
+        {/* Source Code */}
+        <section id="source-code" className="mb-12 scroll-mt-20">
           <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
             <span className="flex size-5 items-center justify-center rounded bg-zinc-100 text-[10px] dark:bg-zinc-800">
-              ≡
+              {"<>"}
             </span>
-            Props
+            Source Code
           </h2>
-          <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-white dark:bg-zinc-950">
-            <ScrollArea className="w-full">
-              <Table containerClassName="overflow-visible">
+          <CodeBlock
+            html={highlightedHtml}
+            language="tsx"
+            rawCode={rawSource}
+            filename={component.filePath.split("/").pop()}
+          />
+        </section>
+
+        {/* Props Table */}
+        {component.props.length > 0 && (
+          <section id="props" className="mb-12 scroll-mt-20">
+            <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
+              <span className="flex size-5 items-center justify-center rounded bg-zinc-100 text-[10px] dark:bg-zinc-800">
+                ≡
+              </span>
+              Props
+            </h2>
+            <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 overflow-hidden">
+              <Table>
                 <TableHeader>
                   <TableRow className="bg-zinc-50/80 hover:bg-zinc-50/80 dark:bg-zinc-900/40 dark:hover:bg-zinc-900/40">
                     <TableHead className="px-4 py-3">Prop</TableHead>
@@ -300,10 +367,10 @@ export default async function ComponentPage({ params }: PageProps) {
                   ))}
                 </TableBody>
               </Table>
-            </ScrollArea>
-          </div>
-        </section>
-      )}
+            </div>
+          </section>
+        )}
+      </div>
     </div>
   )
 }
