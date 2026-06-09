@@ -35,6 +35,11 @@ import { CodeBlock, TerminalBlock } from "@/components/docs/code-block"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { cn } from "@/lib/utils"
+import { MagneticButton } from "@/components/kanso/magnetic-button"
+import { ShimmerBorder } from "@/components/kanso/shimmer-border"
+import { TextReveal } from "@/components/kanso/text-reveal"
+import { GITHUB_URL } from "@/lib/constants"
+import { GithubButton } from "@/components/kanso/github-button"
 import {
   Card,
   CardHeader,
@@ -170,7 +175,6 @@ export default function LandingPageClient({
   const [selectedShowcase, setSelectedShowcase] = React.useState<
     "buttons" | "cards" | "dialogs" | "inputs" | "command" | "pricing"
   >("buttons")
-
   React.useEffect(() => {
     setMounted(true)
   }, [])
@@ -212,7 +216,7 @@ export default function LandingPageClient({
               Docs
             </Link>
             <a
-              href="https://github.com"
+              href={GITHUB_URL}
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-1.5 text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
@@ -236,9 +240,6 @@ export default function LandingPageClient({
               ) : (
                 <MoonIcon className="size-4" />
               )}
-            </Button>
-            <Button variant="outline" size="sm">
-              Sign In
             </Button>
             <Button size="sm" render={<Link href="/docs" />}>
               Get Started
@@ -289,7 +290,7 @@ export default function LandingPageClient({
                   Docs
                 </Link>
                 <a
-                  href="https://github.com"
+                  href={GITHUB_URL}
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center gap-1.5 text-sm font-medium text-zinc-600 dark:text-zinc-400"
@@ -318,9 +319,6 @@ export default function LandingPageClient({
                 </div>
                 <hr className="border-zinc-150 dark:border-zinc-800" />
                 <div className="flex flex-col gap-3">
-                  <Button variant="outline" className="w-full">
-                    Sign In
-                  </Button>
                   <Button className="w-full" render={<Link href="/docs" />} onClick={() => setMobileMenuOpen(false)}>
                     Get Started
                   </Button>
@@ -349,20 +347,20 @@ export default function LandingPageClient({
               Thoughtfully designed React components for modern applications. Inspired by Zen aesthetics and engineered for peak developer experience.
             </p>
 
-            <div className="mt-10 flex flex-wrap gap-4 w-full sm:w-auto">
+            <div className="mt-10 flex flex-wrap gap-4 w-full sm:w-auto items-center">
               <Button
                 className="w-full sm:w-auto px-6 h-11"
                 render={<Link href="/docs" />}
               >
                 Browse Components
               </Button>
-              <Button
-                variant="outline"
-                className="w-full sm:w-auto px-6 h-11"
-                render={<Link href="/docs" />}
+              <GithubButton
+                variantDesign="rainbow"
+                href={GITHUB_URL}
+                className="w-full sm:w-auto h-11"
               >
-                Get Started
-              </Button>
+                Star on GitHub
+              </GithubButton>
             </div>
           </div>
 
@@ -474,6 +472,101 @@ export default function LandingPageClient({
                   Optimized for fast rendering and minimal bundle overhead. Battle-tested component design for scaling web apps.
                 </CardDescription>
               </CardHeader>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Kanso Custom Components Section */}
+      <section id="premium-components" className="border-t border-zinc-200/60 py-28 dark:border-zinc-900 dark:bg-zinc-950">
+        <div className="mx-auto max-w-6xl px-6 md:px-8">
+          <div className="flex flex-col items-start gap-4">
+            <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-400">
+              ✦ Zen Interactions
+            </div>
+            <h2 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-white">
+              Premium Kanso Effects
+            </h2>
+            <p className="max-w-xl text-base text-zinc-500 dark:text-zinc-400">
+              Add polish to your interface with our copy-paste motion effects. Experience the interactive previews below and click to view installation guides.
+            </p>
+          </div>
+
+          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+            {/* Card 1: Magnetic Button */}
+            <Card className="flex flex-col justify-between border border-zinc-200 bg-white p-5 shadow-xs transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/40">
+              <div>
+                <h3 className="text-base font-semibold text-zinc-900 dark:text-white">Magnetic Button</h3>
+                <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed min-h-[40px]">
+                  Attracts elements smoothly to the user's cursor on hover. Built with spring physics for natural, responsive movement.
+                </p>
+                <div className="mt-6 flex h-40 items-center justify-center rounded-lg border border-dashed border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30">
+                  <MagneticButton>Hover Magnet</MagneticButton>
+                </div>
+              </div>
+              <div className="mt-6 flex justify-end">
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="gap-1.5 px-0 text-zinc-950 dark:text-zinc-50"
+                  render={<Link href="/docs/components/buttons/magnetic-button" />}
+                >
+                  View Installation <ArrowUpRightIcon className="size-3.5" />
+                </Button>
+              </div>
+            </Card>
+
+            {/* Card 2: Shimmer Border */}
+            <Card className="flex flex-col justify-between border border-zinc-200 bg-white p-5 shadow-xs transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/40">
+              <div>
+                <h3 className="text-base font-semibold text-zinc-900 dark:text-white">Shimmer Border</h3>
+                <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed min-h-[40px]">
+                  An elegant border lighting outline that cycles continuously. Leverages GPU-accelerated CSS conic-gradients for optimal performance.
+                </p>
+                <div className="mt-6 flex h-40 items-center justify-center rounded-lg border border-dashed border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30 p-4">
+                  <ShimmerBorder borderRadius={8}>
+                    <div className="px-5 py-3 text-xs font-semibold bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300">
+                      Shimmer Border
+                    </div>
+                  </ShimmerBorder>
+                </div>
+              </div>
+              <div className="mt-6 flex justify-end">
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="gap-1.5 px-0 text-zinc-950 dark:text-zinc-50"
+                  render={<Link href="/docs/components/effects/shimmer-border" />}
+                >
+                  View Installation <ArrowUpRightIcon className="size-3.5" />
+                </Button>
+              </div>
+            </Card>
+
+            {/* Card 3: Text Reveal */}
+            <Card className="flex flex-col justify-between border border-zinc-200 bg-white p-5 shadow-xs transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/40">
+              <div>
+                <h3 className="text-base font-semibold text-zinc-900 dark:text-white">Text Reveal</h3>
+                <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed min-h-[40px]">
+                  Fades in text character-by-character as it scrolls into viewport. Uses staggering and subtle blur overrides for readability.
+                </p>
+                <div className="mt-6 flex h-40 items-center justify-center rounded-lg border border-dashed border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30 p-6">
+                  <TextReveal
+                    text="Zen focus. Pure clarity. Kanso UI."
+                    className="text-xs font-medium text-zinc-700 dark:text-zinc-300 text-center leading-relaxed"
+                  />
+                </div>
+              </div>
+              <div className="mt-6 flex justify-end">
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="gap-1.5 px-0 text-zinc-950 dark:text-zinc-50"
+                  render={<Link href="/docs/components/typography/text-reveal" />}
+                >
+                  View Installation <ArrowUpRightIcon className="size-3.5" />
+                </Button>
+              </div>
             </Card>
           </div>
         </div>
@@ -890,7 +983,7 @@ export default function LandingPageClient({
           <p className="mt-6 max-w-md mx-auto text-base text-zinc-500 dark:text-zinc-400">
             Kanso UI gives you the building blocks for beautiful, high-performance web applications.
           </p>
-          <div className="mt-10">
+          <div className="mt-10 flex flex-wrap justify-center gap-4 items-center">
             <Button
               size="lg"
               className="px-8 h-12"
@@ -898,6 +991,14 @@ export default function LandingPageClient({
             >
               Start Building
             </Button>
+            <GithubButton
+              variantDesign="glow"
+              href={GITHUB_URL}
+              glowColor="linear-gradient(135deg, oklch(0.65 0.24 300), oklch(0.6 0.22 340))"
+              className="h-12 px-8"
+            >
+              Star Kanso UI
+            </GithubButton>
           </div>
         </div>
       </section>
@@ -963,7 +1064,7 @@ export default function LandingPageClient({
               </h6>
               <ul className="mt-4 space-y-2 text-xs">
                 <li>
-                  <a href="https://github.com" className="flex items-center gap-1 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50">
+                  <a href={GITHUB_URL} className="flex items-center gap-1 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50">
                     GitHub <GithubIcon className="size-3" />
                   </a>
                 </li>
