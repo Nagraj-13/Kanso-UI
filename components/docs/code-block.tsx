@@ -82,7 +82,7 @@ function CodeBlock({
   return (
     <div
       className={cn(
-        "group/codeblock relative rounded-xl border border-zinc-200 bg-zinc-50 overflow-hidden dark:border-zinc-800/80 dark:bg-zinc-950",
+        "group/codeblock relative w-full rounded-xl border border-zinc-200 bg-zinc-50 overflow-hidden dark:border-zinc-800/80 dark:bg-zinc-950",
         className
       )}
     >

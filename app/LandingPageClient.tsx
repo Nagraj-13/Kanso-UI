@@ -1,3 +1,4 @@
+//app/LandingPageClient.tsx
 "use client"
 
 import * as React from "react"
@@ -330,7 +331,7 @@ export default function LandingPageClient({
       </header>
 
       {/* Hero Section */}
-      <section className="relative mx-auto max-w-6xl px-6 pt-24 pb-32 md:px-8 md:pt-32">
+      <section className="relative mx-auto max-w-7xl px-6 pt-24 pb-32 md:px-8 md:pt-32">
         <div className="grid items-center gap-16 lg:grid-cols-12 lg:gap-12">
           {/* Hero Left Content */}
           <div className="flex flex-col items-start lg:col-span-7">
@@ -357,7 +358,7 @@ export default function LandingPageClient({
               <GithubButton
                 variantDesign="rainbow"
                 href={GITHUB_URL}
-                className="w-full sm:w-auto h-11"
+                className="w-full h-11"
               >
                 Star on GitHub
               </GithubButton>
@@ -995,7 +996,7 @@ export default function LandingPageClient({
               variantDesign="glow"
               href={GITHUB_URL}
               glowColor="linear-gradient(135deg, oklch(0.65 0.24 300), oklch(0.6 0.22 340))"
-              className="h-12 px-8"
+              className="h-12 "
             >
               Star Kanso UI
             </GithubButton>
