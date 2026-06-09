@@ -1,227 +1,126 @@
-# Kanso UI - Project Context
+<p align="center">
+  <img src="public/KansoUiCompletelogo.png" alt="Kanso UI" width="240" />
+</p>
 
-## Overview
+<p align="center">
+  <strong>Simplicity, Engineered.</strong>
+</p>
 
-Kanso UI is a modern open-source React component library and design system inspired by the Japanese philosophy of "Kanso" (簡素), one of the seven principles of Zen aesthetics.
-
-Kanso means simplicity, clarity, and the removal of unnecessary elements.
-
-The goal of Kanso UI is to provide developers with beautifully crafted, accessible, production-ready React components that are simple to use and visually refined.
-
-Kanso UI is positioned alongside:
-
-* shadcn/ui
-* HeroUI
-* Magic UI
-* Aceternity UI
-* React Bits
-
-but with a stronger focus on minimalism, whitespace, typography, accessibility, and thoughtful design.
+<p align="center">
+  Thoughtfully designed, copy-paste React components for modern web applications.<br/>
+  Inspired by Japanese minimalism. Built with Next.js, TypeScript, and Tailwind CSS.
+</p>
 
 ---
 
-## Brand Identity
+## ✨ Features
 
-Brand Name: Kanso UI
-
-Meaning:
-Simplicity. Clarity. Essentialism.
-
-Brand Personality:
-
-* Minimal
-* Elegant
-* Professional
-* Calm
-* Refined
-* Premium
-* Developer-first
-
-Avoid:
-
-* Excessive gradients
-* Neon effects
-* Heavy glassmorphism
-* Loud colors
-* Visual clutter
+- **Copy-Paste Components** — Browse, preview, and copy source code directly into your project
+- **Component Registry** — Structured metadata with props documentation, dependencies, and tags
+- **API Endpoint** — `GET /api/registry/[name]` returns component source as JSON (for future CLI)
+- **Live Previews** — Interactive component demos with syntax-highlighted source code
+- **Accessible** — Built on Base UI primitives with keyboard navigation and screen reader support
+- **Dark Mode** — First-class dark mode via `next-themes` and Tailwind CSS variables
+- **TypeScript** — Fully typed components with exported props interfaces
+- **Minimal Design** — Neutral palette, clean typography, subtle animations — inspired by Vercel, Linear, and shadcn/ui
 
 ---
 
-## Visual Style
+## 🚀 Quick Start
 
-Inspired by:
-
-* Vercel
-* Linear
-* Raycast
-* Stripe Docs
-* shadcn/ui
-
-Color Palette:
-
-* Black
-* White
-* Neutral grays
-
-Accent Colors:
-
-* Very subtle gray gradients
-* Soft off-white surfaces
-
-Typography:
-
-* Modern geometric sans-serif
-* Large headings
-* Tight spacing
-* Excellent readability
-
-Layout:
-
-* Lots of whitespace
-* Strong hierarchy
-* Clean grid system
-* Premium SaaS feel
-
-Animations:
-
-* Subtle
-* Fast
-* Purposeful
-
-No distracting animations.
-
----
-
-## Logo
-
-The logo should be based around a stylized "K" mark that subtly incorporates the initials "NR".
-
-The logo should feel:
-
-* Geometric
-* Minimal
-* Timeless
-* Suitable for a design system
-
----
-
-## Target Audience
-
-Primary:
-
-* React developers
-* Next.js developers
-* Design engineers
-* Frontend engineers
-
-Secondary:
-
-* Startup founders
-* Product designers
-* SaaS teams
-
----
-
-## Core Features
-
-* Accessible Components
-* Copy-Paste Components
-* Registry System
-* Documentation Platform
-* Design Tokens
-* Dark Mode
-* Animation Library
-* Production Ready Components
-
----
-
-## Positioning Statement
-
-Kanso UI provides thoughtfully designed React components that prioritize simplicity, accessibility, and developer experience.
-
-Build beautiful interfaces without unnecessary complexity.
-
----
-
-## Taglines
-
-Simplicity, Engineered.
-
-Build Beautiful Interfaces.
-
-Minimal Components. Maximum Clarity.
-
-Thoughtfully Designed React Components.
-
-Design Less. Build More.
-
----
-
-## Development & Operations
-
-### Commands
-Initialize packages:
 ```bash
+# Clone the repository
+git clone https://github.com/Nagraj-13/Kanso-UI.git
+cd kanso-ui
+
+# Install dependencies
 pnpm install
-```
 
-Start local dev server:
-```bash
+# Start development server
 pnpm dev
 ```
 
-Build production bundle:
-```bash
-pnpm build
-```
-
-Run ESLint checking:
-```bash
-pnpm lint
-```
-
-Run TypeScript verification:
-```bash
-pnpm tsc --noEmit
-```
-
-### Folder Architecture
-- `app/`: Next.js page views and layouts.
-- `components/`: UI components (`components/ui/`), site-wide blocks, and showcase elements.
-- `content/`: Documentation and MDX specifications.
-- `lib/`: Helper utilities (`lib/utils.ts`) and components registry definitions.
+Open [http://localhost:3000](http://localhost:3000) to see the landing page.  
+Open [http://localhost:3000/docs](http://localhost:3000/docs) to browse components.
 
 ---
 
-## 21st.dev Magic MCP Server Integration
+## 📦 Components
 
-Kanso UI is designed to work seamlessly with the [21st.dev Magic MCP server](https://21st.dev/). You can generate, modify, and preview these components directly within your AI coding assistant (Cursor, Cline, Windsurf, or Claude Desktop).
+### Kanso Components (`components/kanso/`)
 
-### Setup Instructions
-1. Obtain an API key from the [21st.dev Magic Console](https://21st.dev/magic/console).
-2. Configure the MCP server for your client:
+| Component | Category | Description |
+|-----------|----------|-------------|
+| **Magnetic Button** | Buttons | Button that magnetically follows cursor on hover |
+| **Shimmer Border** | Effects | Container with animated shimmer border effect |
+| **Text Reveal** | Typography | Text that reveals character-by-character on scroll |
 
-   **CLI Automated Installation:**
-   ```bash
-   npx @21st-dev/cli@latest install <client> --api-key <your-api-key>
-   ```
-   *(Replace `<client>` with `cursor`, `cline`, `windsurf`, or `claude`.)*
+### Primitive Components (`components/ui/`)
 
-   **Manual JSON Configuration:**
-   Add the following object to your `mcp.json` or `mcp_config.json` file:
-   ```json
-   {
-     "mcpServers": {
-       "@21st-dev/magic": {
-         "command": "npx",
-         "args": [
-           "-y",
-           "@21st-dev/magic@latest",
-           "API_KEY=\"your-api-key\""
-         ]
-       }
-     }
-   }
-   ```
-3. Use the command in your AI assistant chat by typing `/ui` followed by your prompt (e.g. `/ui create a minimal notification badge component`).
+55+ shadcn-style primitives built on Base UI including Button, Card, Dialog, Input, Tabs, Command, and more.
 
+---
+
+## 🏗 Adding Components
+
+Kanso UI is designed for easy extension. To add a new component:
+
+1. Create `components/kanso/<name>.tsx`
+2. Add entry to `lib/registry.ts`
+3. Add demo to `components/docs/component-demos.tsx`
+4. Run `pnpm build` to verify
+
+See [CLAUDE.md](./CLAUDE.md) for detailed step-by-step instructions with code examples.
+
+---
+
+## 📁 Project Structure
+
+```
+kanso-ui/
+├── app/                    # Next.js pages and API routes
+│   ├── docs/               # Component documentation pages
+│   └── api/registry/       # Component source API
+├── components/
+│   ├── kanso/              # ★ Kanso-branded copy-paste components
+│   ├── ui/                 # shadcn/Base UI primitives
+│   └── docs/               # Documentation infrastructure
+├── lib/
+│   ├── registry.ts         # ★ Component registry
+│   └── utils.ts            # cn() helper
+├── AGENTS.md               # Agent rulebook
+├── CLAUDE.md               # Development rulebook
+└── README.md               # This file
+```
+
+---
+
+## 🛠 Development
+
+| Command | Description |
+|---------|-------------|
+| `pnpm install` | Install dependencies |
+| `pnpm dev` | Start dev server |
+| `pnpm build` | Production build |
+| `pnpm lint` | Run ESLint |
+| `pnpm tsc --noEmit` | Type check |
+
+---
+
+## 🎨 Design Philosophy
+
+**Kanso (簡素)** — one of the seven principles of Zen aesthetics — means simplicity, clarity, and the removal of unnecessary elements.
+
+Every component in Kanso UI follows these principles:
+
+1. **Simplicity over cleverness**
+2. **Readability over abstraction**
+3. **Composition over inheritance**
+4. **Accessibility over visual tricks**
+5. **Performance over unnecessary features**
+
+---
+
+## 📄 License
+
+MIT © [Nagaraj](https://github.com/Nagraj-13)
