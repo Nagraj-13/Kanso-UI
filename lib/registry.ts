@@ -135,6 +135,86 @@ export const registry: RegistryComponent[] = [
     ],
   },
   {
+    name: "realism-button",
+    title: "Realism Button",
+    description:
+      "A glossy glassmorphism button featuring dynamic, glowing color blur blobs.",
+    category: "buttons",
+    dependencies: [],
+    internalDeps: ["lib/utils", "components/ui/button"],
+    filePath: "components/kanso/realism-button.tsx",
+    tags: ["button", "glossy", "glassmorphism", "glow", "gradient", "realism"],
+    props: [
+      {
+        name: "variantColor",
+        type: '"cyan" | "rose" | "emerald" | "violet"',
+        default: '"cyan"',
+        description: "The color theme of the glowing background blobs.",
+      },
+      {
+        name: "children",
+        type: "React.ReactNode",
+        description: "The label text or content inside the button.",
+        required: true,
+      },
+    ],
+  },
+  {
+    name: "keyboard-button",
+    title: "Keyboard Button",
+    description:
+      "A tactile 3D keyboard keycap style button with realistic shadows and perspective active press physics.",
+    category: "buttons",
+    dependencies: [],
+    internalDeps: ["lib/utils", "components/ui/button"],
+    filePath: "components/kanso/keyboard-button.tsx",
+    tags: ["button", "keyboard", "keycap", "3d", "tactile", "shadow"],
+    props: [
+      {
+        name: "variantColor",
+        type: '"dark" | "light" | "blue"',
+        default: '"dark"',
+        description: "The keycap color variation.",
+      },
+      {
+        name: "icon",
+        type: "React.ReactNode",
+        description: "An optional symbol or key icon displayed at the top left of the keycap.",
+      },
+      {
+        name: "children",
+        type: "React.ReactNode",
+        description: "The uppercase text label of the keycap action.",
+        required: true,
+      },
+    ],
+  },
+  {
+    name: "glow-line-button",
+    title: "Glow Line Button",
+    description:
+      "A sleek dark button with a radial gradient background and a glowing border outline on hover.",
+    category: "buttons",
+    dependencies: [],
+    internalDeps: ["lib/utils", "components/ui/button"],
+    filePath: "components/kanso/glow-line-button.tsx",
+    tags: ["button", "glow", "dark", "outline", "line", "minimal"],
+    props: [
+      {
+        name: "glowColor",
+        type: '"white" | "blue" | "emerald" | "violet" | "rose" | string',
+        default: '"white"',
+        description: "The color of the bottom glow line. Supports color presets or custom values (hex/rgb).",
+      },
+      {
+        name: "children",
+        type: "React.ReactNode",
+        description: "The text label inside the button.",
+        required: true,
+      },
+    ],
+  },
+  {
     name: "shimmer-border",
     title: "Shimmer Border",
     description:

@@ -4,6 +4,9 @@ import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Button } from "@/components/kanso/button"
 import { MagneticButton } from "@/components/kanso/magnetic-button"
+import { RealismButton } from "@/components/kanso/realism-button"
+import { KeyboardButton } from "@/components/kanso/keyboard-button"
+import { GlowLineButton } from "@/components/kanso/glow-line-button"
 import { ShimmerBorder } from "@/components/kanso/shimmer-border"
 import { TextReveal } from "@/components/kanso/text-reveal"
 
@@ -116,6 +119,96 @@ const demos: Record<string, React.ComponentType> = {
         <MagneticButton magneticStrength={0.15}>
           Subtle Pull
         </MagneticButton>
+      </div>
+    )
+  },
+  "realism-button": function RealismButtonDemo() {
+    return (
+      <div className="flex flex-wrap items-center justify-center gap-6">
+        <RealismButton variantColor="cyan">Cyan Glow</RealismButton>
+        <RealismButton variantColor="rose">Rose Glow</RealismButton>
+        <RealismButton variantColor="emerald">Emerald Glow</RealismButton>
+        <RealismButton variantColor="violet">Violet Glow</RealismButton>
+      </div>
+    )
+  },
+  "keyboard-button": function KeyboardButtonDemo() {
+    return (
+      <div className="flex flex-wrap items-center justify-center gap-6">
+        <KeyboardButton
+          variantColor="dark"
+          icon={
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="size-3.5">
+              <path d="M18 3a3 3 0 0 0-3 3v12a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z" />
+              <path d="M9 3a3 3 0 0 0-3 3v12a3 3 0 0 0 6 0V6a3 3 0 0 0-3-3z" />
+              <path d="M3 9a3 3 0 0 0 3 3h12a3 3 0 0 0 0-6H6a3 3 0 0 0-3 3z" />
+              <path d="M3 15a3 3 0 0 0 3 3h12a3 3 0 0 0 0-6H6a3 3 0 0 0-3 3z" />
+            </svg>
+          }
+        >
+          cmd
+        </KeyboardButton>
+
+        <KeyboardButton
+          variantColor="light"
+          icon={
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="size-3.5">
+              <path d="M12 19V5M5 12l7-7 7 7" />
+            </svg>
+          }
+        >
+          shift
+        </KeyboardButton>
+
+        <KeyboardButton
+          variantColor="blue"
+          icon={
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" className="size-3.5">
+              <path d="M5 12h14M12 5l7 7-7 7" />
+            </svg>
+          }
+        >
+          enter
+        </KeyboardButton>
+      </div>
+    )
+  },
+  "glow-line-button": function GlowLineButtonDemo() {
+    const [customColor, setCustomColor] = React.useState("#3fe9ff")
+
+    return (
+      <div className="flex flex-col gap-6 w-full max-w-md items-center">
+        {/* Presets */}
+        <div className="flex flex-wrap items-center justify-center gap-4">
+          <GlowLineButton glowColor="white">White Glow</GlowLineButton>
+          <GlowLineButton glowColor="blue">Blue Glow</GlowLineButton>
+          <GlowLineButton glowColor="emerald">Emerald Glow</GlowLineButton>
+          <GlowLineButton glowColor="rose">Rose Glow</GlowLineButton>
+        </div>
+
+        {/* Custom Color Selector Wheel */}
+        <div className="flex flex-col items-center gap-3 w-full rounded-xl border border-zinc-200/60 bg-zinc-50/20 p-4 dark:border-zinc-800/60 dark:bg-zinc-900/10 mt-2">
+          <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest text-center">
+            Custom Color Wheel Picker
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="relative size-10 rounded-full overflow-hidden border border-zinc-300 dark:border-zinc-700 cursor-pointer shadow-sm">
+              <input
+                type="color"
+                value={customColor}
+                onChange={(e) => setCustomColor(e.target.value)}
+                className="absolute inset-[-4px] size-[48px] p-0 border-0 cursor-pointer rounded-full"
+                title="Choose custom glow color"
+              />
+            </div>
+            <code className="text-xs font-mono text-zinc-500 dark:text-zinc-400 select-all uppercase">
+              {customColor}
+            </code>
+            <GlowLineButton glowColor={customColor}>
+              Custom Glow
+            </GlowLineButton>
+          </div>
+        </div>
       </div>
     )
   },
