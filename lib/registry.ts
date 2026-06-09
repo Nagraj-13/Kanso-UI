@@ -215,6 +215,46 @@ export const registry: RegistryComponent[] = [
     ],
   },
   {
+    name: "github-button",
+    title: "GitHub Button",
+    description:
+      "A set of premium GitHub-focused action buttons with glow lines, keyframe animations, and tooltip overlays.",
+    category: "buttons",
+    dependencies: [],
+    internalDeps: ["lib/utils", "components/ui/button"],
+    filePath: "components/kanso/github-button.tsx",
+    tags: ["button", "github", "social", "glow", "gradient", "tooltip", "animated"],
+    props: [
+      {
+        name: "variantDesign",
+        type: '"classic" | "rainbow" | "tooltip" | "glow"',
+        default: '"classic"',
+        description: "The visual style variation of the GitHub button.",
+      },
+      {
+        name: "stars",
+        type: "number | string",
+        default: "11",
+        description: "The repository star count displayed on the button.",
+      },
+      {
+        name: "href",
+        type: "string",
+        description: "The target repository or profile URL.",
+      },
+      {
+        name: "children",
+        type: "React.ReactNode",
+        description: "The label text displayed inside the button (e.g. Star on GitHub).",
+      },
+      {
+        name: "glowColor",
+        type: "string",
+        description: "Custom glow color (preset name or CSS color/gradient) for the glow variant.",
+      },
+    ],
+  },
+  {
     name: "shimmer-border",
     title: "Shimmer Border",
     description:

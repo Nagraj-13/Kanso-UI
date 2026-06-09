@@ -38,6 +38,8 @@ import { cn } from "@/lib/utils"
 import { MagneticButton } from "@/components/kanso/magnetic-button"
 import { ShimmerBorder } from "@/components/kanso/shimmer-border"
 import { TextReveal } from "@/components/kanso/text-reveal"
+import { GITHUB_URL } from "@/lib/constants"
+import { GithubButton } from "@/components/kanso/github-button"
 import {
   Card,
   CardHeader,
@@ -173,7 +175,6 @@ export default function LandingPageClient({
   const [selectedShowcase, setSelectedShowcase] = React.useState<
     "buttons" | "cards" | "dialogs" | "inputs" | "command" | "pricing"
   >("buttons")
-
   React.useEffect(() => {
     setMounted(true)
   }, [])
@@ -215,7 +216,7 @@ export default function LandingPageClient({
               Docs
             </Link>
             <a
-              href="https://github.com"
+              href={GITHUB_URL}
               target="_blank"
               rel="noreferrer"
               className="flex items-center gap-1.5 text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
@@ -239,9 +240,6 @@ export default function LandingPageClient({
               ) : (
                 <MoonIcon className="size-4" />
               )}
-            </Button>
-            <Button variant="outline" size="sm">
-              Sign In
             </Button>
             <Button size="sm" render={<Link href="/docs" />}>
               Get Started
@@ -292,7 +290,7 @@ export default function LandingPageClient({
                   Docs
                 </Link>
                 <a
-                  href="https://github.com"
+                  href={GITHUB_URL}
                   target="_blank"
                   rel="noreferrer"
                   className="flex items-center gap-1.5 text-sm font-medium text-zinc-600 dark:text-zinc-400"
@@ -321,9 +319,6 @@ export default function LandingPageClient({
                 </div>
                 <hr className="border-zinc-150 dark:border-zinc-800" />
                 <div className="flex flex-col gap-3">
-                  <Button variant="outline" className="w-full">
-                    Sign In
-                  </Button>
                   <Button className="w-full" render={<Link href="/docs" />} onClick={() => setMobileMenuOpen(false)}>
                     Get Started
                   </Button>
@@ -352,20 +347,20 @@ export default function LandingPageClient({
               Thoughtfully designed React components for modern applications. Inspired by Zen aesthetics and engineered for peak developer experience.
             </p>
 
-            <div className="mt-10 flex flex-wrap gap-4 w-full sm:w-auto">
+            <div className="mt-10 flex flex-wrap gap-4 w-full sm:w-auto items-center">
               <Button
                 className="w-full sm:w-auto px-6 h-11"
                 render={<Link href="/docs" />}
               >
                 Browse Components
               </Button>
-              <Button
-                variant="outline"
-                className="w-full sm:w-auto px-6 h-11"
-                render={<Link href="/docs" />}
+              <GithubButton
+                variantDesign="rainbow"
+                href={GITHUB_URL}
+                className="w-full sm:w-auto h-11"
               >
-                Get Started
-              </Button>
+                Star on GitHub
+              </GithubButton>
             </div>
           </div>
 
@@ -988,7 +983,7 @@ export default function LandingPageClient({
           <p className="mt-6 max-w-md mx-auto text-base text-zinc-500 dark:text-zinc-400">
             Kanso UI gives you the building blocks for beautiful, high-performance web applications.
           </p>
-          <div className="mt-10">
+          <div className="mt-10 flex flex-wrap justify-center gap-4 items-center">
             <Button
               size="lg"
               className="px-8 h-12"
@@ -996,6 +991,14 @@ export default function LandingPageClient({
             >
               Start Building
             </Button>
+            <GithubButton
+              variantDesign="glow"
+              href={GITHUB_URL}
+              glowColor="linear-gradient(135deg, oklch(0.65 0.24 300), oklch(0.6 0.22 340))"
+              className="h-12 px-8"
+            >
+              Star Kanso UI
+            </GithubButton>
           </div>
         </div>
       </section>
@@ -1061,7 +1064,7 @@ export default function LandingPageClient({
               </h6>
               <ul className="mt-4 space-y-2 text-xs">
                 <li>
-                  <a href="https://github.com" className="flex items-center gap-1 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50">
+                  <a href={GITHUB_URL} className="flex items-center gap-1 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50">
                     GitHub <GithubIcon className="size-3" />
                   </a>
                 </li>

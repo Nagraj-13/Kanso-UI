@@ -7,8 +7,10 @@ import { MagneticButton } from "@/components/kanso/magnetic-button"
 import { RealismButton } from "@/components/kanso/realism-button"
 import { KeyboardButton } from "@/components/kanso/keyboard-button"
 import { GlowLineButton } from "@/components/kanso/glow-line-button"
+import { GithubButton } from "@/components/kanso/github-button"
 import { ShimmerBorder } from "@/components/kanso/shimmer-border"
 import { TextReveal } from "@/components/kanso/text-reveal"
+import { GITHUB_URL } from "@/lib/constants"
 
 /**
  * Component demo renderers for the docs pages.
@@ -207,6 +209,92 @@ const demos: Record<string, React.ComponentType> = {
             <GlowLineButton glowColor={customColor}>
               Custom Glow
             </GlowLineButton>
+          </div>
+        </div>
+      </div>
+    )
+  },
+  "github-button": function GithubButtonDemo() {
+    type GlowPreset = "default" | "violet" | "rose" | "emerald" | "blue" | "orange"
+    const [selectedGlow, setSelectedGlow] = React.useState<GlowPreset>("default")
+    const glowPresets: { name: GlowPreset; label: string; class: string }[] = [
+      { name: "default", label: "Default", class: "bg-gradient-to-r from-violet-500 via-rose-500 to-orange-400" },
+      { name: "violet", label: "Violet", class: "bg-violet-500" },
+      { name: "rose", label: "Rose", class: "bg-rose-500" },
+      { name: "emerald", label: "Emerald", class: "bg-emerald-500" },
+      { name: "blue", label: "Blue", class: "bg-blue-500" },
+      { name: "orange", label: "Orange", class: "bg-orange-500" },
+    ]
+
+    return (
+      <div className="flex flex-col gap-8 w-full max-w-lg items-center">
+        {/* Row 1: Classic & Tooltip */}
+        <div className="flex flex-wrap items-center justify-center gap-6">
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">
+              Classic Pill
+            </span>
+            <GithubButton variantDesign="classic" href={GITHUB_URL} />
+          </div>
+
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">
+              Tooltip Icon
+            </span>
+            <GithubButton variantDesign="tooltip" href={GITHUB_URL}>
+              Star on GitHub
+            </GithubButton>
+          </div>
+        </div>
+
+        <hr className="w-full border-zinc-200/80 dark:border-zinc-800/60" />
+
+        {/* Row 2: Rainbow & Glow */}
+        <div className="flex flex-col items-center gap-6 w-full">
+          <div className="flex flex-col items-center gap-2">
+            <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">
+              Rainbow Star Glow
+            </span>
+            <GithubButton variantDesign="rainbow" href={GITHUB_URL} />
+          </div>
+
+          <div className="flex flex-col items-center gap-2 mt-2">
+            <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">
+              Gradient Glow
+            </span>
+            <GithubButton
+              variantDesign="glow"
+              href={GITHUB_URL}
+              glowColor={selectedGlow === "default" ? undefined : selectedGlow}
+            >
+              Star Kanso UI
+            </GithubButton>
+          </div>
+        </div>
+
+        <hr className="w-full border-zinc-200/80 dark:border-zinc-800/60" />
+
+        {/* Glow Color Customization Picker */}
+        <div className="flex flex-col items-center gap-2">
+          <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">
+            Customize Glow Color
+          </span>
+          <div className="flex flex-wrap items-center justify-center gap-1.5 p-1 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-900/20">
+            {glowPresets.map((preset) => (
+              <button
+                key={preset.name}
+                onClick={() => setSelectedGlow(preset.name)}
+                className={cn(
+                  "relative flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md transition-all border",
+                  selectedGlow === preset.name
+                    ? "border-zinc-250 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 shadow-xs"
+                    : "border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                )}
+              >
+                <span className={cn("size-2 rounded-full shrink-0", preset.class)} />
+                {preset.label}
+              </button>
+            ))}
           </div>
         </div>
       </div>

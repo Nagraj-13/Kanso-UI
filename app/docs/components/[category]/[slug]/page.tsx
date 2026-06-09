@@ -6,6 +6,8 @@ import { createHighlighter } from "shiki"
 import { registry, getComponent } from "@/lib/registry"
 import { ComponentDemo } from "@/components/docs/component-demos"
 import { CodeBlock, TerminalBlock } from "@/components/docs/code-block"
+import Link from "next/link"
+import { ArrowLeftIcon } from "lucide-react"
 import {
   Table,
   TableHeader,
@@ -95,6 +97,17 @@ export default async function ComponentPage({ params }: PageProps) {
 
   return (
     <div className="max-w-3xl">
+      {/* ── Back Navigation ─────────────────────────── */}
+      <div className="mb-6">
+        <Link
+          href={`/docs/components/${category}`}
+          className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors"
+        >
+          <ArrowLeftIcon className="size-3.5" />
+          Back to {category.charAt(0).toUpperCase() + category.slice(1).replace("-", " ")}
+        </Link>
+      </div>
+
       {/* ── Header ──────────────────────────────────── */}
       <div className="mb-10">
         <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-400">
