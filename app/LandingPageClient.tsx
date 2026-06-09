@@ -2,6 +2,7 @@
 
 import * as React from "react"
 import Image from "next/image"
+import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
 import {
   AccessibilityIcon,
@@ -30,7 +31,10 @@ import {
 } from "lucide-react"
 import { useTheme } from "next-themes"
 
+import { CodeBlock, TerminalBlock } from "@/components/docs/code-block"
 import { Button } from "@/components/ui/button"
+import { Label } from "@/components/ui/label"
+import { cn } from "@/lib/utils"
 import {
   Card,
   CardHeader,
@@ -145,132 +149,31 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
 
 interface LandingPageClientProps {
   heroHtml: string
+  heroRaw: string
   showcaseHtmls: Record<string, string>
+  showcaseRaws: Record<string, string>
   dxHtml: string
+  dxRaw: string
 }
 
-export default function LandingPageClient({ heroHtml, showcaseHtmls, dxHtml }: LandingPageClientProps) {
+export default function LandingPageClient({
+  heroHtml,
+  heroRaw,
+  showcaseHtmls,
+  showcaseRaws,
+  dxHtml,
+  dxRaw,
+}: LandingPageClientProps) {
   const { theme, setTheme } = useTheme()
   const [mounted, setMounted] = React.useState(false)
-  const [copiedCmd, setCopiedCmd] = React.useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [selectedShowcase, setSelectedShowcase] = React.useState<
     "buttons" | "cards" | "dialogs" | "inputs" | "command" | "pricing"
   >("buttons")
-  const [copiedCode, setCopiedCode] = React.useState(false)
 
   React.useEffect(() => {
     setMounted(true)
   }, [])
-
-  // Copy terminal command helper
-  const copyCommand = () => {
-    navigator.clipboard.writeText("npm install @kanso/ui")
-    setCopiedCmd(true)
-    setTimeout(() => setCopiedCmd(false), 2000)
-  }
-
-  // Copy code helper
-  const copyCodeToClipboard = () => {
-    const rawCodes = {
-      buttons: `import { Button } from "@/components/ui/button"
-
-export default function ButtonDemo() {
-  return (
-    <div className="flex flex-wrap gap-3">
-      <Button variant="default">Primary Button</Button>
-      <Button variant="outline">Outline Button</Button>
-      <Button variant="ghost">Ghost Button</Button>
-      <Button variant="destructive">Destructive</Button>
-    </div>
-  )
-}`,
-      cards: `import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-
-export default function CardDemo() {
-  return (
-    <Card className="w-[360px] border-zinc-200 dark:border-zinc-800">
-      <CardHeader>
-        <CardTitle>API Configuration</CardTitle>
-        <CardDescription>Manage your developer keys and secrets.</CardDescription>
-      </CardHeader>
-      <CardContent className="space-y-4">
-        <div className="text-zinc-500">No active keys generated.</div>
-        <Button variant="outline" size="sm">Create Key</Button>
-      </CardContent>
-    </Card>
-  )
-}`,
-      dialogs: `import { Dialog, DialogTrigger, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog"
-import { Button } from "@/components/ui/button"
-
-export default function DialogDemo() {
-  return (
-    <Dialog>
-      <DialogTrigger render={<Button variant="outline">Open Confirm Dialog</Button>} />
-      <DialogContent>
-        <DialogHeader>
-          <DialogTitle>Confirm Action</DialogTitle>
-          <DialogDescription>This will permanently delete the selected project.</DialogDescription>
-        </DialogHeader>
-        <DialogFooter className="mt-4">
-          <DialogClose render={<Button variant="ghost">Cancel</Button>} />
-          <DialogClose render={<Button variant="default">Delete</Button>} />
-        </DialogFooter>
-      </DialogContent>
-    </Dialog>
-  )
-}`,
-      inputs: `import { Input } from "@/components/ui/input"
-import { Button } from "@/components/ui/button"
-
-export default function InputDemo() {
-  return (
-    <div className="flex w-full max-w-sm gap-2">
-      <Input type="email" placeholder="name@domain.com" />
-      <Button variant="default">Subscribe</Button>
-    </div>
-  )
-}`,
-      command: `import { Command, CommandInput, CommandList, CommandGroup, CommandItem } from "@/components/ui/command"
-
-export default function CommandDemo() {
-  return (
-    <Command className="border border-zinc-200 dark:border-zinc-800">
-      <CommandInput placeholder="Search settings..." />
-      <CommandList>
-        <CommandGroup heading="Settings">
-          <CommandItem>Profile Config</CommandItem>
-          <CommandItem>API Management</CommandItem>
-        </CommandGroup>
-      </CommandList>
-    </Command>
-  )
-}`,
-      pricing: `import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-
-export default function PriceCard() {
-  return (
-    <Card className="w-[300px] border-zinc-800 bg-zinc-950 p-6">
-      <CardHeader>
-        <div className="text-xs font-semibold text-zinc-500 uppercase">Pro</div>
-        <CardTitle className="text-2xl mt-1">$19 <span className="text-sm font-normal text-zinc-500">/ mo</span></CardTitle>
-      </CardHeader>
-      <CardContent className="space-y-4 py-4 text-zinc-400">
-        <div>• Unlimited projects</div>
-        <div>• Premium support</div>
-        <Button className="w-full mt-4">Upgrade</Button>
-      </CardContent>
-    </Card>
-  )
-}`
-    }
-    navigator.clipboard.writeText(rawCodes[selectedShowcase])
-    setCopiedCode(true)
-    setTimeout(() => setCopiedCode(false), 2000)
-  }
 
   return (
     <div className="min-h-screen bg-[#fafafa] text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white dark:bg-zinc-950 dark:text-zinc-50 dark:selection:bg-zinc-50 dark:selection:text-zinc-950">
@@ -302,12 +205,12 @@ export default function PriceCard() {
             >
               Showcase
             </a>
-            <a
-              href="#developer"
+            <Link
+              href="/docs"
               className="text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
             >
-              Installation
-            </a>
+              Docs
+            </Link>
             <a
               href="https://github.com"
               target="_blank"
@@ -337,18 +240,20 @@ export default function PriceCard() {
             <Button variant="outline" size="sm">
               Sign In
             </Button>
-            <Button size="sm" onClick={() => (window.location.href = "#developer")}>
+            <Button size="sm" render={<Link href="/docs" />}>
               Get Started
             </Button>
           </div>
 
           {/* Mobile Nav Toggle */}
-          <button
+          <Button
+            variant="ghost"
+            size="icon-sm"
             className="flex items-center justify-center p-2 text-zinc-500 hover:text-zinc-900 md:hidden dark:text-zinc-400 dark:hover:text-zinc-50"
             onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
           >
             {mobileMenuOpen ? <XIcon className="size-5" /> : <MenuIcon className="size-5" />}
-          </button>
+          </Button>
         </div>
 
         {/* Mobile Navigation List */}
@@ -376,13 +281,13 @@ export default function PriceCard() {
                 >
                   Showcase
                 </a>
-                <a
-                  href="#developer"
+                <Link
+                  href="/docs"
                   className="text-sm font-medium text-zinc-600 dark:text-zinc-400"
                   onClick={() => setMobileMenuOpen(false)}
                 >
-                  Installation
-                </a>
+                  Docs
+                </Link>
                 <a
                   href="https://github.com"
                   target="_blank"
@@ -416,7 +321,7 @@ export default function PriceCard() {
                   <Button variant="outline" className="w-full">
                     Sign In
                   </Button>
-                  <Button className="w-full" onClick={() => { setMobileMenuOpen(false); window.location.href = "#developer" }}>
+                  <Button className="w-full" render={<Link href="/docs" />} onClick={() => setMobileMenuOpen(false)}>
                     Get Started
                   </Button>
                 </div>
@@ -447,14 +352,14 @@ export default function PriceCard() {
             <div className="mt-10 flex flex-wrap gap-4 w-full sm:w-auto">
               <Button
                 className="w-full sm:w-auto px-6 h-11"
-                onClick={() => (window.location.href = "#showcase")}
+                render={<Link href="/docs" />}
               >
                 Browse Components
               </Button>
               <Button
                 variant="outline"
                 className="w-full sm:w-auto px-6 h-11"
-                onClick={() => (window.location.href = "#developer")}
+                render={<Link href="/docs" />}
               >
                 Get Started
               </Button>
@@ -466,22 +371,14 @@ export default function PriceCard() {
             <motion.div
               animate={{ y: [0, -8, 0] }}
               transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-              className="w-full max-w-[420px] rounded-xl border border-zinc-200 bg-zinc-950 p-5 shadow-2xl dark:border-zinc-800/80 overflow-hidden min-w-0"
+              className="w-full max-w-[420px] shadow-2xl min-w-0"
             >
-              {/* Traffic light bar */}
-              <div className="mb-4 flex items-center justify-between">
-                <div className="flex gap-1.5">
-                  <span className="size-3 rounded-full bg-zinc-800" />
-                  <span className="size-3 rounded-full bg-zinc-800" />
-                  <span className="size-3 rounded-full bg-zinc-800" />
-                </div>
-                <span className="text-xs font-medium text-zinc-600">Button.tsx</span>
-              </div>
-
-              {/* Shiki generated code block */}
-              <div 
-                className="w-full min-w-0 overflow-x-auto select-none [&>pre]:bg-transparent! [&>pre]:p-0!"
-                dangerouslySetInnerHTML={{ __html: heroHtml }} 
+              <CodeBlock
+                html={heroHtml}
+                rawCode={heroRaw}
+                filename="ButtonDemo.tsx"
+                showLineNumbers={true}
+                collapsible={false}
               />
             </motion.div>
           </div>
@@ -605,17 +502,17 @@ export default function PriceCard() {
                 { id: "command", label: "Command Menu" },
                 { id: "pricing", label: "Pricing Cards" }
               ].map((item) => (
-                <button
+                <Button
                   key={item.id}
+                  variant={selectedShowcase === item.id ? "default" : "ghost"}
                   onClick={() => setSelectedShowcase(item.id as any)}
-                  className={`flex shrink-0 items-center rounded-lg px-4 py-2.5 text-sm font-medium transition-all ${
-                    selectedShowcase === item.id
-                      ? "bg-zinc-900 text-white dark:bg-zinc-100 dark:text-zinc-900"
-                      : "text-zinc-500 hover:bg-zinc-200/50 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900/50 dark:hover:text-zinc-50"
-                  }`}
+                  className={cn(
+                    "justify-start px-4 py-2.5 text-sm font-medium transition-all shrink-0",
+                    selectedShowcase !== item.id && "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+                  )}
                 >
                   {item.label}
-                </button>
+                </Button>
               ))}
             </div>
 
@@ -692,9 +589,9 @@ export default function PriceCard() {
                 {selectedShowcase === "inputs" && (
                   <div className="flex w-full max-w-[360px] flex-col gap-4">
                     <div className="flex flex-col gap-1.5">
-                      <label className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
+                      <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
                         Create Secret Key
-                      </label>
+                      </Label>
                       <div className="flex gap-2">
                         <Input type="text" placeholder="sk_live_..." className="font-mono" />
                         <Button variant="default">Generate</Button>
@@ -791,23 +688,25 @@ export default function PriceCard() {
               </div>
 
               {/* Code Snippet Box */}
-              <div className="relative rounded-xl border border-zinc-200 bg-zinc-950 p-5 dark:border-zinc-800/80 w-full overflow-hidden min-w-0">
-                <div className="flex items-center justify-between border-b border-zinc-900 pb-3 mb-4">
-                  <span className="text-xs font-mono text-zinc-500 uppercase">React Code Example</span>
-                  <button
-                    onClick={copyCodeToClipboard}
-                    className="inline-flex items-center gap-1.5 rounded-lg border border-zinc-900 px-2.5 py-1 text-xs font-medium text-zinc-400 transition-colors hover:bg-zinc-900 hover:text-white"
-                  >
-                    {copiedCode ? <CheckIcon className="size-3.5" /> : <CopyIcon className="size-3.5" />}
-                    {copiedCode ? "Copied" : "Copy Code"}
-                  </button>
-                </div>
-                {/* Shiki static block */}
-                <div 
-                  className="w-full min-w-0 overflow-x-auto select-all [&>pre]:bg-transparent! [&>pre]:p-0!"
-                  dangerouslySetInnerHTML={{ __html: showcaseHtmls[selectedShowcase] }} 
-                />
-              </div>
+              <CodeBlock
+                html={showcaseHtmls[selectedShowcase]}
+                rawCode={showcaseRaws[selectedShowcase]}
+                filename={
+                  selectedShowcase === "buttons"
+                    ? "ButtonDemo.tsx"
+                    : selectedShowcase === "cards"
+                    ? "CardDemo.tsx"
+                    : selectedShowcase === "dialogs"
+                    ? "DialogDemo.tsx"
+                    : selectedShowcase === "inputs"
+                    ? "InputDemo.tsx"
+                    : selectedShowcase === "command"
+                    ? "CommandDemo.tsx"
+                    : "PriceCard.tsx"
+                }
+                showLineNumbers={true}
+                collapsible={false}
+              />
             </div>
           </div>
         </div>
@@ -855,32 +754,15 @@ export default function PriceCard() {
 
             {/* Dx Right Terminal and Code Snippet */}
             <div className="flex flex-col gap-4 justify-center w-full min-w-0">
-              {/* Terminal installation box */}
-              <div className="flex items-center justify-between rounded-xl border border-zinc-200 bg-white p-4 dark:border-zinc-800 dark:bg-zinc-950">
-                <div className="flex items-center gap-3 overflow-hidden min-w-0">
-                  <TerminalIcon className="size-4 text-zinc-500 shrink-0" />
-                  <span className="font-mono text-xs sm:text-sm font-medium truncate">npm install @kanso/ui</span>
-                </div>
-                <button
-                  onClick={copyCommand}
-                  className="flex size-8 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 text-zinc-600 transition-colors hover:bg-zinc-100 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-800 shrink-0"
-                >
-                  {copiedCmd ? <CheckIcon className="size-4" /> : <CopyIcon className="size-4" />}
-                </button>
-              </div>
+              <TerminalBlock command="npm install @kanso/ui" />
 
-              {/* Sample Code block */}
-              <div className="rounded-xl border border-zinc-200 bg-zinc-950 p-5 dark:border-zinc-800 w-full overflow-hidden min-w-0">
-                <div className="mb-4 flex items-center justify-between">
-                  <span className="text-xs font-semibold text-zinc-600 uppercase">Example Integration</span>
-                  <span className="text-xs font-medium text-zinc-600">index.tsx</span>
-                </div>
-                {/* Shiki static block */}
-                <div 
-                  className="w-full min-w-0 overflow-x-auto select-all [&>pre]:bg-transparent! [&>pre]:p-0!"
-                  dangerouslySetInnerHTML={{ __html: dxHtml }} 
-                />
-              </div>
+              <CodeBlock
+                html={dxHtml}
+                rawCode={dxRaw}
+                filename="index.tsx"
+                showLineNumbers={true}
+                collapsible={false}
+              />
             </div>
           </div>
         </div>
@@ -1012,7 +894,7 @@ export default function PriceCard() {
             <Button
               size="lg"
               className="px-8 h-12"
-              onClick={() => (window.location.href = "#developer")}
+              render={<Link href="/docs" />}
             >
               Start Building
             </Button>
@@ -1063,9 +945,9 @@ export default function PriceCard() {
               </h6>
               <ul className="mt-4 space-y-2 text-xs">
                 <li>
-                  <a href="#developer" className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50">
+                  <Link href="/docs" className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50">
                     Documentation
-                  </a>
+                  </Link>
                 </li>
                 <li>
                   <a href="https://nextjs.org" className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50">

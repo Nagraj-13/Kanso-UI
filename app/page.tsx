@@ -163,8 +163,11 @@ export default async function Home() {
   return (
     <LandingPageClient
       heroHtml={heroHtml}
+      heroRaw={heroCode}
       showcaseHtmls={showcaseHtmls}
+      showcaseRaws={showcaseCodes}
       dxHtml={dxHtml}
+      dxRaw={dxCode}
     />
   )
 }

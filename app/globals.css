@@ -153,3 +153,59 @@ html.dark .shiki span {
     transform: rotate(360deg);
   }
 }
+
+/* Kanso CodeBlock — line numbers via CSS counter */
+.code-block-line-numbers code {
+  counter-reset: line;
+}
+
+.code-block-line-numbers code > .line::before {
+  counter-increment: line;
+  content: counter(line);
+  display: inline-block;
+  width: 2ch;
+  margin-right: 1.5em;
+  text-align: right;
+  color: oklch(0.4 0 0);
+  user-select: none;
+  font-variant-numeric: tabular-nums;
+}
+
+/* Custom scrollbar for code blocks */
+.group\/codeblock ::-webkit-scrollbar {
+  height: 6px;
+}
+
+.group\/codeblock ::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.group\/codeblock ::-webkit-scrollbar-thumb {
+  background: oklch(0.35 0 0);
+  border-radius: 3px;
+}
+
+.group\/codeblock ::-webkit-scrollbar-thumb:hover {
+  background: oklch(0.45 0 0);
+}
+
+/* Docs sidebar active link indicator */
+.docs-sidebar-link[data-active="true"] {
+  position: relative;
+}
+
+.docs-sidebar-link[data-active="true"]::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 2px;
+  height: 60%;
+  background: oklch(0.205 0 0);
+  border-radius: 1px;
+}
+
+html.dark .docs-sidebar-link[data-active="true"]::before {
+  background: oklch(0.9 0 0);
+}
