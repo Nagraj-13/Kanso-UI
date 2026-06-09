@@ -131,12 +131,11 @@
 
 /* Shiki light/dark theme overrides */
 .shiki, .shiki span {
-  color: var(--shiki-light) !important;
   background-color: transparent !important;
 }
 
-html.dark .shiki, 
-html.dark .shiki span {
+.dark .shiki, 
+.dark .shiki span {
   color: var(--shiki-dark) !important;
   background-color: transparent !important;
   font-style: var(--shiki-dark-font-style) !important;
@@ -166,7 +165,7 @@ html.dark .shiki span {
   width: 2ch;
   margin-right: 1.5em;
   text-align: right;
-  color: oklch(0.4 0 0);
+  color: var(--muted-foreground);
   user-select: none;
   font-variant-numeric: tabular-nums;
 }
