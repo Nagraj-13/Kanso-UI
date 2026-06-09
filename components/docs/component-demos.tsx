@@ -1,6 +1,8 @@
 "use client"
 
 import * as React from "react"
+import { cn } from "@/lib/utils"
+import { Button } from "@/components/kanso/button"
 import { MagneticButton } from "@/components/kanso/magnetic-button"
 import { ShimmerBorder } from "@/components/kanso/shimmer-border"
 import { TextReveal } from "@/components/kanso/text-reveal"
@@ -13,14 +15,102 @@ import { TextReveal } from "@/components/kanso/text-reveal"
  */
 
 const demos: Record<string, React.ComponentType> = {
+  "button": function ButtonDemo() {
+    type ButtonColor = "zinc" | "blue" | "emerald" | "violet" | "amber" | "rose"
+    const [selectedColor, setSelectedColor] = React.useState<ButtonColor>("zinc")
+    const colors: { name: ButtonColor; class: string }[] = [
+      { name: "zinc", class: "bg-zinc-950 dark:bg-zinc-50" },
+      { name: "blue", class: "bg-blue-500" },
+      { name: "emerald", class: "bg-emerald-500" },
+      { name: "violet", class: "bg-violet-500" },
+      { name: "amber", class: "bg-amber-500" },
+      { name: "rose", class: "bg-rose-500" },
+    ]
+
+    const handleRandomize = () => {
+      const remainingColors = colors.filter((c) => c.name !== selectedColor)
+      const randomColor = remainingColors[Math.floor(Math.random() * remainingColors.length)].name
+      setSelectedColor(randomColor)
+    }
+
+    return (
+      <div className="flex flex-col gap-8 w-full max-w-lg items-center">
+        {/* Color customizer playground */}
+        <div className="flex flex-col items-center gap-3 w-full rounded-xl border border-zinc-200/60 bg-zinc-50/20 p-4 dark:border-zinc-800/60 dark:bg-zinc-900/10">
+          <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest">
+            Select Color & Active Theming
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-3.5 mt-1">
+            {colors.map((c) => (
+              <button
+                key={c.name}
+                onClick={() => setSelectedColor(c.name)}
+                className={cn(
+                  "size-5 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-400 dark:focus:ring-zinc-700 cursor-pointer",
+                  c.class,
+                  selectedColor === c.name ? "ring-2 ring-zinc-500 ring-offset-2 scale-110" : "opacity-80 hover:opacity-100 hover:scale-105"
+                )}
+                aria-label={`Select ${c.name} theme`}
+              />
+            ))}
+            <button
+              onClick={handleRandomize}
+              className="inline-flex items-center gap-1 rounded-md border border-zinc-200 bg-white px-2 py-1 text-[11px] font-semibold text-zinc-700 transition-colors hover:bg-zinc-50 active:scale-95 dark:border-zinc-800 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:bg-zinc-850 cursor-pointer"
+            >
+              🎲 Randomize
+            </button>
+          </div>
+        </div>
+
+        {/* Paired Buttons Showcase Row */}
+        <div className="flex flex-col items-center gap-4 w-full">
+          <div className="text-xs font-medium text-zinc-400 dark:text-zinc-500 text-center">
+            All variants pair and style dynamically matching the &ldquo;{selectedColor}&rdquo; color family:
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-3">
+            <Button variant="primary" color={selectedColor}>Primary</Button>
+            <Button variant="secondary" color={selectedColor}>Secondary</Button>
+            <Button variant="outline" color={selectedColor}>Outline</Button>
+            <Button variant="ghost" color={selectedColor}>Ghost</Button>
+            <Button variant="link" color={selectedColor}>Link</Button>
+          </div>
+        </div>
+
+        {/* Sizes & Inactive displays */}
+        <hr className="w-full border-zinc-200/80 dark:border-zinc-800/60" />
+
+        <div className="grid gap-6 w-full sm:grid-cols-2">
+          {/* Sizes */}
+          <div className="flex flex-col items-center gap-3">
+            <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">
+              Sizes
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <Button size="sm" color={selectedColor}>Small</Button>
+              <Button size="default" color={selectedColor}>Default</Button>
+              <Button size="lg" color={selectedColor}>Large</Button>
+            </div>
+          </div>
+
+          {/* Inactive States */}
+          <div className="flex flex-col items-center gap-3">
+            <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">
+              Inactive States
+            </div>
+            <div className="flex flex-wrap items-center justify-center gap-2">
+              <Button inactive color={selectedColor}>Inactive</Button>
+              <Button variant="outline" inactive color={selectedColor}>Inactive Outline</Button>
+            </div>
+          </div>
+        </div>
+      </div>
+    )
+  },
   "magnetic-button": function MagneticButtonDemo() {
     return (
       <div className="flex flex-wrap items-center justify-center gap-4">
         <MagneticButton>Hover me</MagneticButton>
-        <MagneticButton
-          magneticStrength={0.5}
-          className="bg-transparent border-zinc-300 text-zinc-900 hover:bg-zinc-100 dark:border-zinc-700 dark:text-zinc-100 dark:hover:bg-zinc-800"
-        >
+        <MagneticButton magneticStrength={0.5} variant="outline">
           Outline Style
         </MagneticButton>
         <MagneticButton magneticStrength={0.15}>

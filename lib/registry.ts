@@ -51,6 +51,54 @@ export interface RegistryComponent {
  */
 export const registry: RegistryComponent[] = [
   {
+    name: "button",
+    title: "Button",
+    description:
+      "A versatile, minimalist button component with support for multiple aesthetic variants, sizes, and states.",
+    category: "buttons",
+    dependencies: [],
+    internalDeps: ["lib/utils"],
+    filePath: "components/kanso/button.tsx",
+    tags: ["button", "variants", "primary", "secondary", "outline", "ghost", "interactive"],
+    props: [
+      {
+        name: "variant",
+        type: '"primary" | "secondary" | "outline" | "ghost" | "link"',
+        default: '"primary"',
+        description: "The visual style variant of the button.",
+      },
+      {
+        name: "color",
+        type: '"zinc" | "blue" | "emerald" | "violet" | "amber" | "rose"',
+        default: '"zinc"',
+        description: "The color theme of the button across its variants.",
+      },
+      {
+        name: "size",
+        type: '"default" | "sm" | "lg" | "icon"',
+        default: '"default"',
+        description: "The height and padding scale of the button.",
+      },
+      {
+        name: "inactive",
+        type: "boolean",
+        default: "false",
+        description: "When true, disables interactions and styles the button as inactive.",
+      },
+      {
+        name: "children",
+        type: "React.ReactNode",
+        description: "The content (text, label, or icons) inside the button.",
+        required: true,
+      },
+      {
+        name: "className",
+        type: "string",
+        description: "Additional CSS classes to apply custom overrides.",
+      },
+    ],
+  },
+  {
     name: "magnetic-button",
     title: "Magnetic Button",
     description:
@@ -61,6 +109,12 @@ export const registry: RegistryComponent[] = [
     filePath: "components/kanso/magnetic-button.tsx",
     tags: ["button", "hover", "animation", "magnetic", "interactive"],
     props: [
+      {
+        name: "variant",
+        type: '"default" | "outline"',
+        default: '"default"',
+        description: "The visual style variant of the button.",
+      },
       {
         name: "magneticStrength",
         type: "number",

@@ -45,7 +45,7 @@ export function CategoryShowcase({
             key={component.name}
             className="flex flex-col justify-between border border-zinc-200 bg-white p-5 shadow-xs transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/40"
           >
-            <div>
+            <div className="flex flex-col flex-1">
               <h3 className="text-lg font-semibold text-zinc-950 dark:text-white">
                 {component.title}
               </h3>
@@ -54,7 +54,7 @@ export function CategoryShowcase({
               </p>
 
               {/* Live Interactive Preview */}
-              <div className="mt-6 flex min-h-[200px] items-center justify-center rounded-lg border border-dashed border-zinc-200 bg-zinc-50/50 p-6 dark:border-zinc-800 dark:bg-zinc-900/30">
+              <div className="mt-6 flex flex-1 min-h-[200px] items-center justify-center rounded-lg border border-dashed border-zinc-200 bg-zinc-50/50 p-6 dark:border-zinc-800 dark:bg-zinc-900/30">
                 <ComponentDemo name={component.name} />
               </div>
             </div>
