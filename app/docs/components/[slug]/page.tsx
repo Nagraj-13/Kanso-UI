@@ -14,6 +14,7 @@ import {
   TableHead,
   TableCell,
 } from "@/components/ui/table"
+import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface PageProps {
   params: Promise<{ slug: string }>
@@ -236,8 +237,9 @@ export default async function ComponentPage({ params }: PageProps) {
             </span>
             Props
           </h2>
-          <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden">
-            <Table>
+          <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-white dark:bg-zinc-950">
+            <ScrollArea className="w-full">
+              <Table containerClassName="overflow-visible">
               <TableHeader>
                 <TableRow className="bg-zinc-50/80 hover:bg-zinc-50/80 dark:bg-zinc-900/40 dark:hover:bg-zinc-900/40">
                   <TableHead className="px-4 py-3">Prop</TableHead>
@@ -280,6 +282,7 @@ export default async function ComponentPage({ params }: PageProps) {
                 ))}
               </TableBody>
             </Table>
+            </ScrollArea>
           </div>
         </section>
       )}
