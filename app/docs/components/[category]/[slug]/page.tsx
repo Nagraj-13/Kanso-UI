@@ -17,14 +17,18 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area"
 
 interface PageProps {
-  params: Promise<{ slug: string }>
+  params: Promise<{ category: string; slug: string }>
 }
 
 /**
  * Generate static params for all registered components.
+ * Returning both category and slug for Next.js App Router dynamic nested routes.
  */
 export async function generateStaticParams() {
-  return registry.map((c) => ({ slug: c.name }))
+  return registry.map((c) => ({
+    category: c.category,
+    slug: c.name,
+  }))
 }
 
 /**
@@ -51,10 +55,11 @@ export async function generateMetadata({ params }: PageProps) {
  * - Props table
  */
 export default async function ComponentPage({ params }: PageProps) {
-  const { slug } = await params
+  const { category, slug } = await params
   const component = getComponent(slug)
 
-  if (!component) {
+  // Validate the component exists and its category matches the route path
+  if (!component || component.category !== category) {
     notFound()
   }
 
@@ -240,48 +245,48 @@ export default async function ComponentPage({ params }: PageProps) {
           <div className="rounded-xl border border-zinc-200 dark:border-zinc-800 overflow-hidden bg-white dark:bg-zinc-950">
             <ScrollArea className="w-full">
               <Table containerClassName="overflow-visible">
-              <TableHeader>
-                <TableRow className="bg-zinc-50/80 hover:bg-zinc-50/80 dark:bg-zinc-900/40 dark:hover:bg-zinc-900/40">
-                  <TableHead className="px-4 py-3">Prop</TableHead>
-                  <TableHead className="px-4 py-3">Type</TableHead>
-                  <TableHead className="px-4 py-3">Default</TableHead>
-                  <TableHead className="px-4 py-3">Description</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {component.props.map((prop) => (
-                  <TableRow key={prop.name}>
-                    <TableCell className="px-4 py-3">
-                      <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono font-semibold text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
-                        {prop.name}
-                      </code>
-                      {prop.required && (
-                        <span className="ml-1.5 text-[10px] font-bold text-red-500">
-                          required
-                        </span>
-                      )}
-                    </TableCell>
-                    <TableCell className="px-4 py-3">
-                      <code className="text-xs font-mono text-zinc-500 dark:text-zinc-400">
-                        {prop.type}
-                      </code>
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-zinc-500 dark:text-zinc-400">
-                      {prop.default ? (
-                        <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">
-                          {prop.default}
-                        </code>
-                      ) : (
-                        <span className="text-zinc-300 dark:text-zinc-700">—</span>
-                      )}
-                    </TableCell>
-                    <TableCell className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
-                      {prop.description}
-                    </TableCell>
+                <TableHeader>
+                  <TableRow className="bg-zinc-50/80 hover:bg-zinc-50/80 dark:bg-zinc-900/40 dark:hover:bg-zinc-900/40">
+                    <TableHead className="px-4 py-3">Prop</TableHead>
+                    <TableHead className="px-4 py-3">Type</TableHead>
+                    <TableHead className="px-4 py-3">Default</TableHead>
+                    <TableHead className="px-4 py-3">Description</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {component.props.map((prop) => (
+                    <TableRow key={prop.name}>
+                      <TableCell className="px-4 py-3">
+                        <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono font-semibold text-zinc-800 dark:bg-zinc-800 dark:text-zinc-200">
+                          {prop.name}
+                        </code>
+                        {prop.required && (
+                          <span className="ml-1.5 text-[10px] font-bold text-red-500">
+                            required
+                          </span>
+                        )}
+                      </TableCell>
+                      <TableCell className="px-4 py-3">
+                        <code className="text-xs font-mono text-zinc-500 dark:text-zinc-400">
+                          {prop.type}
+                        </code>
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-zinc-500 dark:text-zinc-400">
+                        {prop.default ? (
+                          <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">
+                            {prop.default}
+                          </code>
+                        ) : (
+                          <span className="text-zinc-300 dark:text-zinc-700">—</span>
+                        )}
+                      </TableCell>
+                      <TableCell className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
+                        {prop.description}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </ScrollArea>
           </div>
         </section>
