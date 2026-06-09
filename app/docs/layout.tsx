@@ -30,25 +30,25 @@ export default function DocsLayout({
 }) {
   const categories = getCategories()
 
-  // Build sidebar data grouped by category
-  const sidebarGroups = categories.map((cat) => {
-    const meta = categoryMeta[cat] ?? {
-      label: cat.charAt(0).toUpperCase() + cat.slice(1).replace("-", " "),
-      icon: "•",
-    }
-    return {
-      category: cat,
-      label: meta.label,
-      icon: meta.icon,
-      items: registry
-        .filter((c) => c.category === cat)
-        .map((c) => ({
-          name: c.name,
-          title: c.title,
-          href: `/docs/components/${c.name}`,
-        })),
-    }
-  })
+  // Build sidebar data with categories as items under a single group
+  const sidebarGroups = [
+    {
+      category: "components",
+      label: "Components",
+      icon: "▣",
+      items: categories.map((cat) => {
+        const meta = categoryMeta[cat] ?? {
+          label: cat.charAt(0).toUpperCase() + cat.slice(1).replace("-", " "),
+          icon: "•",
+        }
+        return {
+          name: cat,
+          title: meta.label,
+          href: `/docs/components/${cat}`,
+        }
+      }),
+    },
+  ]
 
   return (
     <DocsLayoutClient sidebarGroups={sidebarGroups}>
