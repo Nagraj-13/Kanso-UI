@@ -408,19 +408,19 @@ export default function ShimmerBorderDemo() {
       {
         name: "shimmerColor",
         type: "string",
-        default: '"rgba(255, 255, 255, 0.15)"',
+        default: '"rgba(255, 255, 255, 0.2)"',
         description: "Color of the shimmer highlight.",
       },
       {
         name: "shimmerSize",
         type: "number",
-        default: "200",
-        description: "Width of the shimmer highlight in pixels.",
+        default: "25",
+        description: "Width of the shimmer conic gradient sweep as a percentage of the perimeter circle (10 to 50).",
       },
       {
         name: "duration",
         type: "number",
-        default: "3",
+        default: "3.5",
         description: "Animation cycle duration in seconds.",
       },
       {
@@ -706,6 +706,12 @@ export default function ThreeDCardDemo() {
         name: "containerClassName",
         type: "string",
         description: "Additional CSS classes for the outermost perspective container.",
+      },
+      {
+        name: "tiltSensitivity",
+        type: "number",
+        default: "25",
+        description: "How much the card tilts when hovered (lower values tilt more).",
       },
       {
         name: "translateX",

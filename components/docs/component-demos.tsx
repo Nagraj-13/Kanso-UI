@@ -26,6 +26,43 @@ import {
 } from "@/components/kanso/color-picker"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 import { GITHUB_URL } from "@/lib/constants"
+import Color from "color"
+
+function DialKitSlider({
+  label,
+  min,
+  max,
+  step = 1,
+  value,
+  onChange,
+  suffix = ""
+}: {
+  label: string
+  min: number
+  max: number
+  step?: number
+  value: number
+  onChange: (val: number) => void
+  suffix?: string
+}) {
+  return (
+    <div className="flex flex-col gap-1.5 w-full">
+      <div className="flex items-center justify-between text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+        <span>{label}</span>
+        <span className="font-mono text-zinc-500 dark:text-zinc-400">{value}{suffix}</span>
+      </div>
+      <input
+        type="range"
+        min={min}
+        max={max}
+        step={step}
+        value={value}
+        onChange={(e) => onChange(parseFloat(e.target.value))}
+        className="w-full accent-purple-500 h-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer"
+      />
+    </div>
+  )
+}
 
 /**
  * Component demo renderers for the docs pages.
@@ -318,33 +355,120 @@ const demos: Record<string, React.ComponentType> = {
   },
 
   "shimmer-border": function ShimmerBorderDemo() {
+    const [borderWidth, setBorderWidth] = React.useState(2)
+    const [duration, setDuration] = React.useState(3.5)
+    const [shimmerSize, setShimmerSize] = React.useState(20)
+    const [borderRadius, setBorderRadius] = React.useState(16)
+    
+    // Color states
+    const [theme, setTheme] = React.useState<"orchid" | "mint" | "solar" | "cyber" | "chrome" | "custom">("orchid")
+    const [customColor, setCustomColor] = React.useState("#c084fc")
+
+    const themeColors = {
+      orchid: { color: "#c084fc", label: "Orchid Glow", class: "bg-purple-400" },
+      mint: { color: "#34d399", label: "Neon Mint", class: "bg-emerald-400" },
+      solar: { color: "#f59e0b", label: "Solar Gold", class: "bg-amber-400" },
+      cyber: { color: "#60a5fa", label: "Cyber Blue", class: "bg-blue-400" },
+      chrome: { color: "rgba(255, 255, 255, 0.4)", label: "Neutral Chrome", class: "bg-zinc-300 dark:bg-zinc-600" }
+    }
+
+    const activeColor = theme === "custom" ? customColor : themeColors[theme].color
+
     return (
-      <div className="flex flex-col gap-6 w-full max-w-sm">
-        <ShimmerBorder>
-          <div className="px-6 py-5">
-            <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-              Kanso UI
-            </h3>
-            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-              Beautiful, minimal components for modern apps.
-            </p>
+      <div className="flex flex-col items-center gap-6 w-full max-w-sm">
+        {/* Modern ShimmerBorder Preview */}
+        <ShimmerBorder
+          shimmerColor={activeColor}
+          borderWidth={borderWidth}
+          duration={duration}
+          shimmerSize={shimmerSize}
+          borderRadius={borderRadius}
+          className="w-full shadow-lg"
+        >
+          <div className="px-6 py-5 flex flex-col justify-between min-h-[140px] bg-white dark:bg-zinc-950">
+            <div>
+              <div className="flex items-center justify-between">
+                <span className="text-[9px] font-bold tracking-widest text-zinc-400 dark:text-zinc-500 uppercase">
+                  Perimeter Sweep
+                </span>
+                <span className="flex h-1.5 w-1.5 rounded-full bg-emerald-500" />
+              </div>
+              <h3 className="mt-3 text-base font-bold text-zinc-900 dark:text-white">Active Light Sweep</h3>
+              <p className="mt-1 text-xs text-zinc-500 dark:text-zinc-450 leading-relaxed">
+                GPU-accelerated conic masking sweeps a flowing fiber-optic light beam around the card boundaries.
+              </p>
+            </div>
+            <div className="mt-4 flex items-center justify-between text-[9px] font-mono text-zinc-400 dark:text-zinc-500 border-t border-zinc-100 dark:border-zinc-900/50 pt-2.5">
+              <span>Width: {borderWidth}px</span>
+              <span>Speed: {duration}s</span>
+              <span>Spread: {shimmerSize}%</span>
+            </div>
           </div>
         </ShimmerBorder>
 
-        <ShimmerBorder
-          shimmerColor="rgba(120, 120, 255, 0.2)"
-          duration={2}
-          borderRadius={16}
-        >
-          <div className="px-6 py-5">
-            <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
-              Custom Colors
-            </h3>
-            <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
-              Adjust shimmer color, speed, and radius.
-            </p>
+        {/* Theme select controls */}
+        <div className="flex flex-col gap-3 w-full p-4 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">
+            Laser Theme Presets
           </div>
-        </ShimmerBorder>
+          
+          <div className="flex flex-wrap gap-1.5">
+            {(["orchid", "mint", "solar", "cyber", "chrome", "custom"] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => setTheme(t)}
+                className={cn(
+                  "flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-semibold rounded-md border transition-all cursor-pointer",
+                  theme === t
+                    ? "border-zinc-350 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50 shadow-xs"
+                    : "border-transparent text-zinc-500 hover:text-zinc-850 dark:text-zinc-400 dark:hover:text-zinc-200"
+                )}
+              >
+                {t !== "custom" && (
+                  <span className={cn("size-2 rounded-full shrink-0", themeColors[t].class)} />
+                )}
+                {t === "custom" ? "🎨 Custom" : themeColors[t].label.split(" ")[1]}
+              </button>
+            ))}
+          </div>
+
+          {theme === "custom" && (
+            <div className="flex items-center gap-2 mt-1 animate-in fade-in slide-in-from-top-1 duration-150">
+              <Popover>
+                <PopoverTrigger className="flex items-center gap-2 px-2.5 py-1 text-xs border rounded-md bg-white dark:bg-zinc-950 cursor-pointer shadow-xs">
+                  <span
+                    className="size-3.5 rounded-full border border-black/10 dark:border-white/10 shrink-0"
+                    style={{ backgroundColor: customColor }}
+                  />
+                  <span className="font-mono text-[10px] uppercase text-zinc-500">{customColor}</span>
+                </PopoverTrigger>
+                <PopoverContent className="w-64 p-4">
+                  <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-2">Custom Shimmer Color</div>
+                  <ColorPicker
+                    value={customColor}
+                    onChange={setCustomColor}
+                    className="h-auto w-full gap-3"
+                  >
+                    <ColorPickerSelection className="h-32 rounded-md border border-zinc-200 dark:border-zinc-800" />
+                    <ColorPickerHue />
+                    <ColorPickerAlpha />
+                  </ColorPicker>
+                </PopoverContent>
+              </Popover>
+            </div>
+          )}
+        </div>
+
+        {/* Real-time Config Panel (DialKit) */}
+        <div className="grid grid-cols-2 gap-4 w-full p-4 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="col-span-2 text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-1">
+            Real-time Config Kit (Props)
+          </div>
+          <DialKitSlider label="Border Width" min={1.0} max={5.0} step={0.5} value={borderWidth} onChange={setBorderWidth} suffix="px" />
+          <DialKitSlider label="Shimmer Speed" min={1.0} max={8.0} step={0.5} value={duration} onChange={setDuration} suffix="s" />
+          <DialKitSlider label="Shimmer Spread" min={10} max={50} step={5} value={shimmerSize} onChange={setShimmerSize} suffix="%" />
+          <DialKitSlider label="Border Radius" min={6} max={32} step={1} value={borderRadius} onChange={setBorderRadius} suffix="px" />
+        </div>
       </div>
     )
   },
@@ -569,20 +693,72 @@ const demos: Record<string, React.ComponentType> = {
   "border-glow": function BorderGlowDemo() {
     const [key, setKey] = React.useState(0)
     const [intensity, setIntensity] = React.useState(1.0)
+    const [edgeSensitivity, setEdgeSensitivity] = React.useState(30)
+    const [borderRadius, setBorderRadius] = React.useState(28)
+    const [glowRadius, setGlowRadius] = React.useState(40)
+    const [coneSpread, setConeSpread] = React.useState(25)
+    
+    // Theme options
+    const [theme, setTheme] = React.useState<"orchid" | "mint" | "solar" | "cyber" | "custom">("orchid")
+    
+    // Custom configurations
+    const [customGlow, setCustomGlow] = React.useState("280 80 70")
+    const [customColors, setCustomColors] = React.useState(["#c084fc", "#f472b6", "#38bdf8"])
+
+    const themePresets = {
+      orchid: {
+        glowColor: "280 80 70",
+        colors: ["#c084fc", "#f472b6", "#38bdf8"],
+        label: "Orchid Glow",
+        class: "from-purple-400 via-pink-400 to-sky-400"
+      },
+      mint: {
+        glowColor: "160 80 60",
+        colors: ["#34d399", "#22d3ee", "#3b82f6"],
+        label: "Neon Mint",
+        class: "from-emerald-400 via-cyan-400 to-blue-400"
+      },
+      solar: {
+        glowColor: "340 85 65",
+        colors: ["#fb7185", "#f59e0b", "#ec4899"],
+        label: "Solar Flare",
+        class: "from-rose-450 via-amber-400 to-pink-500"
+      },
+      cyber: {
+        glowColor: "210 90 60",
+        colors: ["#60a5fa", "#3b82f6", "#10b981"],
+        label: "Cyber Blue",
+        class: "from-blue-400 via-indigo-500 to-emerald-400"
+      }
+    }
+
+    const activeGlowColor = theme === "custom" ? customGlow : themePresets[theme].glowColor
+    const activeColors = theme === "custom" ? customColors : themePresets[theme].colors
+
+    const setCustomColorAtIndex = (index: number, val: string) => {
+      const copy = [...customColors]
+      copy[index] = val
+      setCustomColors(copy)
+    }
 
     return (
-      <div className="flex flex-col items-center gap-6 w-full max-w-md">
+      <div className="flex flex-col items-center gap-6 w-full max-w-lg">
+        {/* Border Glow Showcase */}
         <BorderGlow
-          key={key}
+          key={`${key}-${theme}`}
           animated={true}
           glowIntensity={intensity}
+          edgeSensitivity={edgeSensitivity}
+          borderRadius={borderRadius}
+          glowRadius={glowRadius}
+          coneSpread={coneSpread}
           className="w-full aspect-video"
-          glowColor="280 80 70"
-          colors={["#c084fc", "#f472b6", "#38bdf8"]}
+          glowColor={activeGlowColor}
+          colors={activeColors}
         >
           <div className="flex flex-col justify-between h-full p-6 text-zinc-100">
             <div>
-              <span className="text-[10px] uppercase tracking-wider text-purple-450 font-semibold px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20">
+              <span className="text-[10px] uppercase tracking-wider text-purple-400 font-semibold px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20">
                 Active Sweep
               </span>
               <h3 className="mt-4 text-xl font-medium tracking-tight text-white">Kanso Border Glow</h3>
@@ -590,33 +766,134 @@ const demos: Record<string, React.ComponentType> = {
                 A premium, high-performance card using custom mesh gradient masks. Move your cursor to see the border and glow light up around the coordinates.
               </p>
             </div>
-            <div className="flex items-center justify-between text-[11px] text-zinc-500 font-mono">
-              <span>HSL: 280 80 70</span>
-              <span>Conic Mask</span>
+            <div className="flex items-center justify-between text-[10px] text-zinc-500 font-mono">
+              <span>Glow: HSL({activeGlowColor})</span>
+              <span>Mesh: {activeColors.map(c => c.slice(0, 7)).join(", ")}</span>
             </div>
           </div>
         </BorderGlow>
 
-        <div className="flex flex-wrap items-center justify-center gap-4 mt-2">
+        {/* Color controls */}
+        <div className="flex flex-col gap-4 w-full p-4 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">
+            Border & Glow Themes
+          </div>
+          
+          <div className="flex flex-wrap gap-2">
+            {(["orchid", "mint", "solar", "cyber", "custom"] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => {
+                  setTheme(t)
+                  setKey((k) => k + 1)
+                }}
+                className={cn(
+                  "flex items-center gap-1.5 px-3 py-1.5 text-xs font-semibold rounded-md transition-all border cursor-pointer",
+                  theme === t
+                    ? "border-zinc-300 dark:border-zinc-700 bg-zinc-55 dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50 shadow-xs"
+                    : "border-transparent text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200"
+                )}
+              >
+                {t !== "custom" && (
+                  <span className={cn("size-2.5 rounded-full bg-gradient-to-r shrink-0", themePresets[t].class)} />
+                )}
+                {t === "custom" ? "🎨 Custom Color Wheel" : themePresets[t].label}
+              </button>
+            ))}
+          </div>
+
+          {theme === "custom" && (
+            <div className="flex flex-wrap gap-4 items-center justify-between p-3 rounded-lg bg-zinc-50 dark:bg-zinc-955/60 border border-zinc-100 dark:border-zinc-900 animate-in fade-in duration-200">
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[10px] uppercase font-semibold text-zinc-400">Outer Glow</span>
+                <Popover>
+                  <PopoverTrigger className="flex items-center gap-2 px-2.5 py-1 text-xs border rounded-md bg-white dark:bg-zinc-900 cursor-pointer shadow-xs">
+                    <span
+                      className="size-3.5 rounded-full border border-black/10 dark:border-white/10 shrink-0"
+                      style={{ backgroundColor: `hsl(${customGlow.split(" ")[0]}deg ${customGlow.split(" ")[1]}% ${customGlow.split(" ")[2]}%)` }}
+                    />
+                    <span className="font-mono text-[10px]">HSL({customGlow})</span>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-64 p-4">
+                    <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-2">Glow Base Color</div>
+                    <ColorPicker
+                      value={(() => {
+                        try {
+                          const parts = customGlow.split(" ")
+                          return Color.hsl(parseFloat(parts[0]), parseFloat(parts[1]), parseFloat(parts[2])).hex()
+                        } catch {
+                          return "#c084fc"
+                        }
+                      })()}
+                      onChange={(val) => {
+                        try {
+                          const [h, s, l] = Color(val).hsl().array()
+                          setCustomGlow(`${Math.round(h)} ${Math.round(s)} ${Math.round(l)}`)
+                        } catch {}
+                      }}
+                      className="h-auto w-full gap-3"
+                    >
+                      <ColorPickerSelection className="h-32 rounded-md border border-zinc-200 dark:border-zinc-800" />
+                      <ColorPickerHue />
+                      <ColorPickerAlpha />
+                    </ColorPicker>
+                  </PopoverContent>
+                </Popover>
+              </div>
+
+              <div className="flex flex-col gap-1.5">
+                <span className="text-[10px] uppercase font-semibold text-zinc-400">Mesh Gradients</span>
+                <div className="flex gap-2">
+                  {customColors.map((color, index) => (
+                    <Popover key={index}>
+                      <PopoverTrigger className="flex items-center justify-center p-1.5 border rounded-md bg-white dark:bg-zinc-900 cursor-pointer shadow-xs">
+                        <span
+                          className="size-4 rounded-full border border-black/10 dark:border-white/10"
+                          style={{ backgroundColor: color }}
+                        />
+                      </PopoverTrigger>
+                      <PopoverContent className="w-64 p-4">
+                        <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-2">Mesh Color {index + 1}</div>
+                        <ColorPicker
+                          value={color}
+                          onChange={(val) => setCustomColorAtIndex(index, val)}
+                          className="h-auto w-full gap-3"
+                        >
+                          <ColorPickerSelection className="h-32 rounded-md border border-zinc-200 dark:border-zinc-800" />
+                          <ColorPickerHue />
+                          <ColorPickerAlpha />
+                        </ColorPicker>
+                      </PopoverContent>
+                    </Popover>
+                  ))}
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Real-time Config Panel (DialKit) */}
+        <div className="grid grid-cols-2 gap-4 w-full p-4 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30 font-sans">
+          <div className="col-span-2 text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-1">
+            Real-time Config Kit (Props)
+          </div>
+          <DialKitSlider label="Glow Intensity" min={0.2} max={2.0} step={0.1} value={intensity} onChange={setIntensity} />
+          <DialKitSlider label="Edge Sensitivity" min={10} max={80} step={2} value={edgeSensitivity} onChange={setEdgeSensitivity} />
+          <DialKitSlider label="Border Radius" min={8} max={40} step={1} value={borderRadius} onChange={setBorderRadius} suffix="px" />
+          <DialKitSlider label="Glow Radius" min={20} max={80} step={5} value={glowRadius} onChange={setGlowRadius} suffix="px" />
+          <div className="col-span-2">
+            <DialKitSlider label="Conic Spread Angle" min={10} max={60} step={1} value={coneSpread} onChange={setConeSpread} suffix="°" />
+          </div>
+        </div>
+
+        {/* Action Controls */}
+        <div className="flex flex-wrap items-center justify-between w-full gap-4 mt-1 border-t border-zinc-100 dark:border-zinc-900 pt-4">
           <button
             onClick={() => setKey((k) => k + 1)}
             className="px-3.5 py-1.5 text-xs font-semibold rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900 transition-all shadow-xs cursor-pointer active:scale-95"
           >
             ⚡ Trigger Sweep Animation
           </button>
-          <div className="flex items-center gap-2">
-            <span className="text-xs text-zinc-400 font-medium">Intensity:</span>
-            <input
-              type="range"
-              min="0.2"
-              max="2.0"
-              step="0.2"
-              value={intensity}
-              onChange={(e) => setIntensity(parseFloat(e.target.value))}
-              className="w-20 accent-purple-500 h-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer"
-            />
-            <span className="text-xs font-mono text-zinc-500 w-6">{intensity.toFixed(1)}</span>
-          </div>
         </div>
       </div>
     )
@@ -657,69 +934,177 @@ const demos: Record<string, React.ComponentType> = {
     )
   },
   "three-d-card": function ThreeDCardDemo() {
+    const [translateZTitle, setTranslateZTitle] = React.useState(50)
+    const [translateZDesc, setTranslateZDesc] = React.useState(30)
+    const [translateZImage, setTranslateZImage] = React.useState(80)
+    const [translateZSpecs, setTranslateZSpecs] = React.useState(45)
+    const [translateZButton, setTranslateZButton] = React.useState(60)
+    const [tiltSensitivity, setTiltSensitivity] = React.useState(25)
+    const [sheenOpacity, setSheenOpacity] = React.useState(0.4)
+    const [borderRadius, setBorderRadius] = React.useState(24)
+    const [glareBlur, setGlareBlur] = React.useState(16)
+
     return (
-      <CardContainer containerClassName="py-4">
-        <CardBody className="relative h-auto w-full max-w-sm rounded-2xl border border-zinc-200 bg-zinc-50/50 p-6 dark:border-zinc-850 dark:bg-zinc-900/30 shadow-xl">
-          <CardItem
-            translateZ={40}
-            className="text-lg font-semibold text-zinc-900 dark:text-zinc-50"
+      <div className="flex flex-col items-center gap-8 w-full max-w-sm">
+        {/* Modern, minimal, and "lit" 3D Card Container */}
+        <CardContainer containerClassName="py-2 w-full" tiltSensitivity={tiltSensitivity}>
+          <CardBody 
+            style={{ borderRadius: `${borderRadius}px` }} 
+            className="group relative h-auto w-full border border-zinc-200/60 dark:border-zinc-800/80 bg-gradient-to-br from-zinc-100 via-zinc-200 to-zinc-100 dark:from-zinc-900 dark:via-zinc-950 dark:to-zinc-900 p-6 shadow-2xl backdrop-blur-xl transition-all duration-300"
           >
-            Kanso Keycap Pro
-          </CardItem>
-          
-          <CardItem
-            translateZ={20}
-            className="mt-1.5 text-xs text-zinc-500 dark:text-zinc-400"
-          >
-            Premium minimalist artisan cherry mx keycap.
-          </CardItem>
+            {/* Polished inner chamfered border highlight */}
+            <div className="absolute inset-0 rounded-[inherit] border border-white/20 dark:border-white/5 pointer-events-none z-20" />
 
-          <CardItem
-            translateZ={60}
-            className="w-full mt-4 overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/50 dark:border-zinc-700/50 aspect-video flex items-center justify-center text-zinc-400 dark:text-zinc-650"
-          >
-            <svg viewBox="0 0 100 100" className="size-24 stroke-current stroke-[1.5] fill-none opacity-80">
-              <path d="M20 70 L35 25 L65 25 L80 70 Z" />
-              <path d="M35 25 L38 20 L62 20 L65 25" />
-              <circle cx="50" cy="45" r="8" className="stroke-zinc-300 dark:stroke-zinc-700" />
-              <path d="M47 45 H53 M50 42 V48" className="stroke-zinc-450 dark:stroke-zinc-500" />
-            </svg>
-          </CardItem>
+            {/* Specular linear sheen sweep reflection (sharp light reflection) */}
+            <div
+              className="absolute inset-0 pointer-events-none rounded-[inherit] overflow-hidden opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30 mix-blend-overlay"
+            >
+              <div
+                className="absolute -inset-[50%] transition-transform duration-75 ease-out"
+                style={{
+                  background: `linear-gradient(115deg, transparent 20%, rgba(255,255,255,0) 30%, rgba(56,189,248,${sheenOpacity * 0.15}) 40%, rgba(255,255,255,${sheenOpacity * 0.95}) 50%, rgba(244,114,182,${sheenOpacity * 0.15}) 60%, rgba(255,255,255,0) 70%, transparent 80%)`,
+                  transform: `translateX(calc(var(--mouse-x-pct, 50%) * 2.4 - 120%)) translateY(calc(var(--mouse-y-pct, 50%) * 2.4 - 120%)) rotate(25deg)`,
+                  filter: glareBlur ? `blur(${glareBlur}px)` : "none",
+                }}
+              />
+            </div>
 
-          <div className="flex items-center justify-between mt-6">
+            {/* Broad soft ambient highlight spotlight */}
+            <div
+              className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-[inherit] z-10 mix-blend-overlay"
+              style={{
+                background: `radial-gradient(350px circle at var(--mouse-x, 50%) var(--mouse-y, 50%), rgba(255, 255, 255, ${sheenOpacity * 0.25}), transparent 80%)`,
+                filter: glareBlur ? `blur(${Math.round(glareBlur * 1.5)}px)` : "none",
+              }}
+            />
+
             <CardItem
-              translateZ={30}
-              className="text-sm font-semibold text-zinc-850 dark:text-zinc-200 font-mono"
+              translateZ={35}
+              className="absolute top-6 right-6 text-[9px] font-semibold tracking-widest text-zinc-500 dark:text-zinc-400 uppercase px-2.5 py-0.5 rounded-full bg-zinc-100 dark:bg-zinc-900/60 border border-zinc-200/60 dark:border-zinc-800/80"
             >
-              $39.00
+              Limited Concept
             </CardItem>
+
             <CardItem
-              translateZ={80}
-              as="button"
-              className="rounded-lg bg-zinc-950 px-3 py-1.5 text-xs font-semibold text-zinc-50 transition-colors hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200 cursor-pointer border border-transparent focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-700"
+              translateZ={translateZTitle}
+              className="text-lg font-bold text-zinc-900 dark:text-white tracking-tight"
             >
-              Buy Now
+              Zen Artisan Keycaps
             </CardItem>
+            
+            <CardItem
+              translateZ={translateZDesc}
+              className="mt-1 text-xs text-zinc-500 dark:text-zinc-400"
+            >
+              Frosted obsidian design featuring spring mechanical actions.
+            </CardItem>
+
+            {/* Float Shadow Cast effect helper */}
+            <div className="relative w-full mt-5">
+              <CardItem
+                translateZ={translateZImage}
+                className="w-full overflow-hidden rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 aspect-video shadow-2xl relative z-10"
+              >
+                <img
+                  src="/3d-card.png"
+                  alt="Zen Artisan Card visual"
+                  className="w-full h-full object-cover select-none pointer-events-none"
+                />
+              </CardItem>
+              {/* Dynamic shadow that floats underneath matching image translateZ, wrapped in CardItem to auto-align on hover-exit */}
+              <CardItem 
+                translateZ={Math.round(translateZImage * 0.35)}
+                className="absolute inset-0 size-full rounded-xl bg-black/15 dark:bg-black/60 blur-lg -z-10 w-full"
+              />
+            </div>
+
+            {/* Specs Grid */}
+            <CardItem
+              translateZ={translateZSpecs}
+              className="grid grid-cols-3 gap-2.5 mt-5 w-full"
+            >
+              <div className="flex flex-col p-2.5 rounded-lg border border-zinc-200/50 dark:border-zinc-800/40 bg-zinc-50/50 dark:bg-zinc-900/40">
+                <span className="text-[8px] font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Profile</span>
+                <span className="text-xs font-bold text-zinc-700 dark:text-zinc-250 font-mono mt-0.5">Cherry MX</span>
+              </div>
+              <div className="flex flex-col p-2.5 rounded-lg border border-zinc-200/50 dark:border-zinc-800/40 bg-zinc-50/50 dark:bg-zinc-900/40">
+                <span className="text-[8px] font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Material</span>
+                <span className="text-xs font-bold text-zinc-700 dark:text-zinc-250 font-mono mt-0.5">Obsidian PBT</span>
+              </div>
+              <div className="flex flex-col p-2.5 rounded-lg border border-zinc-200/50 dark:border-zinc-800/40 bg-zinc-50/50 dark:bg-zinc-900/40">
+                <span className="text-[8px] font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">Weight</span>
+                <span className="text-xs font-bold text-zinc-700 dark:text-zinc-250 font-mono mt-0.5">145g Set</span>
+              </div>
+            </CardItem>
+
+            <div className="flex items-center justify-between mt-6">
+              <CardItem
+                translateZ={40}
+                className="text-base font-bold text-zinc-900 dark:text-white font-mono"
+              >
+                $189.00
+              </CardItem>
+              <CardItem
+                translateZ={translateZButton}
+                as="button"
+                className="rounded-lg bg-zinc-950 dark:bg-white text-white dark:text-zinc-950 px-4 py-2 text-xs font-bold transition-all hover:bg-zinc-800 dark:hover:bg-zinc-200 cursor-pointer shadow-md active:scale-95 focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-650"
+              >
+                Acquire Pro
+              </CardItem>
+            </div>
+          </CardBody>
+        </CardContainer>
+
+        {/* Real-time Config Panel (DialKit) */}
+        <div className="grid grid-cols-2 gap-4 w-full p-4 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="col-span-2 text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-1">
+            Real-time Config Kit (Props)
           </div>
-        </CardBody>
-      </CardContainer>
+          <DialKitSlider label="Image Lift (Z)" min={20} max={120} step={5} value={translateZImage} onChange={setTranslateZImage} suffix="px" />
+          <DialKitSlider label="Specs Lift (Z)" min={10} max={85} step={5} value={translateZSpecs} onChange={setTranslateZSpecs} suffix="px" />
+          <DialKitSlider label="Button Lift (Z)" min={10} max={80} step={5} value={translateZButton} onChange={setTranslateZButton} suffix="px" />
+          <DialKitSlider label="Title Lift (Z)" min={10} max={80} step={5} value={translateZTitle} onChange={setTranslateZTitle} suffix="px" />
+          <DialKitSlider label="Desc Lift (Z)" min={10} max={60} step={5} value={translateZDesc} onChange={setTranslateZDesc} suffix="px" />
+          <DialKitSlider label="Tilt Sensitivity" min={10} max={60} step={1} value={tiltSensitivity} onChange={setTiltSensitivity} />
+          
+          <div className="col-span-2 border-t border-zinc-100 dark:border-zinc-900 pt-3 mt-1 grid grid-cols-2 gap-4">
+            <DialKitSlider label="Sheen Opacity" min={0.0} max={1.0} step={0.05} value={sheenOpacity} onChange={setSheenOpacity} />
+            <DialKitSlider label="Glare Blur" min={0} max={40} step={1} value={glareBlur} onChange={setGlareBlur} suffix="px" />
+            <div className="col-span-2">
+              <DialKitSlider label="Card Border Radius" min={8} max={36} step={1} value={borderRadius} onChange={setBorderRadius} suffix="px" />
+            </div>
+          </div>
+        </div>
+      </div>
     )
   },
   "interactive-card": function InteractiveCardDemo() {
     const [key, setKey] = React.useState(0)
+    const [intensity, setIntensity] = React.useState(1.0)
+    const [spotlightSize, setSpotlightSize] = React.useState(300)
+    const [borderRadius, setBorderRadius] = React.useState(24)
+    const [glowRadius, setGlowRadius] = React.useState(40)
+
     return (
       <div className="flex flex-col items-center gap-6 w-full max-w-sm">
         <InteractiveCard
-          key={key}
+          key={`${key}-${intensity}-${spotlightSize}-${borderRadius}-${glowRadius}`}
           animated={true}
-          glowIntensity={1.0}
+          glowIntensity={intensity}
+          spotlightSize={spotlightSize}
+          borderRadius={borderRadius}
+          glowRadius={glowRadius}
           className="w-full"
           glowColor="320 80 60"
           spotlightColor="rgba(236, 72, 153, 0.15)"
           colors={["#f472b6", "#ec4899", "#8b5cf6"]}
-          borderRadius={24}
         >
           <CardBody className="relative h-auto w-full p-6 text-zinc-150 flex flex-col justify-between">
+            {/* Ambient backdrop glow circle inside */}
+            <div className="absolute inset-0 w-full h-full -z-10 rounded-[inherit] overflow-hidden pointer-events-none opacity-40">
+              <div className="absolute bottom-[-10%] left-[-10%] size-[55%] rounded-full bg-pink-600/10 blur-[50px]" />
+            </div>
+
             <div>
               <div className="flex items-center justify-between">
                 <CardItem
@@ -766,6 +1151,17 @@ const demos: Record<string, React.ComponentType> = {
             </div>
           </CardBody>
         </InteractiveCard>
+
+        {/* Real-time Config Panel (DialKit) */}
+        <div className="grid grid-cols-2 gap-4 w-full p-4 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="col-span-2 text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-1 font-sans">
+            Real-time Config Kit (Props)
+          </div>
+          <DialKitSlider label="Glow Intensity" min={0.2} max={2.0} step={0.1} value={intensity} onChange={setIntensity} />
+          <DialKitSlider label="Spotlight Radius" min={150} max={450} step={10} value={spotlightSize} onChange={setSpotlightSize} suffix="px" />
+          <DialKitSlider label="Border Radius" min={12} max={36} step={1} value={borderRadius} onChange={setBorderRadius} suffix="px" />
+          <DialKitSlider label="Glow Radius" min={20} max={80} step={5} value={glowRadius} onChange={setGlowRadius} suffix="px" />
+        </div>
       </div>
     )
   },

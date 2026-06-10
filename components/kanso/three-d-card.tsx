@@ -10,6 +10,7 @@ const MouseEnterContext = React.createContext<
 interface CardContainerProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode
   containerClassName?: string
+  tiltSensitivity?: number
 }
 
 /**
@@ -19,6 +20,7 @@ function CardContainer({
   children,
   className,
   containerClassName,
+  tiltSensitivity = 25,
   ...props
 }: CardContainerProps) {
   const containerRef = React.useRef<HTMLDivElement>(null)
@@ -27,9 +29,16 @@ function CardContainer({
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!containerRef.current) return
     const { left, top, width, height } = containerRef.current.getBoundingClientRect()
-    const x = (e.clientX - left - width / 2) / 25
-    const y = (e.clientY - top - height / 2) / 25
+    const x = (e.clientX - left - width / 2) / tiltSensitivity
+    const y = (e.clientY - top - height / 2) / tiltSensitivity
     
+    const mouseX = e.clientX - left
+    const mouseY = e.clientY - top
+    containerRef.current.style.setProperty("--mouse-x", `${mouseX}px`)
+    containerRef.current.style.setProperty("--mouse-y", `${mouseY}px`)
+    containerRef.current.style.setProperty("--mouse-x-pct", `${(mouseX / width) * 100}%`)
+    containerRef.current.style.setProperty("--mouse-y-pct", `${(mouseY / height) * 100}%`)
+
     // Disable transition during active mouse movement for real-time tracking
     containerRef.current.style.transition = "none"
     containerRef.current.style.transform = `rotateY(${x}deg) rotateX(${y}deg)`
@@ -48,6 +57,11 @@ function CardContainer({
     // Buttery smooth snap-back transition on leave
     containerRef.current.style.transition = "transform 0.5s cubic-bezier(0.03, 0.98, 0.52, 0.99)"
     containerRef.current.style.transform = `rotateY(0deg) rotateX(0deg)`
+    
+    containerRef.current.style.removeProperty("--mouse-x")
+    containerRef.current.style.removeProperty("--mouse-y")
+    containerRef.current.style.removeProperty("--mouse-x-pct")
+    containerRef.current.style.removeProperty("--mouse-y-pct")
   }
 
   return (
