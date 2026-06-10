@@ -64,7 +64,6 @@ export const ColorPicker = ({
   className,
   ...props
 }: ColorPickerProps) => {
-  const defaultColor = useMemo(() => Color(defaultValue), [defaultValue])
   const initialColor = useMemo(() => Color(value || defaultValue), [value, defaultValue])
 
   const [hue, setHue] = useState(initialColor.hue() || 0)
@@ -78,11 +77,19 @@ export const ColorPicker = ({
     if (value) {
       try {
         const color = Color(value).hsl()
-        setHue(color.hue() || 0)
-        setSaturation(color.saturationl() || 0)
-        setLightness(color.lightness() || 0)
-        setAlpha(color.alpha() * 100)
-      } catch (e) {
+        const newHue = color.hue() || 0
+        const newSat = color.saturationl() || 0
+        const newLight = color.lightness() || 0
+        const newAlpha = color.alpha() * 100
+
+        const handle = requestAnimationFrame(() => {
+          setHue(newHue)
+          setSaturation(newSat)
+          setLightness(newLight)
+          setAlpha(newAlpha)
+        })
+        return () => cancelAnimationFrame(handle)
+      } catch {
         // Handle malformed colors gracefully
       }
     }
@@ -104,7 +111,7 @@ export const ColorPicker = ({
           colorString = color.toString()
         }
         onChange(colorString)
-      } catch (e) {
+      } catch {
         // Safe fallback
       }
     }
@@ -135,8 +142,6 @@ export type ColorPickerSelectionProps = HTMLAttributes<HTMLDivElement>
 export const ColorPickerSelection = memo(({ className, ...props }: ColorPickerSelectionProps) => {
   const containerRef = useRef<HTMLDivElement>(null)
   const [isDragging, setIsDragging] = useState(false)
-  const [positionX, setPositionX] = useState(0)
-  const [positionY, setPositionY] = useState(0)
   const { hue, saturation, lightness, setSaturation, setLightness } = useColorPicker()
 
   const backgroundGradient = useMemo(() => {
@@ -145,14 +150,11 @@ export const ColorPickerSelection = memo(({ className, ...props }: ColorPickerSe
             hsl(${hue}, 100%, 50%)`
   }, [hue])
 
-  // Sync internal pointer coordinates with outer state
-  useEffect(() => {
-    const x = saturation / 100
-    const topLightness = x < 0.01 ? 100 : 50 + 50 * (1 - x)
-    const y = 1 - (lightness / topLightness)
-    setPositionX(Math.max(0, Math.min(1, x)))
-    setPositionY(Math.max(0, Math.min(1, y)))
-  }, [saturation, lightness])
+  // Derive coordinates directly from saturation and lightness state
+  const x = saturation / 100
+  const topLightness = x < 0.01 ? 100 : 50 + 50 * (1 - x)
+  const positionX = Math.max(0, Math.min(1, x))
+  const positionY = Math.max(0, Math.min(1, 1 - (lightness / topLightness)))
 
   const handlePointerMove = useCallback(
     (event: PointerEvent) => {
@@ -321,7 +323,7 @@ export const ColorPickerOutput = ({ className, ...props }: ColorPickerOutputProp
 
   return (
     <Select onValueChange={(val) => { if (val) setMode(val) }} value={mode}>
-      <SelectTrigger className="h-8 w-20 shrink-0 text-xs" {...props}>
+      <SelectTrigger className={cn("h-8 w-20 shrink-0 text-xs", className)} {...props}>
         <SelectValue placeholder="Mode" />
       </SelectTrigger>
       <SelectContent>
