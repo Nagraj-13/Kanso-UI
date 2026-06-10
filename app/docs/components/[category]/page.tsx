@@ -1,7 +1,7 @@
 //app/docs/components/[category]/page.tsx
 import * as React from "react"
 import { notFound } from "next/navigation"
-import { getComponentsByCategory, getCategories } from "@/lib/registry"
+import { getComponentsByCategory, getCategories, type RegistryComponent } from "@/lib/registry"
 import { CategoryShowcase } from "@/components/docs/category-showcase"
 
 interface PageProps {
@@ -17,6 +17,10 @@ const categoryMeta: Record<string, { label: string; description: string }> = {
   effects: {
     label: "Effects",
     description: "Visual enhancements and GPU-accelerated motion decorations to emphasize elements.",
+  },
+  cards: {
+    label: "Cards",
+    description: "Minimalist and interactive cards featuring 3D tilt, spotlight, and border glow effects.",
   },
   typography: {
     label: "Typography",
@@ -61,7 +65,7 @@ export async function generateMetadata({ params }: PageProps) {
 
 export default async function CategoryPage({ params }: PageProps) {
   const { category } = await params
-  const components = getComponentsByCategory(category as any)
+  const components = getComponentsByCategory(category as RegistryComponent["category"])
 
   if (components.length === 0) {
     notFound()

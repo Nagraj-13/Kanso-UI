@@ -6,7 +6,6 @@ import { createHighlighter } from "shiki"
 import { registry, getComponent } from "@/lib/registry"
 import { ComponentDemo } from "@/components/docs/component-demos"
 import { CodeBlock, TerminalBlock } from "@/components/docs/code-block"
-import { TableOfContents } from "@/components/docs/table-of-contents"
 import Link from "next/link"
 import { ArrowLeftIcon } from "lucide-react"
 import {

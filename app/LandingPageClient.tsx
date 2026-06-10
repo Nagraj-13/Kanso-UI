@@ -14,21 +14,14 @@ import {
   SunIcon,
   SparklesIcon,
   CheckCircle2Icon,
-  ArrowRightIcon,
   SearchIcon,
-  TerminalIcon,
   ArrowUpRightIcon,
-  ChevronRightIcon,
-  BookOpenIcon,
-  LayersIcon,
   MenuIcon,
   XIcon,
-  MessageSquareIcon,
   SparkleIcon,
   SettingsIcon,
   UserIcon,
-  ShieldAlertIcon,
-  CreditCardIcon
+  ShieldAlertIcon
 } from "lucide-react"
 import { useTheme } from "next-themes"
 
@@ -41,6 +34,8 @@ import { ShimmerBorder } from "@/components/kanso/shimmer-border"
 import { TextReveal } from "@/components/kanso/text-reveal"
 import { GITHUB_URL } from "@/lib/constants"
 import { GithubButton } from "@/components/kanso/github-button"
+import { InteractiveCard, CardBody, CardItem } from "@/components/kanso/interactive-card"
+import { SpotlightCard } from "@/components/kanso/spotlight-card"
 import {
   Card,
   CardHeader,
@@ -110,7 +105,7 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
   const elementRef = React.useRef<HTMLSpanElement>(null)
 
   React.useEffect(() => {
-    let start = 0
+    const start = 0
     const end = parseInt(value.replace(/[^0-9]/g, ""), 10) || 0
     if (start === end) return
 
@@ -176,8 +171,10 @@ export default function LandingPageClient({
   const [selectedShowcase, setSelectedShowcase] = React.useState<
     "buttons" | "cards" | "dialogs" | "inputs" | "command" | "pricing"
   >("buttons")
+  const [heroTab, setHeroTab] = React.useState<"preview" | "code">("preview")
   React.useEffect(() => {
-    setMounted(true)
+    const handle = requestAnimationFrame(() => setMounted(true))
+    return () => cancelAnimationFrame(handle)
   }, [])
 
   return (
@@ -331,12 +328,17 @@ export default function LandingPageClient({
       </header>
 
       {/* Hero Section */}
-      <section className="relative mx-auto max-w-7xl px-6 pt-24 pb-32 md:px-8 md:pt-32">
-        <div className="grid items-center gap-16 lg:grid-cols-12 lg:gap-12">
+      <section className="relative mx-auto max-w-7xl px-6 pt-24 pb-32 md:px-8 md:pt-32 overflow-hidden">
+        {/* Ambient background blob */}
+        <div className="pointer-events-none absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 animate-pulse duration-[8s]" aria-hidden="true">
+          <div className="relative left-[calc(50%-15rem)] aspect-1155/678 w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-purple-500/10 to-indigo-600/15 opacity-40 dark:from-purple-500/15 dark:to-indigo-600/20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style={{ clipPath: "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" }} />
+        </div>
+
+        <div className="grid items-center gap-16 lg:grid-cols-12 lg:gap-12 relative z-10">
           {/* Hero Left Content */}
           <div className="flex flex-col items-start lg:col-span-7">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-3.5 py-1 text-xs font-medium dark:border-zinc-800 dark:bg-zinc-900/50">
-              <SparklesIcon className="size-3.5 text-zinc-600 dark:text-zinc-400" />
+            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-3.5 py-1.5 text-xs font-medium dark:border-zinc-800 dark:bg-zinc-900/50">
+              <SparklesIcon className="size-3.5 text-zinc-650 dark:text-zinc-400" />
               <span className="text-zinc-600 dark:text-zinc-400">Introducing Kanso UI</span>
             </div>
 
@@ -344,13 +346,13 @@ export default function LandingPageClient({
               Build Beautiful Interfaces Without Complexity
             </h1>
 
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-zinc-500 dark:text-zinc-400">
-              Thoughtfully designed React components for modern applications. Inspired by Zen aesthetics and engineered for peak developer experience.
+            <p className="mt-6 max-w-lg text-lg leading-relaxed text-zinc-500 dark:text-zinc-455">
+              Thoughtfully designed React components for modern applications. Inspired by Zen minimalism and engineered for peak performance and copy-paste ease.
             </p>
 
             <div className="mt-10 flex flex-wrap gap-4 w-full sm:w-auto items-center">
               <Button
-                className="w-full sm:w-auto px-6 h-11"
+                className="w-full sm:w-auto px-6 h-11 text-sm font-semibold cursor-pointer shadow-sm"
                 render={<Link href="/docs" />}
               >
                 Browse Components
@@ -365,21 +367,122 @@ export default function LandingPageClient({
             </div>
           </div>
 
-          {/* Hero Right Code Card (Floating Code Preview) */}
-          <div className="flex justify-center lg:col-span-5 w-full min-w-0">
-            <motion.div
-              animate={{ y: [0, -8, 0] }}
-              transition={{ repeat: Infinity, duration: 6, ease: "easeInOut" }}
-              className="w-full max-w-[420px] shadow-2xl min-w-0"
-            >
-              <CodeBlock
-                html={heroHtml}
-                rawCode={heroRaw}
-                filename="ButtonDemo.tsx"
-                showLineNumbers={true}
-                collapsible={false}
-              />
-            </motion.div>
+          {/* Hero Right Code Card (Floating Tabbed Showcase) */}
+          <div className="flex flex-col items-center justify-center lg:col-span-5 w-full min-w-0 gap-6">
+            {/* Tab Selector Buttons */}
+            <div className="flex rounded-lg border border-zinc-200/80 p-0.5 bg-zinc-150/40 dark:border-zinc-800 dark:bg-zinc-900/60 shadow-xs">
+              <button
+                onClick={() => setHeroTab("preview")}
+                className={cn(
+                  "px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer",
+                  heroTab === "preview"
+                    ? "bg-white dark:bg-zinc-800 text-zinc-950 dark:text-white shadow-xs"
+                    : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                )}
+              >
+                Interactive Preview
+              </button>
+              <button
+                onClick={() => setHeroTab("code")}
+                className={cn(
+                  "px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer",
+                  heroTab === "code"
+                    ? "bg-white dark:bg-zinc-800 text-zinc-950 dark:text-white shadow-xs"
+                    : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
+                )}
+              >
+                Code Snippet
+              </button>
+            </div>
+
+            {/* Display container */}
+            <div className="w-full max-w-[420px] min-h-[400px] flex items-center justify-center min-w-0">
+              <AnimatePresence mode="wait">
+                {heroTab === "preview" ? (
+                  <motion.div
+                    key="preview"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    className="w-full flex justify-center"
+                  >
+                    <InteractiveCard
+                      animated={true}
+                      glowColor="280 80 70"
+                      spotlightColor="rgba(168, 85, 247, 0.15)"
+                      colors={["#c084fc", "#f472b6", "#38bdf8"]}
+                      className="w-full max-w-[360px]"
+                      borderRadius={24}
+                    >
+                      <CardBody className="relative h-auto w-full p-6 text-zinc-150 flex flex-col justify-between">
+                        <div>
+                          <div className="flex items-center justify-between">
+                            <CardItem
+                              translateZ={40}
+                              className="text-[10px] font-semibold uppercase tracking-wider text-purple-400 px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20"
+                            >
+                              Interact Me
+                            </CardItem>
+                            <span className="text-zinc-650 dark:text-zinc-550 text-[10px] font-mono select-none">
+                              Kanso UI
+                            </span>
+                          </div>
+
+                          <CardItem
+                            translateZ={60}
+                            className="mt-6 text-2xl font-bold tracking-tight text-white"
+                          >
+                            Zen Interaction
+                          </CardItem>
+
+                          <CardItem
+                            translateZ={30}
+                            className="mt-2.5 text-xs text-zinc-400 leading-relaxed"
+                          >
+                            Hover, tilt in 3D, and move your cursor to explore high-performance spotlights and conic mesh gradient borders.
+                          </CardItem>
+                        </div>
+
+                        <div className="flex items-center justify-between mt-8">
+                          <CardItem
+                            translateZ={25}
+                            className="text-xs font-semibold text-zinc-500 font-mono"
+                          >
+                            Copy-Paste Ready
+                          </CardItem>
+                          <CardItem
+                            translateZ={70}
+                            as={Link}
+                            href="/docs"
+                            className="rounded-lg bg-white px-3.5 py-2 text-xs font-semibold text-zinc-950 hover:bg-zinc-200 transition-colors cursor-pointer border border-transparent shadow-md"
+                          >
+                            Get Started
+                          </CardItem>
+                        </div>
+                      </CardBody>
+                    </InteractiveCard>
+                  </motion.div>
+                ) : (
+                  <motion.div
+                    key="code"
+                    initial={{ opacity: 0, scale: 0.95 }}
+                    animate={{ opacity: 1, scale: 1 }}
+                    exit={{ opacity: 0, scale: 0.95 }}
+                    transition={{ duration: 0.2 }}
+                    className="w-full min-w-0"
+                  >
+                    <CodeBlock
+                      html={heroHtml}
+                      rawCode={heroRaw}
+                      filename="CardDemo.tsx"
+                      showLineNumbers={true}
+                      collapsible={false}
+                    />
+                  </motion.div>
+                )}
+              </AnimatePresence>
+            </div>
           </div>
         </div>
       </section>
@@ -398,82 +501,70 @@ export default function LandingPageClient({
 
           <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {/* Feature 1 */}
-            <Card className="border border-zinc-200/80 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40">
-              <CardHeader className="p-0">
-                <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-                  <AccessibilityIcon className="size-5 text-zinc-600 dark:text-zinc-400" />
-                </div>
-                <CardTitle className="mt-4 text-base font-semibold">Accessible by Default</CardTitle>
-                <CardDescription className="mt-2 text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                  Engineered using Radix and Base UI primitive outlines. Full keyboard navigation and proper screen reader support.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <SpotlightCard className="p-6 border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-900/40 shadow-xs rounded-2xl">
+              <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
+                <AccessibilityIcon className="size-5 text-zinc-650 dark:text-zinc-400" />
+              </div>
+              <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-50">Accessible by Default</h3>
+              <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                Engineered using Radix and Base UI primitive outlines. Full keyboard navigation and proper screen reader support.
+              </p>
+            </SpotlightCard>
 
             {/* Feature 2 */}
-            <Card className="border border-zinc-200/80 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40">
-              <CardHeader className="p-0">
-                <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-                  <CopyIcon className="size-5 text-zinc-600 dark:text-zinc-400" />
-                </div>
-                <CardTitle className="mt-4 text-base font-semibold">Copy-Paste Components</CardTitle>
-                <CardDescription className="mt-2 text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                  No complex setup or heavy registry dependencies. Copy the component code directly into your folder structure.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <SpotlightCard className="p-6 border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-900/40 shadow-xs rounded-2xl">
+              <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
+                <CopyIcon className="size-5 text-zinc-650 dark:text-zinc-400" />
+              </div>
+              <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-50">Copy-Paste Components</h3>
+              <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                No complex setup or heavy registry dependencies. Copy the component code directly into your folder structure.
+              </p>
+            </SpotlightCard>
 
             {/* Feature 3 */}
-            <Card className="border border-zinc-200/80 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40">
-              <CardHeader className="p-0">
-                <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-                  <Code2Icon className="size-5 text-zinc-600 dark:text-zinc-400" />
-                </div>
-                <CardTitle className="mt-4 text-base font-semibold">TypeScript First</CardTitle>
-                <CardDescription className="mt-2 text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                  Fully typed components with explicit contracts. Get code completion and compile-time warnings right in your editor.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <SpotlightCard className="p-6 border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-900/40 shadow-xs rounded-2xl">
+              <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
+                <Code2Icon className="size-5 text-zinc-650 dark:text-zinc-400" />
+              </div>
+              <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-50">TypeScript First</h3>
+              <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                Fully typed components with explicit contracts. Get code completion and compile-time warnings right in your editor.
+              </p>
+            </SpotlightCard>
 
             {/* Feature 4 */}
-            <Card className="border border-zinc-200/80 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40">
-              <CardHeader className="p-0">
-                <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-                  <MoonIcon className="size-5 text-zinc-600 dark:text-zinc-400" />
-                </div>
-                <CardTitle className="mt-4 text-base font-semibold">Dark Mode Ready</CardTitle>
-                <CardDescription className="mt-2 text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                  Native class-based dark mode design. Easily adapt color schemes using CSS variables and Tailwind variables.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <SpotlightCard className="p-6 border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-900/40 shadow-xs rounded-2xl">
+              <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
+                <MoonIcon className="size-5 text-zinc-650 dark:text-zinc-400" />
+              </div>
+              <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-50">Dark Mode Ready</h3>
+              <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                Native class-based dark mode design. Easily adapt color schemes using CSS variables and Tailwind variables.
+              </p>
+            </SpotlightCard>
 
             {/* Feature 5 */}
-            <Card className="border border-zinc-200/80 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40">
-              <CardHeader className="p-0">
-                <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-                  <SparkleIcon className="size-5 text-zinc-600 dark:text-zinc-400" />
-                </div>
-                <CardTitle className="mt-4 text-base font-semibold">Beautiful Defaults</CardTitle>
-                <CardDescription className="mt-2 text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                  Clean, minimalist aesthetics inspired by Zen. Neutral borders, clear indicators, and generous spacing.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <SpotlightCard className="p-6 border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-900/40 shadow-xs rounded-2xl">
+              <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
+                <SparkleIcon className="size-5 text-zinc-650 dark:text-zinc-400" />
+              </div>
+              <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-50">Beautiful Defaults</h3>
+              <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                Clean, minimalist aesthetics inspired by Zen. Neutral borders, clear indicators, and generous spacing.
+              </p>
+            </SpotlightCard>
 
             {/* Feature 6 */}
-            <Card className="border border-zinc-200/80 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40">
-              <CardHeader className="p-0">
-                <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-                  <CheckCircle2Icon className="size-5 text-zinc-600 dark:text-zinc-400" />
-                </div>
-                <CardTitle className="mt-4 text-base font-semibold">Production Ready</CardTitle>
-                <CardDescription className="mt-2 text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                  Optimized for fast rendering and minimal bundle overhead. Battle-tested component design for scaling web apps.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <SpotlightCard className="p-6 border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-900/40 shadow-xs rounded-2xl">
+              <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
+                <CheckCircle2Icon className="size-5 text-zinc-650 dark:text-zinc-400" />
+              </div>
+              <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-50">Production Ready</h3>
+              <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                Optimized for fast rendering and minimal bundle overhead. Battle-tested component design for scaling web apps.
+              </p>
+            </SpotlightCard>
           </div>
         </div>
       </section>
@@ -499,7 +590,7 @@ export default function LandingPageClient({
               <div>
                 <h3 className="text-base font-semibold text-zinc-900 dark:text-white">Magnetic Button</h3>
                 <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed min-h-[40px]">
-                  Attracts elements smoothly to the user's cursor on hover. Built with spring physics for natural, responsive movement.
+                  Attracts elements smoothly to the user&apos;s cursor on hover. Built with spring physics for natural, responsive movement.
                 </p>
                 <div className="mt-6 flex h-40 items-center justify-center rounded-lg border border-dashed border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30">
                   <MagneticButton>Hover Magnet</MagneticButton>
@@ -588,18 +679,18 @@ export default function LandingPageClient({
           <div className="mt-16 grid items-start gap-8 lg:grid-cols-12 w-full min-w-0">
             {/* Left selector menu */}
             <div className="flex gap-2 overflow-x-auto pb-4 lg:col-span-3 lg:flex-col lg:overflow-visible lg:pb-0 w-full">
-              {[
+              {([
                 { id: "buttons", label: "Buttons" },
                 { id: "cards", label: "Cards" },
                 { id: "dialogs", label: "Dialogs" },
                 { id: "inputs", label: "Inputs" },
                 { id: "command", label: "Command Menu" },
                 { id: "pricing", label: "Pricing Cards" }
-              ].map((item) => (
+              ] as const).map((item) => (
                 <Button
                   key={item.id}
                   variant={selectedShowcase === item.id ? "default" : "ghost"}
-                  onClick={() => setSelectedShowcase(item.id as any)}
+                  onClick={() => setSelectedShowcase(item.id)}
                   className={cn(
                     "justify-start px-4 py-2.5 text-sm font-medium transition-all shrink-0",
                     selectedShowcase !== item.id && "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
@@ -919,58 +1010,52 @@ export default function LandingPageClient({
 
           <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {/* Testimonial 1 */}
-            <Card className="border border-zinc-200/80 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40">
-              <CardContent className="p-0">
-                <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-                  "The layout rules and visual patterns in Kanso UI match exactly what we need for modern enterprise platforms. Simplicity is indeed engineered directly in."
-                </p>
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="size-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center font-bold text-xs">
-                    AB
-                  </div>
-                  <div>
-                    <h5 className="text-xs font-semibold">Alexander Boyd</h5>
-                    <p className="text-[11px] text-zinc-500">Design Engineer, Linear</p>
-                  </div>
+            <SpotlightCard className="border border-zinc-200/80 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40 rounded-2xl">
+              <p className="text-sm leading-relaxed text-zinc-655 dark:text-zinc-300">
+                {"\"The layout rules and visual patterns in Kanso UI match exactly what we need for modern enterprise platforms. Simplicity is indeed engineered directly in.\""}
+              </p>
+              <div className="mt-6 flex items-center gap-3">
+                <div className="size-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center font-bold text-xs">
+                  AB
                 </div>
-              </CardContent>
-            </Card>
+                <div>
+                  <h5 className="text-xs font-semibold">Alexander Boyd</h5>
+                  <p className="text-[11px] text-zinc-550">Design Engineer, Linear</p>
+                </div>
+              </div>
+            </SpotlightCard>
 
             {/* Testimonial 2 */}
-            <Card className="border border-zinc-200/80 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40">
-              <CardContent className="p-0">
-                <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-                  "Having WCAG accessibility compliant outlines right out of the box saved us weeks of audit fixing. The styling is perfectly minimal."
-                </p>
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="size-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center font-bold text-xs">
-                    MK
-                  </div>
-                  <div>
-                    <h5 className="text-xs font-semibold">Mia Koyama</h5>
-                    <p className="text-[11px] text-zinc-500">Lead Frontend, Stripe</p>
-                  </div>
+            <SpotlightCard className="border border-zinc-200/80 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40 rounded-2xl">
+              <p className="text-sm leading-relaxed text-zinc-655 dark:text-zinc-300">
+                {"\"Having WCAG accessibility compliant outlines right out of the box saved us weeks of audit fixing. The styling is perfectly minimal.\""}
+              </p>
+              <div className="mt-6 flex items-center gap-3">
+                <div className="size-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center font-bold text-xs">
+                  MK
                 </div>
-              </CardContent>
-            </Card>
+                <div>
+                  <h5 className="text-xs font-semibold">Mia Koyama</h5>
+                  <p className="text-[11px] text-zinc-555">Lead Frontend, Stripe</p>
+                </div>
+              </div>
+            </SpotlightCard>
 
             {/* Testimonial 3 */}
-            <Card className="border border-zinc-200/80 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40">
-              <CardContent className="p-0">
-                <p className="text-sm leading-relaxed text-zinc-600 dark:text-zinc-300">
-                  "Copy-paste setup means I don't need to add another complex library bundle. I copy precisely the components I need, modify the props, and build."
-                </p>
-                <div className="mt-6 flex items-center gap-3">
-                  <div className="size-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center font-bold text-xs">
-                    DR
-                  </div>
-                  <div>
-                    <h5 className="text-xs font-semibold">David Ross</h5>
-                    <p className="text-[11px] text-zinc-500">CTO, Vercel Templates</p>
-                  </div>
+            <SpotlightCard className="border border-zinc-200/80 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40 rounded-2xl">
+              <p className="text-sm leading-relaxed text-zinc-655 dark:text-zinc-300">
+                {"\"Copy-paste setup means I don't need to add another complex library bundle. I copy precisely the components I need, modify the props, and build.\""}
+              </p>
+              <div className="mt-6 flex items-center gap-3">
+                <div className="size-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center font-bold text-xs">
+                  DR
                 </div>
-              </CardContent>
-            </Card>
+                <div>
+                  <h5 className="text-xs font-semibold">David Ross</h5>
+                  <p className="text-[11px] text-zinc-555">CTO, Vercel Templates</p>
+                </div>
+              </div>
+            </SpotlightCard>
           </div>
         </div>
       </section>

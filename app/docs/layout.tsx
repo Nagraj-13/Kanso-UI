@@ -1,8 +1,6 @@
 //app/docs/layout.tsx
 import * as React from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { registry, getCategories } from "@/lib/registry"
+import { getCategories } from "@/lib/registry"
 import { DocsLayoutClient } from "./layout-client"
 
 export const metadata = {
@@ -14,6 +12,7 @@ export const metadata = {
 const categoryMeta: Record<string, { label: string; icon: string }> = {
   buttons: { label: "Buttons", icon: "◉" },
   effects: { label: "Effects", icon: "✦" },
+  cards: { label: "Cards", icon: "❐" },
   layout: { label: "Layout", icon: "▣" },
   typography: { label: "Typography", icon: "Aa" },
   feedback: { label: "Feedback", icon: "◈" },
