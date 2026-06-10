@@ -10,6 +10,19 @@ import { GlowLineButton } from "@/components/kanso/glow-line-button"
 import { GithubButton } from "@/components/kanso/github-button"
 import { ShimmerBorder } from "@/components/kanso/shimmer-border"
 import { TextReveal } from "@/components/kanso/text-reveal"
+import { SpotlightSection, SpotSeparator } from "@/components/kanso/spotlight-section"
+import {
+  ColorPicker,
+  ColorPickerSelection,
+  ColorPickerHue,
+  ColorPickerAlpha,
+  ColorPickerEyeDropper,
+  ColorPickerOutput,
+  ColorPickerFormat,
+} from "@/components/kanso/color-picker"
+import { Button as UiButton } from "@/components/ui/button"
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
+import { Input } from "@/components/ui/input"
 import { GITHUB_URL } from "@/lib/constants"
 
 /**
@@ -194,8 +207,9 @@ const demos: Record<string, React.ComponentType> = {
             Custom Color Wheel Picker
           </div>
           <div className="flex items-center gap-4">
-            <div className="relative size-10 rounded-full overflow-hidden border border-zinc-300 dark:border-zinc-700 cursor-pointer shadow-sm">
+            <div suppressHydrationWarning className="relative size-10 rounded-full overflow-hidden border border-zinc-300 dark:border-zinc-700 cursor-pointer shadow-sm">
               <input
+                suppressHydrationWarning
                 type="color"
                 value={customColor}
                 onChange={(e) => setCustomColor(e.target.value)}
@@ -303,7 +317,7 @@ const demos: Record<string, React.ComponentType> = {
 
   "shimmer-border": function ShimmerBorderDemo() {
     return (
-      <div className="flex flex-wrap items-center justify-center gap-6">
+      <div className="flex flex-col gap-6 w-full max-w-sm">
         <ShimmerBorder>
           <div className="px-6 py-5">
             <h3 className="text-base font-semibold text-zinc-900 dark:text-zinc-100">
@@ -346,6 +360,207 @@ const demos: Record<string, React.ComponentType> = {
           staggerDelay={0.02}
           className="text-base text-zinc-500 dark:text-zinc-400 max-w-lg text-center"
         />
+      </div>
+    )
+  },
+
+  "spotlight-section": function SpotlightSectionDemo() {
+    type PresetColor = "white" | "blue" | "emerald" | "violet" | "rose"
+    const [selectedColor, setSelectedColor] = React.useState<PresetColor | "custom">("violet")
+    const [customColor, setCustomColor] = React.useState("#d946ef")
+    const [variant, setVariant] = React.useState<"both" | "top-only" | "bottom-only">("both")
+    const [intensity, setIntensity] = React.useState<"subtle" | "medium" | "high">("medium")
+
+    const colors: { name: PresetColor | "custom"; label: string; class: string }[] = [
+      { name: "white", label: "White", class: "bg-zinc-300 dark:bg-zinc-600" },
+      { name: "blue", label: "Blue", class: "bg-blue-500" },
+      { name: "emerald", label: "Emerald", class: "bg-emerald-500" },
+      { name: "violet", label: "Violet", class: "bg-violet-500" },
+      { name: "rose", label: "Rose", class: "bg-rose-500" },
+      { name: "custom", label: "Custom", class: "bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500" },
+    ]
+
+    const activeColor = selectedColor === "custom" ? customColor : selectedColor
+
+    return (
+      <div className="flex flex-col gap-10 w-full max-w-2xl items-center">
+        {/* Controls Panel */}
+        <div className="grid gap-6 w-full sm:grid-cols-2 p-5 rounded-2xl border border-zinc-200/60 bg-zinc-50/20 dark:border-zinc-800/60 dark:bg-zinc-900/10">
+          {/* Left Controls: Colors */}
+          <div className="flex flex-col gap-3">
+            <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest">
+              Spotlight Color Theme
+            </div>
+            <div className="flex flex-wrap items-center gap-2 mt-1">
+              {colors.map((c) => (
+                <button
+                  key={c.name}
+                  onClick={() => setSelectedColor(c.name)}
+                  className={cn(
+                    "flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-medium rounded-md transition-all border cursor-pointer",
+                    selectedColor === c.name
+                      ? "border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 shadow-xs"
+                      : "border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100"
+                  )}
+                  aria-label={`Select ${c.label} color`}
+                >
+                  <span className={cn("size-2 rounded-full shrink-0", c.class)} />
+                  {c.label}
+                </button>
+              ))}
+            </div>
+
+            {selectedColor === "custom" && (
+              <div className="flex items-center gap-3 mt-2 pl-1 animate-in fade-in slide-in-from-top-1 duration-200">
+                <Popover>
+                  <PopoverTrigger
+                    className="inline-flex shrink-0 items-center justify-center rounded-md border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 p-2 h-8 gap-2 px-3 py-1 cursor-pointer text-sm font-medium hover:bg-zinc-50 dark:hover:bg-zinc-900/50 shadow-xs"
+                  >
+                    <span
+                      className="size-3.5 rounded-full border border-black/10 dark:border-white/10 shrink-0"
+                      style={{ backgroundColor: customColor }}
+                    />
+                    <span className="font-mono text-xs uppercase text-zinc-600 dark:text-zinc-350">
+                      {customColor}
+                    </span>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-64 flex flex-col gap-3 p-4">
+                    <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">
+                      Custom Color Picker
+                    </div>
+                    <ColorPicker
+                      value={customColor}
+                      onChange={(val) => setCustomColor(val)}
+                      className="h-auto w-full gap-3"
+                    >
+                      <ColorPickerSelection className="h-32 rounded-md border border-zinc-200 dark:border-zinc-800" />
+                      <ColorPickerHue />
+                      <ColorPickerAlpha />
+                      <div className="flex items-center gap-2 mt-1">
+                        <ColorPickerEyeDropper />
+                        <ColorPickerOutput />
+                        <ColorPickerFormat />
+                      </div>
+                    </ColorPicker>
+                  </PopoverContent>
+                </Popover>
+              </div>
+            )}
+          </div>
+
+          {/* Right Controls: Variants & Intensity */}
+          <div className="flex flex-col gap-4">
+            {/* Variants */}
+            <div className="flex flex-col gap-2">
+              <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest">
+                Layout Border Variant
+              </div>
+              <div className="flex rounded-md border border-zinc-200 dark:border-zinc-800 p-0.5 w-fit bg-zinc-100/50 dark:bg-zinc-950/40">
+                {(["both", "top-only", "bottom-only"] as const).map((v) => (
+                  <button
+                    key={v}
+                    onClick={() => setVariant(v)}
+                    className={cn(
+                      "px-2.5 py-1 text-[11px] font-medium rounded-sm capitalize transition-all cursor-pointer",
+                      variant === v
+                        ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 shadow-xs"
+                        : "text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-200"
+                    )}
+                  >
+                    {v.replace("-only", "")}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Intensity */}
+            <div className="flex flex-col gap-2">
+              <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest">
+                Glow Intensity
+              </div>
+              <div className="flex rounded-md border border-zinc-200 dark:border-zinc-800 p-0.5 w-fit bg-zinc-100/50 dark:bg-zinc-950/40">
+                {(["subtle", "medium", "high"] as const).map((i) => (
+                  <button
+                    key={i}
+                    onClick={() => setIntensity(i)}
+                    className={cn(
+                      "px-2.5 py-1 text-[11px] font-medium rounded-sm capitalize transition-all cursor-pointer",
+                      intensity === i
+                        ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 shadow-xs"
+                        : "text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-200"
+                    )}
+                  >
+                    {i}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        {/* Live Spotlight Section Demo Container */}
+        <div className="w-full rounded-2xl border border-zinc-200/50 bg-zinc-50/5 p-4 dark:border-zinc-900/40 dark:bg-zinc-950/5 overflow-hidden">
+          <SpotlightSection
+            title="Ambient Interface Spotlight"
+            spotlightColor={activeColor}
+            variant={variant}
+            intensity={intensity}
+            className="w-full"
+          >
+            <div className="flex flex-col items-center justify-center text-center py-20 px-6 max-w-md mx-auto">
+              <span className="text-[11px] font-semibold tracking-wider text-zinc-400 dark:text-zinc-500 uppercase px-2 py-0.5 rounded-full border border-zinc-200/60 dark:border-zinc-800/80 bg-zinc-100/50 dark:bg-zinc-900/30">
+                Layout Element
+              </span>
+              <h3 className="mt-4 text-xl font-medium text-zinc-800 dark:text-zinc-200">
+                Minimalist Content Container
+              </h3>
+              <p className="mt-2.5 text-sm text-zinc-500 dark:text-zinc-400 leading-relaxed">
+                Add beautiful ambient glows to structure your product pages, landing sections, or feature highlights. Fits beautifully with dark themes.
+              </p>
+            </div>
+          </SpotlightSection>
+        </div>
+
+        {/* Separator Showcase */}
+        <div className="flex flex-col gap-6 w-full mt-2">
+          <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest text-center">
+            SpotSeparator Presets & Variations
+          </div>
+          
+          <div className="flex flex-col gap-8 w-full p-6 rounded-2xl border border-zinc-200/60 bg-zinc-50/20 dark:border-zinc-800/60 dark:bg-zinc-900/10">
+            <div className="flex flex-col gap-2.5 w-full">
+              <div className="text-[10px] text-zinc-400 font-mono">Zinc preset (80% width)</div>
+              <SpotSeparator color="zinc" width="80%" />
+            </div>
+
+            <div className="flex flex-col gap-2.5 w-full">
+              <div className="text-[10px] text-zinc-400 font-mono">Blue preset (60% width)</div>
+              <SpotSeparator color="blue" width="60%" />
+            </div>
+
+            <div className="flex flex-col gap-2.5 w-full">
+              <div className="text-[10px] text-zinc-400 font-mono">Emerald preset (40% width)</div>
+              <SpotSeparator color="emerald" width="40%" />
+            </div>
+
+            <div className="flex flex-col gap-2.5 w-full">
+              <div className="text-[10px] text-zinc-400 font-mono">Violet preset (20% width)</div>
+              <SpotSeparator color="violet" width="20%" />
+            </div>
+
+            <div className="flex flex-col gap-2.5 w-full">
+              <div className="text-[10px] text-zinc-400 font-mono">Rose preset (95% width, 2px height)</div>
+              <SpotSeparator color="rose" width="95%" height="2px" />
+            </div>
+
+            {selectedColor === "custom" && (
+              <div className="flex flex-col gap-2.5 w-full animate-in fade-in duration-300">
+                <div className="text-[10px] text-zinc-400 font-mono">Custom color separator ({customColor})</div>
+                <SpotSeparator color={customColor} width="85%" />
+              </div>
+            )}
+          </div>
+        </div>
       </div>
     )
   },
