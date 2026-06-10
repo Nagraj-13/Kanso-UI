@@ -12,36 +12,46 @@ export interface SpotlightSectionProps extends React.HTMLAttributes<HTMLElement>
   variant?: "both" | "top-only" | "bottom-only"
 }
 
-const colorMap = {
+const presetColors = {
   white: {
-    light: "rgba(0, 0, 0, 0.04)",
-    dark: "rgba(255, 255, 255, 0.08)",
-    lineLight: "rgba(0, 0, 0, 0.1)",
-    lineDark: "rgba(255, 255, 255, 0.15)",
+    light: "rgb(0, 0, 0)",
+    dark: "rgb(255, 255, 255)",
+    glowLightPct: 4,
+    glowDarkPct: 8,
+    lineLightPct: 10,
+    lineDarkPct: 15,
   },
   blue: {
-    light: "rgba(59, 130, 246, 0.08)",
-    dark: "rgba(59, 130, 246, 0.12)",
-    lineLight: "rgba(59, 130, 246, 0.3)",
-    lineDark: "rgba(59, 130, 246, 0.5)",
+    light: "rgb(59, 130, 246)",
+    dark: "rgb(59, 130, 246)",
+    glowLightPct: 8,
+    glowDarkPct: 12,
+    lineLightPct: 30,
+    lineDarkPct: 50,
   },
   emerald: {
-    light: "rgba(16, 185, 129, 0.08)",
-    dark: "rgba(16, 185, 129, 0.12)",
-    lineLight: "rgba(16, 185, 129, 0.3)",
-    lineDark: "rgba(16, 185, 129, 0.5)",
+    light: "rgb(16, 185, 129)",
+    dark: "rgb(16, 185, 129)",
+    glowLightPct: 8,
+    glowDarkPct: 12,
+    lineLightPct: 30,
+    lineDarkPct: 50,
   },
   violet: {
-    light: "rgba(139, 92, 246, 0.08)",
-    dark: "rgba(139, 92, 246, 0.12)",
-    lineLight: "rgba(139, 92, 246, 0.3)",
-    lineDark: "rgba(139, 92, 246, 0.5)",
+    light: "rgb(139, 92, 246)",
+    dark: "rgb(139, 92, 246)",
+    glowLightPct: 8,
+    glowDarkPct: 12,
+    lineLightPct: 30,
+    lineDarkPct: 50,
   },
   rose: {
-    light: "rgba(244, 63, 94, 0.08)",
-    dark: "rgba(244, 63, 94, 0.12)",
-    lineLight: "rgba(244, 63, 94, 0.3)",
-    lineDark: "rgba(244, 63, 94, 0.5)",
+    light: "rgb(244, 63, 94)",
+    dark: "rgb(244, 63, 94)",
+    glowLightPct: 8,
+    glowDarkPct: 12,
+    lineLightPct: 30,
+    lineDarkPct: 50,
   },
 }
 
@@ -63,25 +73,28 @@ export function SpotlightSection({
   }
   const intensityMultiplier = intensityMap[intensity]
 
-  // Construct color definitions
-  const customGlowLight = `color-mix(in srgb, ${spotlightColor} ${6 * intensityMultiplier}%, transparent)`
-  const customGlowDark = `color-mix(in srgb, ${spotlightColor} ${10 * intensityMultiplier}%, transparent)`
-  const customLineLight = `color-mix(in srgb, ${spotlightColor} ${30 * intensityMultiplier}%, transparent)`
-  const customLineDark = `color-mix(in srgb, ${spotlightColor} ${50 * intensityMultiplier}%, transparent)`
-
-  const cssVariables = isPreset
-    ? {
-        "--spotlight-glow-light": colorMap[spotlightColor as keyof typeof colorMap].light,
-        "--spotlight-glow-dark": colorMap[spotlightColor as keyof typeof colorMap].dark,
-        "--spotlight-line-light": colorMap[spotlightColor as keyof typeof colorMap].lineLight,
-        "--spotlight-line-dark": colorMap[spotlightColor as keyof typeof colorMap].lineDark,
-      }
+  const config = isPreset
+    ? presetColors[spotlightColor as keyof typeof presetColors]
     : {
-        "--spotlight-glow-light": customGlowLight,
-        "--spotlight-glow-dark": customGlowDark,
-        "--spotlight-line-light": customLineLight,
-        "--spotlight-line-dark": customLineDark,
+        light: spotlightColor,
+        dark: spotlightColor,
+        glowLightPct: 6,
+        glowDarkPct: 10,
+        lineLightPct: 30,
+        lineDarkPct: 50,
       }
+
+  const glowLight = `color-mix(in srgb, ${config.light} ${config.glowLightPct * intensityMultiplier}%, transparent)`
+  const glowDark = `color-mix(in srgb, ${config.dark} ${config.glowDarkPct * intensityMultiplier}%, transparent)`
+  const lineLight = `color-mix(in srgb, ${config.light} ${config.lineLightPct * intensityMultiplier}%, transparent)`
+  const lineDark = `color-mix(in srgb, ${config.dark} ${config.lineDarkPct * intensityMultiplier}%, transparent)`
+
+  const cssVariables = {
+    "--spotlight-glow-light": glowLight,
+    "--spotlight-glow-dark": glowDark,
+    "--spotlight-line-light": lineLight,
+    "--spotlight-line-dark": lineDark,
+  }
 
   const showTop = variant === "both" || variant === "top-only"
   const showBottom = variant === "both" || variant === "bottom-only"

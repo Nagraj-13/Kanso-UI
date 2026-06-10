@@ -3,15 +3,20 @@ import LandingPageClient from "./LandingPageClient"
 
 // --- Static Code Snippets for Shiki to highlight on Server ---
 
-const heroCode = `import { Button } from "@kanso/ui"
-import { ArrowRight } from "lucide-react"
+const heroCode = `import { InteractiveCard, CardBody, CardItem } from "@kanso/ui"
 
-export default function HeroDemo() {
+export default function CardDemo() {
   return (
-    <Button variant="default" size="lg">
-      Get Started
-      <ArrowRight className="size-4" />
-    </Button>
+    <InteractiveCard animated glowColor="280 80 70">
+      <CardBody className="p-6">
+        <CardItem translateZ={50} className="text-xl font-bold text-white">
+          Zen Interaction
+        </CardItem>
+        <CardItem translateZ={30} className="text-zinc-400 mt-2">
+          3D tilt, cursor spotlight, and edge border glow.
+        </CardItem>
+      </CardBody>
+    </InteractiveCard>
   )
 }`
 

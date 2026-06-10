@@ -59,7 +59,8 @@ export function DocsLayoutClient({
   const [search, setSearch] = React.useState("")
 
   React.useEffect(() => {
-    setMounted(true)
+    const handle = requestAnimationFrame(() => setMounted(true))
+    return () => cancelAnimationFrame(handle)
   }, [])
 
   // Filter items by search query
