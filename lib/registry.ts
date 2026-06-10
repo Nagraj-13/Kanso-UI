@@ -488,6 +488,63 @@ export default function TextRevealDemo() {
       },
     ],
   },
+  {
+    name: "spotlight-section",
+    title: "Spotlight Section",
+    description:
+      "A layout container featuring top and bottom gradient divider lines with ambient radial spotlights.",
+    category: "effects",
+    dependencies: [],
+    internalDeps: ["lib/utils"],
+    filePath: "components/kanso/spotlight-section.tsx",
+    tags: ["layout", "divider", "spotlight", "glow", "gradient", "separator"],
+    usage: `import { SpotlightSection, SpotSeparator } from "@/components/kanso/spotlight-section"
+
+export default function SpotlightSectionDemo() {
+  return (
+    <div className="w-full flex flex-col gap-12">
+      <SpotlightSection title="Spotlight Title" spotlightColor="violet">
+        <div className="py-8 text-center text-zinc-500">
+          Your section content goes here.
+        </div>
+      </SpotlightSection>
+
+      <SpotSeparator color="violet" width="50%" />
+    </div>
+  )
+}`,
+    props: [
+      {
+        name: "title",
+        type: "string",
+        description: "The header title displayed in the center of the top spotlight boundary.",
+      },
+      {
+        name: "spotlightColor",
+        type: '"white" | "blue" | "emerald" | "violet" | "rose" | string',
+        default: '"white"',
+        description: "The color theme of the spotlights and line accents. Supports preset names or custom CSS colors.",
+      },
+      {
+        name: "intensity",
+        type: '"subtle" | "medium" | "high"',
+        default: '"medium"',
+        description: "Controls the background spotlight glow opacity scale.",
+      },
+      {
+        name: "variant",
+        type: '"both" | "top-only" | "bottom-only"',
+        default: '"both"',
+        description: "Positions and renders either top, bottom, or both divider spotlight sections.",
+      },
+      {
+        name: "children",
+        type: "React.ReactNode",
+        description: "The inner content to render within the spotlight margins.",
+        required: true,
+      },
+    ],
+  },
 ]
 
 /**

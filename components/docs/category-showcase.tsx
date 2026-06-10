@@ -39,7 +39,7 @@ export function CategoryShowcase({
       <hr className="border-zinc-200/80 dark:border-zinc-800/60" />
 
       {/* Components Showcase Grid */}
-      <div className="grid gap-6 sm:grid-cols-2">
+      <div className="grid gap-6 grid-cols-1">
         {components.map((component) => (
           <Card
             key={component.name}
