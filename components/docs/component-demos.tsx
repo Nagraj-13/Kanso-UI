@@ -11,6 +11,10 @@ import { GithubButton } from "@/components/kanso/github-button"
 import { ShimmerBorder } from "@/components/kanso/shimmer-border"
 import { TextReveal } from "@/components/kanso/text-reveal"
 import { SpotlightSection, SpotSeparator } from "@/components/kanso/spotlight-section"
+import { BorderGlow } from "@/components/kanso/border-glow"
+import { SpotlightCard } from "@/components/kanso/spotlight-card"
+import { CardContainer, CardBody, CardItem } from "@/components/kanso/three-d-card"
+import { InteractiveCard } from "@/components/kanso/interactive-card"
 import {
   ColorPicker,
   ColorPickerSelection,
@@ -20,9 +24,7 @@ import {
   ColorPickerOutput,
   ColorPickerFormat,
 } from "@/components/kanso/color-picker"
-import { Button as UiButton } from "@/components/ui/button"
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
-import { Input } from "@/components/ui/input"
 import { GITHUB_URL } from "@/lib/constants"
 
 /**
@@ -383,7 +385,7 @@ const demos: Record<string, React.ComponentType> = {
     const activeColor = selectedColor === "custom" ? customColor : selectedColor
 
     return (
-      <div className="flex flex-col gap-10 w-full max-w-2xl items-center">
+      <div className="flex flex-col gap-10 w-full  items-center">
         {/* Controls Panel */}
         <div className="grid gap-6 w-full sm:grid-cols-2 p-5 rounded-2xl border border-zinc-200/60 bg-zinc-50/20 dark:border-zinc-800/60 dark:bg-zinc-900/10">
           {/* Left Controls: Colors */}
@@ -561,6 +563,209 @@ const demos: Record<string, React.ComponentType> = {
             )}
           </div>
         </div>
+      </div>
+    )
+  },
+  "border-glow": function BorderGlowDemo() {
+    const [key, setKey] = React.useState(0)
+    const [intensity, setIntensity] = React.useState(1.0)
+
+    return (
+      <div className="flex flex-col items-center gap-6 w-full max-w-md">
+        <BorderGlow
+          key={key}
+          animated={true}
+          glowIntensity={intensity}
+          className="w-full aspect-video"
+          glowColor="280 80 70"
+          colors={["#c084fc", "#f472b6", "#38bdf8"]}
+        >
+          <div className="flex flex-col justify-between h-full p-6 text-zinc-100">
+            <div>
+              <span className="text-[10px] uppercase tracking-wider text-purple-450 font-semibold px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20">
+                Active Sweep
+              </span>
+              <h3 className="mt-4 text-xl font-medium tracking-tight text-white">Kanso Border Glow</h3>
+              <p className="mt-1.5 text-xs text-zinc-400 leading-relaxed">
+                A premium, high-performance card using custom mesh gradient masks. Move your cursor to see the border and glow light up around the coordinates.
+              </p>
+            </div>
+            <div className="flex items-center justify-between text-[11px] text-zinc-500 font-mono">
+              <span>HSL: 280 80 70</span>
+              <span>Conic Mask</span>
+            </div>
+          </div>
+        </BorderGlow>
+
+        <div className="flex flex-wrap items-center justify-center gap-4 mt-2">
+          <button
+            onClick={() => setKey((k) => k + 1)}
+            className="px-3.5 py-1.5 text-xs font-semibold rounded-md border border-zinc-200 bg-white hover:bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-950 dark:hover:bg-zinc-900 transition-all shadow-xs cursor-pointer active:scale-95"
+          >
+            ⚡ Trigger Sweep Animation
+          </button>
+          <div className="flex items-center gap-2">
+            <span className="text-xs text-zinc-400 font-medium">Intensity:</span>
+            <input
+              type="range"
+              min="0.2"
+              max="2.0"
+              step="0.2"
+              value={intensity}
+              onChange={(e) => setIntensity(parseFloat(e.target.value))}
+              className="w-20 accent-purple-500 h-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none cursor-pointer"
+            />
+            <span className="text-xs font-mono text-zinc-500 w-6">{intensity.toFixed(1)}</span>
+          </div>
+        </div>
+      </div>
+    )
+  },
+  "spotlight-card": function SpotlightCardDemo() {
+    return (
+      <div className="grid gap-6 sm:grid-cols-3 w-full max-w-3xl">
+        <SpotlightCard className="p-6">
+          <div className="size-10 rounded-lg bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center border border-zinc-200/60 dark:border-zinc-800/80">
+            ✨
+          </div>
+          <h4 className="mt-4 font-semibold text-zinc-900 dark:text-zinc-50">Pure Simplicity</h4>
+          <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+            Minimalist aesthetics inspired by Japanese design. Clean, light-weight, and developer-friendly.
+          </p>
+        </SpotlightCard>
+
+        <SpotlightCard className="p-6" spotlightColor="rgba(168, 85, 247, 0.12)">
+          <div className="size-10 rounded-lg bg-purple-500/10 flex items-center justify-center border border-purple-500/20 text-purple-650 dark:text-purple-400">
+            🔮
+          </div>
+          <h4 className="mt-4 font-semibold text-purple-650 dark:text-purple-450">Indigo Accent</h4>
+          <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+            Customizable spotlight gradients. Override default options to match your product colors.
+          </p>
+        </SpotlightCard>
+
+        <SpotlightCard className="p-6">
+          <div className="size-10 rounded-lg bg-zinc-100 dark:bg-zinc-900 flex items-center justify-center border border-zinc-200/60 dark:border-zinc-800/80">
+            🚀
+          </div>
+          <h4 className="mt-4 font-semibold text-zinc-900 dark:text-zinc-50">Zero Re-renders</h4>
+          <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
+            Tracks cursor position via direct CSS variable mutations, bypassing component updates.
+          </p>
+        </SpotlightCard>
+      </div>
+    )
+  },
+  "three-d-card": function ThreeDCardDemo() {
+    return (
+      <CardContainer containerClassName="py-4">
+        <CardBody className="relative h-auto w-full max-w-sm rounded-2xl border border-zinc-200 bg-zinc-50/50 p-6 dark:border-zinc-850 dark:bg-zinc-900/30 shadow-xl">
+          <CardItem
+            translateZ={40}
+            className="text-lg font-semibold text-zinc-900 dark:text-zinc-50"
+          >
+            Kanso Keycap Pro
+          </CardItem>
+          
+          <CardItem
+            translateZ={20}
+            className="mt-1.5 text-xs text-zinc-500 dark:text-zinc-400"
+          >
+            Premium minimalist artisan cherry mx keycap.
+          </CardItem>
+
+          <CardItem
+            translateZ={60}
+            className="w-full mt-4 overflow-hidden rounded-xl bg-zinc-100 dark:bg-zinc-800 border border-zinc-200/50 dark:border-zinc-700/50 aspect-video flex items-center justify-center text-zinc-400 dark:text-zinc-650"
+          >
+            <svg viewBox="0 0 100 100" className="size-24 stroke-current stroke-[1.5] fill-none opacity-80">
+              <path d="M20 70 L35 25 L65 25 L80 70 Z" />
+              <path d="M35 25 L38 20 L62 20 L65 25" />
+              <circle cx="50" cy="45" r="8" className="stroke-zinc-300 dark:stroke-zinc-700" />
+              <path d="M47 45 H53 M50 42 V48" className="stroke-zinc-450 dark:stroke-zinc-500" />
+            </svg>
+          </CardItem>
+
+          <div className="flex items-center justify-between mt-6">
+            <CardItem
+              translateZ={30}
+              className="text-sm font-semibold text-zinc-850 dark:text-zinc-200 font-mono"
+            >
+              $39.00
+            </CardItem>
+            <CardItem
+              translateZ={80}
+              as="button"
+              className="rounded-lg bg-zinc-950 px-3 py-1.5 text-xs font-semibold text-zinc-50 transition-colors hover:bg-zinc-800 dark:bg-zinc-50 dark:text-zinc-950 dark:hover:bg-zinc-200 cursor-pointer border border-transparent focus:outline-none focus:ring-2 focus:ring-zinc-400 dark:focus:ring-zinc-700"
+            >
+              Buy Now
+            </CardItem>
+          </div>
+        </CardBody>
+      </CardContainer>
+    )
+  },
+  "interactive-card": function InteractiveCardDemo() {
+    const [key, setKey] = React.useState(0)
+    return (
+      <div className="flex flex-col items-center gap-6 w-full max-w-sm">
+        <InteractiveCard
+          key={key}
+          animated={true}
+          glowIntensity={1.0}
+          className="w-full"
+          glowColor="320 80 60"
+          spotlightColor="rgba(236, 72, 153, 0.15)"
+          colors={["#f472b6", "#ec4899", "#8b5cf6"]}
+          borderRadius={24}
+        >
+          <CardBody className="relative h-auto w-full p-6 text-zinc-150 flex flex-col justify-between">
+            <div>
+              <div className="flex items-center justify-between">
+                <CardItem
+                  translateZ={50}
+                  className="text-xs font-semibold uppercase tracking-wider text-pink-400 px-2 py-0.5 rounded-full bg-pink-500/10 border border-pink-500/20"
+                >
+                  Supreme Effect
+                </CardItem>
+                <CardItem translateZ={30} className="text-zinc-500 text-xs font-mono">
+                  All-in-One
+                </CardItem>
+              </div>
+
+              <CardItem
+                translateZ={60}
+                className="mt-6 text-2xl font-bold tracking-tight text-white"
+              >
+                Zen Interaction
+              </CardItem>
+
+              <CardItem
+                translateZ={40}
+                className="mt-2 text-xs text-zinc-400 leading-relaxed"
+              >
+                Moves in 3D perspective, tracks cursor coordinates via spotlight, and glows along the conic mesh gradient edges.
+              </CardItem>
+            </div>
+
+            <div className="flex items-center justify-between mt-8">
+              <CardItem
+                translateZ={45}
+                className="text-xs font-semibold text-zinc-300 font-mono"
+              >
+                Interactive Preview
+              </CardItem>
+              <CardItem
+                translateZ={90}
+                as="button"
+                onClick={() => setKey((k) => k + 1)}
+                className="rounded-lg bg-white px-3 py-1.5 text-xs font-semibold text-zinc-950 hover:bg-zinc-200 transition-colors cursor-pointer border border-transparent shadow-md active:scale-95"
+              >
+                Replay Sweep
+              </CardItem>
+            </div>
+          </CardBody>
+        </InteractiveCard>
       </div>
     )
   },
