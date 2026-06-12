@@ -408,19 +408,19 @@ export default function ShimmerBorderDemo() {
       {
         name: "shimmerColor",
         type: "string",
-        default: '"rgba(255, 255, 255, 0.15)"',
+        default: '"rgba(255, 255, 255, 0.2)"',
         description: "Color of the shimmer highlight.",
       },
       {
         name: "shimmerSize",
         type: "number",
-        default: "200",
-        description: "Width of the shimmer highlight in pixels.",
+        default: "25",
+        description: "Width of the shimmer conic gradient sweep as a percentage of the perimeter circle (10 to 50).",
       },
       {
         name: "duration",
         type: "number",
-        default: "3",
+        default: "3.5",
         description: "Animation cycle duration in seconds.",
       },
       {
@@ -708,6 +708,12 @@ export default function ThreeDCardDemo() {
         description: "Additional CSS classes for the outermost perspective container.",
       },
       {
+        name: "tiltSensitivity",
+        type: "number",
+        default: "25",
+        description: "How much the card tilts when hovered (lower values tilt more).",
+      },
+      {
         name: "translateX",
         type: "number | string",
         default: "0",
@@ -841,6 +847,564 @@ export default function InteractiveCardDemo() {
         type: "number",
         default: "300",
         description: "Radius width of spotlight circle overlays in pixels.",
+      },
+    ],
+  },
+  {
+    name: "liquid-metal-card",
+    title: "Liquid Metal Card",
+    description:
+      "A premium minimalist card featuring a real-time, interactive WebGL liquid metal shader overlay.",
+    category: "cards",
+    dependencies: ["@paper-design/shaders-react"],
+    internalDeps: ["lib/utils", "components/ui/button", "components/ui/badge"],
+    filePath: "components/kanso/liquid-metal-card.tsx",
+    tags: ["card", "shader", "webgl", "liquid-metal", "interactive", "animation"],
+    usage: `import { LiquidMetalCard } from "@/components/kanso/liquid-metal-card"
+
+export default function LiquidMetalCardDemo() {
+  return (
+    <LiquidMetalCard
+      title="Liquid Metal"
+      subtitle="Interact"
+      description="WebGL liquid metal shader effect running on a Kanso UI card container."
+      className="max-w-sm"
+    />
+  )
+}`,
+    props: [
+      {
+        name: "srTitle",
+        type: "string",
+        default: '"Kanso UI"',
+        description: "Screen reader only title of the card.",
+      },
+      {
+        name: "title",
+        type: "React.ReactNode",
+        default: "Kanso UI",
+        description: "The primary header text of the card.",
+      },
+      {
+        name: "subtitle",
+        type: "React.ReactNode",
+        default: "Simplicity",
+        description: "Secondary header suffix or subtitle text.",
+      },
+      {
+        name: "description",
+        type: "React.ReactNode",
+        description: "The main description body copy text of the card.",
+      },
+      {
+        name: "showCta",
+        type: "boolean",
+        default: "true",
+        description: "Whether to render the action CTA button.",
+      },
+      {
+        name: "ctaProps",
+        type: "Partial<LiquidMetalCardCTAProps>",
+        description: "Custom configuration props passed directly to the CTA button link.",
+      },
+      {
+        name: "showBadges",
+        type: "boolean",
+        default: "true",
+        description: "Whether to display the metadata tech stack badges row.",
+      },
+      {
+        name: "techStack",
+        type: "LiquidMetalCardTechItem[]",
+        description: "Array of tech elements (name, version, icon) to show inside the badges row.",
+      },
+      {
+        name: "desktopShaderProps",
+        type: "Partial<LiquidMetalProps>",
+        description: "Shader custom parameters specifically for desktop sizes.",
+      },
+      {
+        name: "mobileShaderProps",
+        type: "Partial<LiquidMetalProps>",
+        description: "Shader custom parameters specifically for mobile sizes.",
+      },
+    ],
+  },
+  {
+    name: "halftone-image",
+    title: "Halftone Image",
+    description: "Convert any image into a gorgeous, interactive halftone dither artwork with mouse hover distortion.",
+    category: "effects",
+    dependencies: [],
+    internalDeps: ["lib/utils"],
+    filePath: "components/kanso/halftone-image.tsx",
+    tags: ["image", "halftone", "dither", "canvas", "hover", "interactive"],
+    usage: `import { HalftoneImage } from "@/components/kanso/halftone-image"
+
+export default function HalftoneImageDemo() {
+  return (
+    <div className="w-[300px] h-[300px] rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
+      <HalftoneImage
+        src="/avatar.jpg"
+        dotSpacing={7}
+        contrast={1.3}
+        inkColor="currentColor"
+        paperColor="transparent"
+      />
+    </div>
+  )
+}`,
+    props: [
+      {
+        name: "src",
+        type: "string",
+        required: true,
+        description: "The source image URL.",
+      },
+      {
+        name: "dotSpacing",
+        type: "number",
+        default: "8",
+        description: "The spacing between dots in pixels (density). Lower value = higher detail.",
+      },
+      {
+        name: "maxDotRadius",
+        type: "number",
+        description: "The maximum dot radius. Defaults to dotSpacing * 0.7.",
+      },
+      {
+        name: "inkColor",
+        type: "string",
+        default: '"currentColor"',
+        description: "Color of the halftone dots. If 'currentColor', it reads the text color of parent elements.",
+      },
+      {
+        name: "colors",
+        type: "string[]",
+        description: "Multiple colors for halftone dots to cycle through.",
+      },
+      {
+        name: "paperColor",
+        type: "string",
+        default: '"transparent"',
+        description: "Color of the background paper layer. If 'transparent', the original page background shows through.",
+      },
+      {
+        name: "contrast",
+        type: "number",
+        default: "1.2",
+        description: "Contrast adjustment factor (e.g. 1.0 = normal, 1.5 = high contrast).",
+      },
+      {
+        name: "brightness",
+        type: "number",
+        default: "1.0",
+        description: "Brightness adjustment factor (e.g. 1.0 = normal, 1.2 = brighter).",
+      },
+      {
+        name: "interactive",
+        type: "boolean",
+        default: "true",
+        description: "Toggle interactive mouse hover warp effect.",
+      },
+      {
+        name: "hoverRadius",
+        type: "number",
+        default: "100",
+        description: "The radius of mouse influence for distortion in pixels.",
+      },
+      {
+        name: "distortionStrength",
+        type: "number",
+        default: "8",
+        description: "The strength of the warping push/pull distortion.",
+      },
+      {
+        name: "dotScaleStrength",
+        type: "number",
+        default: "1.2",
+        description: "Scale factor of the dots under the cursor (e.g., 0.5 to shrink, 1.5 to grow).",
+      },
+    ],
+  },
+  {
+    name: "halftone-grid",
+    title: "Halftone Grid",
+    description: "An interactive, mouse-responsive dithered background grid that modulates dot sizes dynamically based on the cursor's proximity.",
+    category: "effects",
+    dependencies: [],
+    internalDeps: ["lib/utils"],
+    filePath: "components/kanso/halftone-grid.tsx",
+    tags: ["grid", "background", "dots", "ripple", "hover", "interactive"],
+    usage: `import { HalftoneGrid } from "@/components/kanso/halftone-grid"
+
+export default function HalftoneGridDemo() {
+  return (
+    <div className="w-full h-[300px] border border-zinc-200 dark:border-zinc-800 rounded-xl relative overflow-hidden bg-zinc-950">
+      <HalftoneGrid
+        dotRadius={1.5}
+        dotSpacing={12}
+        gradientFrom="rgba(168, 85, 247, 0.35)"
+        gradientTo="rgba(180, 151, 207, 0.25)"
+        glowColor="#120F17"
+        sparkle={true}
+      />
+    </div>
+  )
+}`,
+    props: [
+      {
+        name: "dotRadius",
+        type: "number",
+        default: "1.5",
+        description: "The base radius of individual dots in pixels.",
+      },
+      {
+        name: "dotSpacing",
+        type: "number",
+        default: "14",
+        description: "The spacing between dots in pixels.",
+      },
+      {
+        name: "cursorRadius",
+        type: "number",
+        default: "500",
+        description: "Radius in pixels where cursor displacement takes effect.",
+      },
+      {
+        name: "cursorForce",
+        type: "number",
+        default: "0.1",
+        description: "Force of cursor interactions on dots.",
+      },
+      {
+        name: "bulgeOnly",
+        type: "boolean",
+        default: "true",
+        description: "If true, dots bulge away from cursor. If false, dots orbit/flee cursor.",
+      },
+      {
+        name: "bulgeStrength",
+        type: "number",
+        default: "67",
+        description: "Strength of the bulge push/pull factor.",
+      },
+      {
+        name: "glowRadius",
+        type: "number",
+        default: "160",
+        description: "Radius in pixels of the SVG cursor spotlight glow.",
+      },
+      {
+        name: "sparkle",
+        type: "boolean",
+        default: "false",
+        description: "Enables sparkling hash-based dot radius scaling variance.",
+      },
+      {
+        name: "waveAmplitude",
+        type: "number",
+        default: "0",
+        description: "Sizing multiplier of active background waves.",
+      },
+      {
+        name: "gradientFrom",
+        type: "string",
+        default: '"rgba(168, 85, 247, 0.35)"',
+        description: "Halftone dot layout linear gradient start color.",
+      },
+      {
+        name: "gradientTo",
+        type: "string",
+        default: '"rgba(180, 151, 207, 0.25)"',
+        description: "Halftone dot layout linear gradient end color.",
+      },
+      {
+        name: "glowColor",
+        type: "string",
+        default: '"#120F17"',
+        description: "Color of the SVG cursor radial spotlight glow.",
+      },
+      {
+        name: "colors",
+        type: "string[]",
+        description: "Multiple colors for dither particles. Draws individual dots with distinct colors.",
+      },
+    ],
+  },
+  {
+    name: "magic-rings",
+    title: "Magic Rings",
+    description: "An elegant, interactive shader component rendering nested expanding magic wave rings.",
+    category: "effects",
+    dependencies: ["three"],
+    internalDeps: ["lib/utils"],
+    filePath: "components/kanso/magic-rings.tsx",
+    tags: ["shader", "rings", "interactive", "canvas", "waves", "webgl"],
+    usage: `import { MagicRings } from "@/components/kanso/magic-rings"
+
+export default function MagicRingsDemo() {
+  return (
+    <div className="w-full h-[300px] rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 relative bg-zinc-950">
+      <MagicRings
+        color="#fc42ff"
+        colorTwo="#42fcff"
+        speed={1}
+        ringCount={6}
+        followMouse={true}
+        clickBurst={true}
+      />
+    </div>
+  )
+}`,
+    props: [
+      {
+        name: "color",
+        type: "string",
+        default: '"#fc42ff"',
+        description: "Primary ring accent color.",
+      },
+      {
+        name: "colorTwo",
+        type: "string",
+        default: '"#42fcff"',
+        description: "Secondary gradient ring color.",
+      },
+      {
+        name: "speed",
+        type: "number",
+        default: "1",
+        description: "Animation speed multiplier.",
+      },
+      {
+        name: "ringCount",
+        type: "number",
+        default: "6",
+        description: "Number of nested wave rings.",
+      },
+      {
+        name: "attenuation",
+        type: "number",
+        default: "10",
+        description: "Attenuation rate of the shader fields.",
+      },
+      {
+        name: "lineThickness",
+        type: "number",
+        default: "2",
+        description: "Line thickness coefficient.",
+      },
+      {
+        name: "baseRadius",
+        type: "number",
+        default: "0.35",
+        description: "Starting radius ratio of the inner rings.",
+      },
+      {
+        name: "radiusStep",
+        type: "number",
+        default: "0.1",
+        description: "Radius increment spacing per nested ring.",
+      },
+      {
+        name: "scaleRate",
+        type: "number",
+        default: "0.1",
+        description: "Ring expansion rate factor.",
+      },
+      {
+        name: "opacity",
+        type: "number",
+        default: "1",
+        description: "Overall opacity modifier.",
+      },
+      {
+        name: "blur",
+        type: "number",
+        default: "0",
+        description: "Blur filter strength applied in pixels.",
+      },
+      {
+        name: "noiseAmount",
+        type: "number",
+        default: "0.1",
+        description: "Grain shader noise texture intensity.",
+      },
+      {
+        name: "rotation",
+        type: "number",
+        default: "0",
+        description: "Default rotation angle offset in degrees.",
+      },
+      {
+        name: "ringGap",
+        type: "number",
+        default: "1.5",
+        description: "Exponent gap space scaling multiplier.",
+      },
+      {
+        name: "fadeIn",
+        type: "number",
+        default: "0.7",
+        description: "Fade in speed index.",
+      },
+      {
+        name: "fadeOut",
+        type: "number",
+        default: "0.5",
+        description: "Fade out speed index.",
+      },
+      {
+        name: "followMouse",
+        type: "boolean",
+        default: "false",
+        description: "Allows the center anchor offset to chase mouse coordinates.",
+      },
+      {
+        name: "mouseInfluence",
+        type: "number",
+        default: "0.2",
+        description: "The sensitivity factor of mouse influence on placement displacement.",
+      },
+      {
+        name: "hoverScale",
+        type: "number",
+        default: "1.2",
+        description: "Maximum scale factor reached when hovering.",
+      },
+      {
+        name: "parallax",
+        type: "number",
+        default: "0.05",
+        description: "Layered offset coefficient creating perspective depth.",
+      },
+      {
+        name: "clickBurst",
+        type: "boolean",
+        default: "false",
+        description: "Enables explosive expansion ripple on click events.",
+      },
+    ],
+  },
+  {
+    name: "antigravity",
+    title: "Antigravity Particles",
+    description: "A gorgeous React Three Fiber canvas component rendering magnetic floating particles that orbit the mouse cursor on hover.",
+    category: "effects",
+    dependencies: ["three", "@react-three/fiber"],
+    internalDeps: ["lib/utils"],
+    filePath: "components/kanso/antigravity.tsx",
+    tags: ["particles", "magnet", "orbit", "wave", "interactive", "fiber", "webgl"],
+    usage: `import { Antigravity } from "@/components/kanso/antigravity"
+
+export default function AntigravityDemo() {
+  return (
+    <div className="w-full h-[350px] border border-zinc-200 dark:border-zinc-800 bg-zinc-950 rounded-xl overflow-hidden">
+      <Antigravity
+        count={250}
+        magnetRadius={8}
+        ringRadius={8}
+        color="#c084fc"
+        particleShape="capsule"
+      />
+    </div>
+  )
+}`,
+    props: [
+      {
+        name: "count",
+        type: "number",
+        default: "300",
+        description: "Total number of instanced particles.",
+      },
+      {
+        name: "magnetRadius",
+        type: "number",
+        default: "10",
+        description: "Radius in viewport units where mouse coordinates attract particles.",
+      },
+      {
+        name: "ringRadius",
+        type: "number",
+        default: "10",
+        description: "Orbit radius of particles around target mouse point.",
+      },
+      {
+        name: "waveSpeed",
+        type: "number",
+        default: "0.4",
+        description: "Speed coefficient of orbit wave ripples.",
+      },
+      {
+        name: "waveAmplitude",
+        type: "number",
+        default: "1",
+        description: "Sizing variance amplitude of wave sweeps.",
+      },
+      {
+        name: "particleSize",
+        type: "number",
+        default: "2",
+        description: "Scale base of each particle mesh.",
+      },
+      {
+        name: "lerpSpeed",
+        type: "number",
+        default: "0.1",
+        description: "Interpolation factor for movement smoothness.",
+      },
+      {
+        name: "color",
+        type: "string",
+        default: '"#FF9FFC"',
+        description: "Color of the particles material.",
+      },
+      {
+        name: "colors",
+        type: "string[]",
+        description: "Multiple colors array. Cycles through colors for individual particles.",
+      },
+      {
+        name: "autoAnimate",
+        type: "boolean",
+        default: "false",
+        description: "Triggers automated sine paths animation when mouse is inactive.",
+      },
+      {
+        name: "particleVariance",
+        type: "number",
+        default: "1",
+        description: "Sizing variance coefficient.",
+      },
+      {
+        name: "rotationSpeed",
+        type: "number",
+        default: "0",
+        description: "Spin rotation speed offset of particle ring.",
+      },
+      {
+        name: "depthFactor",
+        type: "number",
+        default: "1",
+        description: "Intensity of particle movement along the Z deep axis.",
+      },
+      {
+        name: "pulseSpeed",
+        type: "number",
+        default: "3",
+        description: "Sizing pulse animation speed.",
+      },
+      {
+        name: "particleShape",
+        type: '"capsule" | "sphere" | "box" | "tetrahedron"',
+        default: '"capsule"',
+        description: "Geometry shape mesh instanced for particles.",
+      },
+      {
+        name: "fieldStrength",
+        type: "number",
+        default: "10",
+        description: "Orbit path compactness coefficient.",
       },
     ],
   },

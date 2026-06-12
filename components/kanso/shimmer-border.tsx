@@ -46,21 +46,26 @@ function ShimmerBorder({
   children,
   className,
   borderRadius = 12,
-  shimmerColor = "rgba(255, 255, 255, 0.15)",
-  shimmerSize = 200,
+  shimmerColor = "rgba(255, 255, 255, 0.2)",
+  shimmerSize = 25,
   duration = 3,
   borderWidth = 1.5,
   background,
   style,
   ...props
 }: ShimmerBorderProps) {
+  const innerRadius = Math.max(0, borderRadius - borderWidth)
+  // Build a realistic glowing laser gradient sweep with a hot-white center core
+  const conicBg = `conic-gradient(from 0deg, transparent 0%, var(--shimmer-color) ${Math.max(0, shimmerSize - 15)}%, rgba(255, 255, 255, 0.6) ${Math.max(0, shimmerSize - 4)}%, rgba(255, 255, 255, 0.95) ${shimmerSize}%, rgba(255, 255, 255, 0.6) ${shimmerSize + 4}%, var(--shimmer-color) ${shimmerSize + 15}%, transparent ${shimmerSize + 30}%, transparent 100%)`
+
   return (
     <div
       style={
         {
           "--shimmer-border-radius": `${borderRadius}px`,
+          "--shimmer-inner-radius": `${innerRadius}px`,
           "--shimmer-color": shimmerColor,
-          "--shimmer-size": `${shimmerSize}px`,
+          "--shimmer-size": `${shimmerSize}%`,
           "--shimmer-duration": `${duration}s`,
           "--shimmer-border-width": `${borderWidth}px`,
           "--shimmer-background": background ?? "transparent",
@@ -73,28 +78,25 @@ function ShimmerBorder({
       )}
       {...props}
     >
-      {/* Animated shimmer layer (behind content) */}
+      {/* 1. Static border underneath for always-visible wire edge */}
       <div
-        className="absolute inset-0 animate-[shimmer-spin_var(--shimmer-duration)_linear_infinite]"
-        style={{
-          background: `conic-gradient(from 0deg, transparent 0%, var(--shimmer-color) 10%, transparent 20%)`,
-          borderRadius: "inherit",
-        }}
-      />
-
-      {/* Static border underneath for always-visible edge */}
-      <div
-        className="absolute inset-0 rounded-[inherit] border border-zinc-200 dark:border-zinc-800"
+        className="absolute inset-0 rounded-[inherit] border border-zinc-200/50 dark:border-zinc-800/40 pointer-events-none"
         style={{ borderRadius: "inherit" }}
       />
 
-      {/* Inner content area */}
+      {/* 2. Animated shimmer layer (spins over static wire border) */}
       <div
-        className="relative z-10 rounded-[calc(var(--shimmer-border-radius)-var(--shimmer-border-width))] bg-white dark:bg-zinc-950"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[300%] h-[300%] animate-[shimmer-spin_var(--shimmer-duration)_linear_infinite] pointer-events-none blur-[1px]"
         style={{
-          background:
-            background ??
-            undefined,
+          background: conicBg,
+        }}
+      />
+
+      {/* 3. Inner content area */}
+      <div
+        className="relative z-10 rounded-[var(--shimmer-inner-radius)] bg-white dark:bg-zinc-950 h-full w-full p-1"
+        style={{
+          background: background ?? undefined,
         }}
       >
         {children}
