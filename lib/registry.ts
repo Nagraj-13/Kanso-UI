@@ -979,6 +979,11 @@ export default function HalftoneImageDemo() {
         description: "Color of the halftone dots. If 'currentColor', it reads the text color of parent elements.",
       },
       {
+        name: "colors",
+        type: "string[]",
+        description: "Multiple colors for halftone dots to cycle through.",
+      },
+      {
         name: "paperColor",
         type: "string",
         default: '"transparent"',
@@ -1119,6 +1124,11 @@ export default function HalftoneGridDemo() {
         type: "string",
         default: '"#120F17"',
         description: "Color of the SVG cursor radial spotlight glow.",
+      },
+      {
+        name: "colors",
+        type: "string[]",
+        description: "Multiple colors for dither particles. Draws individual dots with distinct colors.",
       },
     ],
   },
@@ -1348,6 +1358,11 @@ export default function AntigravityDemo() {
         type: "string",
         default: '"#FF9FFC"',
         description: "Color of the particles material.",
+      },
+      {
+        name: "colors",
+        type: "string[]",
+        description: "Multiple colors array. Cycles through colors for individual particles.",
       },
       {
         name: "autoAnimate",

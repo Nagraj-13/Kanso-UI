@@ -29,6 +29,7 @@ export interface HalftoneGridProps extends React.HTMLAttributes<HTMLDivElement> 
   gradientFrom?: string
   gradientTo?: string
   glowColor?: string
+  colors?: string[]
 }
 
 const HalftoneGrid = React.memo(
@@ -47,6 +48,7 @@ const HalftoneGrid = React.memo(
         gradientFrom = "rgba(168, 85, 247, 0.35)",
         gradientTo = "rgba(180, 151, 207, 0.25)",
         glowColor = "#120F17",
+        colors,
         className,
         style,
         ...props
@@ -75,6 +77,7 @@ const HalftoneGrid = React.memo(
         waveAmplitude,
         gradientFrom,
         gradientTo,
+        colors,
       }
 
       const rebuildRef = React.useRef<(() => void) | null>(null)
@@ -92,36 +95,6 @@ const HalftoneGrid = React.memo(
         if (!ctx) return
 
         const dpr = Math.min(window.devicePixelRatio || 1, 2)
-        let resizeTimer: ReturnType<typeof setTimeout>
-
-        function resize() {
-          clearTimeout(resizeTimer)
-          resizeTimer = setTimeout(doResize, 100)
-        }
-
-        function doResize() {
-          if (!canvas) return
-          const parent = canvas.parentElement
-          if (!parent) return
-          const rect = parent.getBoundingClientRect()
-          const w = rect.width
-          const h = rect.height
-
-          canvas.width = w * dpr
-          canvas.height = h * dpr
-          canvas.style.width = `${w}px`
-          canvas.style.height = `${h}px`
-          ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
-
-          sizeRef.current = {
-            w,
-            h,
-            offsetX: rect.left + window.scrollX,
-            offsetY: rect.top + window.scrollY,
-          }
-
-          buildDots(w, h)
-        }
 
         function buildDots(w: number, h: number) {
           const p = propsRef.current
@@ -187,18 +160,12 @@ const HalftoneGrid = React.memo(
 
           ctx!.clearRect(0, 0, w, h)
 
-          const grad = ctx!.createLinearGradient(0, 0, w, h)
-          grad.addColorStop(0, p.gradientFrom as string)
-          grad.addColorStop(1, p.gradientTo as string)
-          ctx!.fillStyle = grad
-
           const cr = p.cursorRadius as number
           const crSq = cr * cr
           const rad = (p.dotRadius as number) / 2
           const isBulge = p.bulgeOnly as boolean
 
-          ctx!.beginPath()
-
+          // 1. Run physics updates for all dots first
           for (let i = 0; i < len; i++) {
             const d = dots[i]
             const dx = m.x - d.ax
@@ -232,35 +199,103 @@ const HalftoneGrid = React.memo(
               d.sx += (d.x - d.sx) * 0.1
               d.sy += (d.y - d.sy) * 0.1
             }
+          }
 
+          // 2. Draw dots (partitioned by color if colors array exists)
+          const getDotDrawCoords = (i: number, d: Dot) => {
             let drawX = d.sx
             let drawY = d.sy
             if ((p.waveAmplitude as number) > 0) {
               drawY += Math.sin(d.ax * 0.03 + t) * (p.waveAmplitude as number)
               drawX += Math.cos(d.ay * 0.03 + t * 0.7) * (p.waveAmplitude as number) * 0.5
             }
+            return { drawX, drawY }
+          }
 
-            if (p.sparkle) {
-              const hash = ((i * 2654435761) ^ (frameCount >> 3)) >>> 0
-              if ((hash % 100) < 3) {
-                ctx!.moveTo(drawX + rad * 1.8, drawY)
-                ctx!.arc(drawX, drawY, rad * 1.8, 0, TWO_PI)
+          const cols = p.colors as string[]
+          if (cols && cols.length > 0) {
+            for (let cIdx = 0; cIdx < cols.length; cIdx++) {
+              ctx!.fillStyle = cols[cIdx]
+              ctx!.beginPath()
+              for (let i = cIdx; i < len; i += cols.length) {
+                const d = dots[i]
+                const { drawX, drawY } = getDotDrawCoords(i, d)
+                if (p.sparkle) {
+                  const hash = ((i * 2654435761) ^ (frameCount >> 3)) >>> 0
+                  if ((hash % 100) < 3) {
+                    ctx!.moveTo(drawX + rad * 1.8, drawY)
+                    ctx!.arc(drawX, drawY, rad * 1.8, 0, TWO_PI)
+                  } else {
+                    ctx!.moveTo(drawX + rad, drawY)
+                    ctx!.arc(drawX, drawY, rad, 0, TWO_PI)
+                  }
+                } else {
+                  ctx!.moveTo(drawX + rad, drawY)
+                  ctx!.arc(drawX, drawY, rad, 0, TWO_PI)
+                }
+              }
+              ctx!.fill()
+            }
+          } else {
+            const grad = ctx!.createLinearGradient(0, 0, w, h)
+            grad.addColorStop(0, p.gradientFrom as string)
+            grad.addColorStop(1, p.gradientTo as string)
+            ctx!.fillStyle = grad
+
+            ctx!.beginPath()
+            for (let i = 0; i < len; i++) {
+              const d = dots[i]
+              const { drawX, drawY } = getDotDrawCoords(i, d)
+              if (p.sparkle) {
+                const hash = ((i * 2654435761) ^ (frameCount >> 3)) >>> 0
+                if ((hash % 100) < 3) {
+                  ctx!.moveTo(drawX + rad * 1.8, drawY)
+                  ctx!.arc(drawX, drawY, rad * 1.8, 0, TWO_PI)
+                } else {
+                  ctx!.moveTo(drawX + rad, drawY)
+                  ctx!.arc(drawX, drawY, rad, 0, TWO_PI)
+                }
               } else {
                 ctx!.moveTo(drawX + rad, drawY)
                 ctx!.arc(drawX, drawY, rad, 0, TWO_PI)
               }
-            } else {
-              ctx!.moveTo(drawX + rad, drawY)
-              ctx!.arc(drawX, drawY, rad, 0, TWO_PI)
             }
+            ctx!.fill()
           }
 
-          ctx!.fill()
           rafRef.current = requestAnimationFrame(tick)
         }
 
-        doResize()
-        window.addEventListener("resize", resize)
+        // Setup ResizeObserver to observe size changes dynamically
+        const resizeObserver = new ResizeObserver((entries) => {
+          for (const entry of entries) {
+            const { width: w, height: h } = entry.contentRect
+            if (w > 0 && h > 0) {
+              if (!canvas) return
+              canvas.width = w * dpr
+              canvas.height = h * dpr
+              canvas.style.width = `${w}px`
+              canvas.style.height = `${h}px`
+              ctx!.setTransform(dpr, 0, 0, dpr, 0, 0)
+
+              const rect = canvas.getBoundingClientRect()
+              sizeRef.current = {
+                w,
+                h,
+                offsetX: rect.left + window.scrollX,
+                offsetY: rect.top + window.scrollY,
+              }
+
+              buildDots(w, h)
+            }
+          }
+        })
+
+        const parent = canvas.parentElement
+        if (parent) {
+          resizeObserver.observe(parent)
+        }
+
         window.addEventListener("mousemove", onMouseMove, { passive: true })
         rafRef.current = requestAnimationFrame(tick)
 
@@ -270,10 +305,9 @@ const HalftoneGrid = React.memo(
         }
 
         return () => {
+          resizeObserver.disconnect()
           if (rafRef.current) cancelAnimationFrame(rafRef.current)
           clearInterval(speedInterval)
-          clearTimeout(resizeTimer)
-          window.removeEventListener("resize", resize)
           window.removeEventListener("mousemove", onMouseMove)
         }
       }, [])

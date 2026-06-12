@@ -14,6 +14,7 @@ export interface AntigravityProps {
   particleSize?: number
   lerpSpeed?: number
   color?: string
+  colors?: string[]
   autoAnimate?: boolean
   particleVariance?: number
   rotationSpeed?: number
@@ -40,6 +41,7 @@ const AntigravityInner: React.FC<AntigravityProps> = ({
   particleSize = 2,
   lerpSpeed = 0.1,
   color = "#FF9FFC",
+  colors,
   autoAnimate = false,
   particleVariance = 1,
   rotationSpeed = 0,
@@ -130,6 +132,8 @@ const AntigravityInner: React.FC<AntigravityProps> = ({
     const targetY = virtualMouse.current.y
 
     const globalRotation = state.clock.getElapsedTime() * rotationSpeed
+    const colorObj = new THREE.Color()
+    const hasColors = colors && colors.length > 0
 
     particles.forEach((particle, i) => {
       let { t } = particle
@@ -184,9 +188,21 @@ const AntigravityInner: React.FC<AntigravityProps> = ({
       dummy.updateMatrix()
 
       mesh.setMatrixAt(i, dummy.matrix)
+
+      // Set individual instance color
+      if (hasColors) {
+        colorObj.set(colors[i % colors.length])
+        mesh.setColorAt(i, colorObj)
+      } else {
+        colorObj.set(color)
+        mesh.setColorAt(i, colorObj)
+      }
     })
 
     mesh.instanceMatrix.needsUpdate = true
+    if (mesh.instanceColor) {
+      mesh.instanceColor.needsUpdate = true
+    }
   })
 
   return (
@@ -213,6 +229,7 @@ const Antigravity = React.forwardRef<HTMLDivElement, AntigravityWrapperProps>(
       particleSize,
       lerpSpeed,
       color,
+      colors,
       autoAnimate,
       particleVariance,
       rotationSpeed,
@@ -243,6 +260,7 @@ const Antigravity = React.forwardRef<HTMLDivElement, AntigravityWrapperProps>(
             particleSize={particleSize}
             lerpSpeed={lerpSpeed}
             color={color}
+            colors={colors}
             autoAnimate={autoAnimate}
             particleVariance={particleVariance}
             rotationSpeed={rotationSpeed}

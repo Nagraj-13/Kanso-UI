@@ -1438,6 +1438,10 @@ const demos: Record<string, React.ComponentType> = {
     const [brightness, setBrightness] = React.useState<number>(1.0)
     const [distortion, setDistortion] = React.useState<number>(8)
     const [interactive, setInteractive] = React.useState<boolean>(true)
+    const [inkColor, setInkColor] = React.useState<string>("currentColor")
+    const [useMulticolor, setUseMulticolor] = React.useState<boolean>(false)
+    const colorsList = ["currentColor", "#3b82f6", "#10b981", "#f43f5e", "#f59e0b", "#a855f7"]
+    const multiColors = ["#3b82f6", "#10b981", "#f43f5e", "#f59e0b", "#a855f7"]
 
     return (
       <div className="flex flex-col gap-8 w-full max-w-md items-center">
@@ -1449,6 +1453,8 @@ const demos: Record<string, React.ComponentType> = {
             brightness={brightness}
             distortionStrength={distortion}
             interactive={interactive}
+            inkColor={useMulticolor ? undefined : inkColor}
+            colors={useMulticolor ? multiColors : undefined}
             alt="Halftone portrait preview"
           />
         </div>
@@ -1498,8 +1504,48 @@ const demos: Record<string, React.ComponentType> = {
               type="checkbox"
               checked={interactive}
               onChange={(e) => setInteractive(e.target.checked)}
-              className="accent-purple-500"
+              className="accent-purple-500 cursor-pointer"
             />
+          </div>
+
+          <div className="col-span-2 flex items-center justify-between text-xs pt-2 border-t border-zinc-100 dark:border-zinc-800/80">
+            <span className="text-zinc-500 font-medium">Enable Multi-Color Particles</span>
+            <input
+              type="checkbox"
+              checked={useMulticolor}
+              onChange={(e) => setUseMulticolor(e.target.checked)}
+              className="accent-purple-500 cursor-pointer"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5 col-span-2 pt-3 border-t border-zinc-100 dark:border-zinc-800/80 opacity-80">
+            <span className={cn(
+              "text-[10px] font-semibold uppercase tracking-wider",
+              useMulticolor ? "text-zinc-350 dark:text-zinc-600" : "text-zinc-400"
+            )}>
+              Ink Color {useMulticolor && "(Single color disabled)"}
+            </span>
+            <div className="flex gap-2">
+              {colorsList.map((c) => (
+                <button
+                  key={c}
+                  disabled={useMulticolor}
+                  onClick={() => setInkColor(c)}
+                  className={cn(
+                    "size-5 rounded-full border cursor-pointer transition-all hover:scale-105",
+                    c === "currentColor" ? "bg-zinc-900 dark:bg-zinc-50 border-zinc-300" :
+                    c === "#3b82f6" ? "bg-blue-500" :
+                    c === "#10b981" ? "bg-emerald-500" :
+                    c === "#f43f5e" ? "bg-rose-500" :
+                    c === "#f59e0b" ? "bg-amber-500" :
+                    "bg-purple-500",
+                    !useMulticolor && inkColor === c ? "border-zinc-900 dark:border-white ring-2 ring-zinc-900/10 dark:ring-white/10 scale-105" : "border-transparent",
+                    useMulticolor && "opacity-40 cursor-not-allowed hover:scale-100"
+                  )}
+                  title={c === "currentColor" ? "Theme Default" : c}
+                />
+              ))}
+            </div>
           </div>
         </div>
       </div>
@@ -1512,13 +1558,44 @@ const demos: Record<string, React.ComponentType> = {
     const [cursorRad, setCursorRad] = React.useState<number>(500)
     const [sparkle, setSparkle] = React.useState<boolean>(false)
     const [colorTheme, setColorTheme] = React.useState<"purple" | "cyan" | "emerald" | "rose" | "amber">("purple")
+    const [useMulticolor, setUseMulticolor] = React.useState<boolean>(false)
 
     const themes = {
-      purple: { from: "rgba(168, 85, 247, 0.35)", to: "rgba(180, 151, 207, 0.25)", glow: "#120F17", badge: "bg-purple-500" },
-      cyan: { from: "rgba(6, 182, 212, 0.35)", to: "rgba(34, 211, 238, 0.25)", glow: "#081E24", badge: "bg-cyan-500" },
-      emerald: { from: "rgba(16, 185, 129, 0.35)", to: "rgba(52, 211, 153, 0.25)", glow: "#051F14", badge: "bg-emerald-500" },
-      rose: { from: "rgba(244, 63, 94, 0.35)", to: "rgba(251, 113, 133, 0.25)", glow: "#240509", badge: "bg-rose-500" },
-      amber: { from: "rgba(245, 158, 11, 0.35)", to: "rgba(251, 191, 36, 0.25)", glow: "#241805", badge: "bg-amber-500" },
+      purple: {
+        from: "rgba(168, 85, 247, 0.35)",
+        to: "rgba(180, 151, 207, 0.25)",
+        glow: "#120F17",
+        badge: "bg-purple-500",
+        colors: ["#a855f7", "#c084fc", "#e9d5ff", "#c084fc"]
+      },
+      cyan: {
+        from: "rgba(6, 182, 212, 0.35)",
+        to: "rgba(34, 211, 238, 0.25)",
+        glow: "#081E24",
+        badge: "bg-cyan-500",
+        colors: ["#06b6d4", "#22d3ee", "#67e8f9", "#22d3ee"]
+      },
+      emerald: {
+        from: "rgba(16, 185, 129, 0.35)",
+        to: "rgba(52, 211, 153, 0.25)",
+        glow: "#051F14",
+        badge: "bg-emerald-500",
+        colors: ["#10b981", "#34d399", "#6ee7b7", "#34d399"]
+      },
+      rose: {
+        from: "rgba(244, 63, 94, 0.35)",
+        to: "rgba(251, 113, 133, 0.25)",
+        glow: "#240509",
+        badge: "bg-rose-500",
+        colors: ["#f43f5e", "#fb7185", "#fda4af", "#fb7185"]
+      },
+      amber: {
+        from: "rgba(245, 158, 11, 0.35)",
+        to: "rgba(251, 191, 36, 0.25)",
+        glow: "#241805",
+        badge: "bg-amber-500",
+        colors: ["#f59e0b", "#fbbf24", "#fcd34d", "#fbbf24"]
+      },
     }
 
     return (
@@ -1533,6 +1610,7 @@ const demos: Record<string, React.ComponentType> = {
             gradientFrom={themes[colorTheme].from}
             gradientTo={themes[colorTheme].to}
             glowColor={themes[colorTheme].glow}
+            colors={useMulticolor ? themes[colorTheme].colors : undefined}
             className="absolute inset-0"
           />
           <div className="relative z-20 max-w-xs px-4 bg-white/40 dark:bg-black/40 backdrop-blur-xs py-4 rounded-xl border border-white/10 shadow-sm animate-fade-in">
@@ -1605,6 +1683,16 @@ const demos: Record<string, React.ComponentType> = {
             onChange={setCursorRad}
             suffix="px"
           />
+
+          <div className="col-span-2 flex items-center justify-between pt-2 border-t border-zinc-150 dark:border-zinc-800">
+            <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Enable Multi-Color Particles</span>
+            <input
+              type="checkbox"
+              checked={useMulticolor}
+              onChange={(e) => setUseMulticolor(e.target.checked)}
+              className="accent-purple-500 cursor-pointer"
+            />
+          </div>
 
           <div className="col-span-2 flex items-center justify-between pt-2 border-t border-zinc-150 dark:border-zinc-800">
             <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Sparkling Effect</span>
@@ -1712,6 +1800,9 @@ const demos: Record<string, React.ComponentType> = {
     const [ringRadius, setRingRadius] = React.useState(8)
     const [particleSize, setParticleSize] = React.useState(2.0)
     const [particleShape, setParticleShape] = React.useState<"capsule" | "sphere" | "box" | "tetrahedron">("capsule")
+    const [color, setColor] = React.useState<string>("#FF9FFC")
+    const [useMulticolor, setUseMulticolor] = React.useState<boolean>(false)
+    const colorsList = ["#FF9FFC", "#3b82f6", "#10b981", "#f43f5e", "#f59e0b", "#a855f7"]
 
     return (
       <div className="flex flex-col gap-8 w-full max-w-lg items-center">
@@ -1722,7 +1813,8 @@ const demos: Record<string, React.ComponentType> = {
             ringRadius={ringRadius}
             particleSize={particleSize}
             particleShape={particleShape}
-            color="#FF9FFC"
+            color={useMulticolor ? undefined : color}
+            colors={useMulticolor ? colorsList : undefined}
             autoAnimate={true}
           />
           <div className="absolute top-4 left-4 z-20 pointer-events-none">
@@ -1788,6 +1880,45 @@ const demos: Record<string, React.ComponentType> = {
             value={particleSize}
             onChange={setParticleSize}
           />
+
+          <div className="col-span-2 flex items-center justify-between pt-2 border-t border-zinc-150 dark:border-zinc-800">
+            <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Enable Multi-Color Particles</span>
+            <input
+              type="checkbox"
+              checked={useMulticolor}
+              onChange={(e) => setUseMulticolor(e.target.checked)}
+              className="accent-purple-500 cursor-pointer"
+            />
+          </div>
+
+          <div className="flex flex-col gap-1.5 col-span-2 pt-3 border-t border-zinc-150 dark:border-zinc-800 opacity-80">
+            <span className={cn(
+              "text-[10px] font-semibold uppercase tracking-wider",
+              useMulticolor ? "text-zinc-350 dark:text-zinc-655" : "text-zinc-400"
+            )}>
+              Particle Color {useMulticolor && "(Single color disabled)"}
+            </span>
+            <div className="flex gap-2">
+              {colorsList.map((c) => (
+                <button
+                  key={c}
+                  disabled={useMulticolor}
+                  onClick={() => setColor(c)}
+                  className={cn(
+                    "size-5 rounded-full border cursor-pointer transition-all hover:scale-105",
+                    c === "#FF9FFC" ? "bg-[#FF9FFC]" :
+                    c === "#3b82f6" ? "bg-blue-500" :
+                    c === "#10b981" ? "bg-emerald-500" :
+                    c === "#f43f5e" ? "bg-rose-500" :
+                    c === "#f59e0b" ? "bg-amber-500" :
+                    "bg-purple-500",
+                    !useMulticolor && color === c ? "border-zinc-900 dark:border-white ring-2 ring-zinc-900/10 dark:ring-white/10 scale-105" : "border-transparent",
+                    useMulticolor && "opacity-40 cursor-not-allowed hover:scale-100"
+                  )}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     )

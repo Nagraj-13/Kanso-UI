@@ -166,6 +166,7 @@ const COLOR_THEMES = [
     glowColor: "#120F17",
     ringColor: "#a855f7",
     particleColor: "#a855f7",
+    colors: ["#a855f7", "#c084fc", "#e9d5ff", "#c084fc"],
     colorClass: "bg-purple-500",
   },
   {
@@ -176,6 +177,7 @@ const COLOR_THEMES = [
     glowColor: "#081E24",
     ringColor: "#06b6d4",
     particleColor: "#06b6d4",
+    colors: ["#06b6d4", "#22d3ee", "#67e8f9", "#22d3ee"],
     colorClass: "bg-cyan-500",
   },
   {
@@ -186,6 +188,7 @@ const COLOR_THEMES = [
     glowColor: "#051F14",
     ringColor: "#10b981",
     particleColor: "#10b981",
+    colors: ["#10b981", "#34d399", "#6ee7b7", "#34d399"],
     colorClass: "bg-emerald-500",
   },
   {
@@ -196,6 +199,7 @@ const COLOR_THEMES = [
     glowColor: "#240509",
     ringColor: "#f43f5e",
     particleColor: "#f43f5e",
+    colors: ["#f43f5e", "#fb7185", "#fda4af", "#fb7185"],
     colorClass: "bg-rose-500",
   },
   {
@@ -206,6 +210,7 @@ const COLOR_THEMES = [
     glowColor: "#241805",
     ringColor: "#f59e0b",
     particleColor: "#f59e0b",
+    colors: ["#f59e0b", "#fbbf24", "#fcd34d", "#fbbf24"],
     colorClass: "bg-amber-500",
   },
 ]
@@ -233,6 +238,7 @@ export default function LandingPageClient({
     glowColor: "#120F17",
     ringColor: "#a855f7",
     particleColor: "#a855f7",
+    colors: ["#a855f7", "#c084fc", "#e9d5ff", "#c084fc"],
     themeName: "purple",
   })
   const [heroTab, setHeroTab] = React.useState<"preview" | "code">("preview")
@@ -392,8 +398,8 @@ export default function LandingPageClient({
       </header>
 
       {/* Hero Section */}
-      <section className="relative mx-auto max-w-7xl px-6 pt-24 pb-32 md:px-8 md:pt-32 overflow-hidden">
-        {/* Halftone background layer */}
+      <section className="relative w-full pt-24 pb-32 md:pt-32 overflow-hidden">
+        {/* Halftone background grid layer */}
         <div className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-30">
           <HalftoneGrid
             dotRadius={halftoneParams.dotRadius}
@@ -402,6 +408,7 @@ export default function LandingPageClient({
             gradientFrom={halftoneParams.gradientFrom}
             gradientTo={halftoneParams.gradientTo}
             glowColor={halftoneParams.glowColor}
+            colors={halftoneParams.colors}
           />
         </div>
 
@@ -434,6 +441,7 @@ export default function LandingPageClient({
             waveAmplitude={0.6}
             particleSize={1.4}
             color={theme === "dark" ? halftoneParams.particleColor || "#a855f7" : halftoneParams.particleColor || "#6366f1"}
+            colors={halftoneParams.colors}
             autoAnimate={true}
             particleShape="capsule"
           />
@@ -443,7 +451,8 @@ export default function LandingPageClient({
           <div className="relative left-[calc(50%-15rem)] aspect-1155/678 w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-purple-500/10 to-indigo-600/15 opacity-40 dark:from-purple-500/15 dark:to-indigo-600/20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style={{ clipPath: "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" }} />
         </div>
 
-        <div className="grid items-center gap-16 lg:grid-cols-12 lg:gap-12 relative z-10">
+        <div className="mx-auto max-w-6xl px-6 md:px-8 relative z-10 w-full">
+          <div className="grid items-center gap-16 lg:grid-cols-12 lg:gap-12">
           {/* Hero Left Content */}
           <div className="flex flex-col items-start lg:col-span-7">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-3.5 py-1.5 text-xs font-medium dark:border-zinc-800 dark:bg-zinc-900/50">
@@ -545,6 +554,7 @@ export default function LandingPageClient({
                                     glowColor: themeItem.glowColor,
                                     ringColor: themeItem.ringColor,
                                     particleColor: themeItem.particleColor,
+                                    colors: themeItem.colors,
                                     themeName: themeItem.name,
                                   }))
                                 }
@@ -656,6 +666,7 @@ export default function LandingPageClient({
               </AnimatePresence>
             </div>
           </div>
+        </div>
         </div>
       </section>
 

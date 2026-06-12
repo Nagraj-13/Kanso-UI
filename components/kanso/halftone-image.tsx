@@ -12,6 +12,8 @@ export interface HalftoneImageProps extends React.HTMLAttributes<HTMLDivElement>
   maxDotRadius?: number
   /** Color of the halftone dots. If 'currentColor', it reads the text color of parent elements. */
   inkColor?: string
+  /** Multiple colors for dither particles. Cycles through colors. */
+  colors?: string[]
   /** Color of the background paper layer. If 'transparent', the original page background shows through. */
   paperColor?: string
   /** Contrast adjustment factor (e.g. 1.0 = normal, 1.5 = high contrast) */
@@ -49,6 +51,7 @@ const HalftoneImage = React.forwardRef<HTMLDivElement, HalftoneImageProps>(
       dotSpacing = 8,
       maxDotRadius,
       inkColor = "currentColor",
+      colors,
       paperColor = "transparent",
       contrast = 1.2,
       brightness = 1.0,
@@ -141,6 +144,7 @@ const HalftoneImage = React.forwardRef<HTMLDivElement, HalftoneImageProps>(
 
       const radiusLimit = maxDotRadius || dotSpacing * 0.7
       const mouse = mouseRef.current
+      const hasColors = colors && colors.length > 0
 
       for (let y = 0; y < height; y += dotSpacing) {
         for (let x = 0; x < width; x += dotSpacing) {
@@ -202,6 +206,12 @@ const HalftoneImage = React.forwardRef<HTMLDivElement, HalftoneImageProps>(
 
           // Render dot if visible
           if (dotRadius > 0.4) {
+            if (hasColors) {
+              const dotIdx = Math.floor(y / dotSpacing) * Math.floor(width / dotSpacing) + Math.floor(x / dotSpacing)
+              ctx.fillStyle = colors[dotIdx % colors.length]
+            } else {
+              ctx.fillStyle = resolvedInkColor
+            }
             ctx.beginPath()
             ctx.arc(drawX, drawY, dotRadius, 0, Math.PI * 2)
             ctx.fill()
@@ -213,6 +223,7 @@ const HalftoneImage = React.forwardRef<HTMLDivElement, HalftoneImageProps>(
       dotSpacing,
       maxDotRadius,
       inkColor,
+      colors,
       paperColor,
       contrast,
       brightness,
