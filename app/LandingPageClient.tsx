@@ -20,8 +20,7 @@ import {
   XIcon,
   SparkleIcon,
   SettingsIcon,
-  UserIcon,
-  ShieldAlertIcon
+  UserIcon
 } from "lucide-react"
 import { useTheme } from "next-themes"
 
@@ -36,14 +35,15 @@ import { GITHUB_URL } from "@/lib/constants"
 import { GithubButton } from "@/components/kanso/github-button"
 import { InteractiveCard, CardBody, CardItem } from "@/components/kanso/interactive-card"
 import { SpotlightCard } from "@/components/kanso/spotlight-card"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card"
+import { RealismButton } from "@/components/kanso/realism-button"
+import { KeyboardButton } from "@/components/kanso/keyboard-button"
+import { GlowLineButton } from "@/components/kanso/glow-line-button"
+import { LiquidMetalCard } from "@/components/kanso/liquid-metal-card"
+import { HalftoneImage } from "@/components/kanso/halftone-image"
+import { HalftoneGrid } from "@/components/kanso/halftone-grid"
+import { MagicRings } from "@/components/kanso/magic-rings"
+import { Antigravity } from "@/components/kanso/antigravity"
+import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
   Dialog,
@@ -157,6 +157,64 @@ interface LandingPageClientProps {
   dxRaw: string
 }
 
+const COLOR_THEMES = [
+  {
+    name: "purple",
+    label: "Purple",
+    gradientFrom: "rgba(168, 85, 247, 0.35)",
+    gradientTo: "rgba(180, 151, 207, 0.25)",
+    glowColor: "#120F17",
+    ringColor: "#a855f7",
+    particleColor: "#a855f7",
+    colors: ["#a855f7", "#c084fc", "#e9d5ff", "#c084fc"],
+    colorClass: "bg-purple-500",
+  },
+  {
+    name: "cyan",
+    label: "Cyan",
+    gradientFrom: "rgba(6, 182, 212, 0.35)",
+    gradientTo: "rgba(34, 211, 238, 0.25)",
+    glowColor: "#081E24",
+    ringColor: "#06b6d4",
+    particleColor: "#06b6d4",
+    colors: ["#06b6d4", "#22d3ee", "#67e8f9", "#22d3ee"],
+    colorClass: "bg-cyan-500",
+  },
+  {
+    name: "emerald",
+    label: "Emerald",
+    gradientFrom: "rgba(16, 185, 129, 0.35)",
+    gradientTo: "rgba(52, 211, 153, 0.25)",
+    glowColor: "#051F14",
+    ringColor: "#10b981",
+    particleColor: "#10b981",
+    colors: ["#10b981", "#34d399", "#6ee7b7", "#34d399"],
+    colorClass: "bg-emerald-500",
+  },
+  {
+    name: "rose",
+    label: "Rose",
+    gradientFrom: "rgba(244, 63, 94, 0.35)",
+    gradientTo: "rgba(251, 113, 133, 0.25)",
+    glowColor: "#240509",
+    ringColor: "#f43f5e",
+    particleColor: "#f43f5e",
+    colors: ["#f43f5e", "#fb7185", "#fda4af", "#fb7185"],
+    colorClass: "bg-rose-500",
+  },
+  {
+    name: "amber",
+    label: "Amber",
+    gradientFrom: "rgba(245, 158, 11, 0.35)",
+    gradientTo: "rgba(251, 191, 36, 0.25)",
+    glowColor: "#241805",
+    ringColor: "#f59e0b",
+    particleColor: "#f59e0b",
+    colors: ["#f59e0b", "#fbbf24", "#fcd34d", "#fbbf24"],
+    colorClass: "bg-amber-500",
+  },
+]
+
 export default function LandingPageClient({
   heroHtml,
   heroRaw,
@@ -169,8 +227,20 @@ export default function LandingPageClient({
   const [mounted, setMounted] = React.useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [selectedShowcase, setSelectedShowcase] = React.useState<
-    "buttons" | "cards" | "dialogs" | "inputs" | "command" | "pricing"
+    "buttons" | "cards" | "dialogs" | "inputs" | "command" | "pricing" | "halftone" | "magic-rings" | "antigravity"
   >("buttons")
+  const [halftoneParams, setHalftoneParams] = React.useState({
+    dotRadius: 1.5,
+    dotSpacing: 12,
+    sparkle: true,
+    gradientFrom: "rgba(168, 85, 247, 0.35)",
+    gradientTo: "rgba(180, 151, 207, 0.25)",
+    glowColor: "#120F17",
+    ringColor: "#a855f7",
+    particleColor: "#a855f7",
+    colors: ["#a855f7", "#c084fc", "#e9d5ff", "#c084fc"],
+    themeName: "purple",
+  })
   const [heroTab, setHeroTab] = React.useState<"preview" | "code">("preview")
   React.useEffect(() => {
     const handle = requestAnimationFrame(() => setMounted(true))
@@ -328,13 +398,61 @@ export default function LandingPageClient({
       </header>
 
       {/* Hero Section */}
-      <section className="relative mx-auto max-w-7xl px-6 pt-24 pb-32 md:px-8 md:pt-32 overflow-hidden">
+      <section className="relative w-full pt-24 pb-32 md:pt-32 overflow-hidden">
+        {/* Halftone background grid layer */}
+        <div className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-30">
+          <HalftoneGrid
+            dotRadius={halftoneParams.dotRadius}
+            dotSpacing={halftoneParams.dotSpacing}
+            sparkle={halftoneParams.sparkle}
+            gradientFrom={halftoneParams.gradientFrom}
+            gradientTo={halftoneParams.gradientTo}
+            glowColor={halftoneParams.glowColor}
+            colors={halftoneParams.colors}
+          />
+        </div>
+
+        {/* Magic Rings background layer */}
+        <div className="absolute inset-0 pointer-events-none opacity-30 dark:opacity-20 mix-blend-multiply dark:mix-blend-screen">
+          <MagicRings
+            color={theme === "dark" ? halftoneParams.ringColor || "#a855f7" : halftoneParams.ringColor || "#8b5cf6"}
+            colorTwo={theme === "dark" ? "#3b82f6" : "#06b6d4"}
+            speed={0.6}
+            ringCount={5}
+            attenuation={12}
+            lineThickness={1.5}
+            baseRadius={0.25}
+            radiusStep={0.08}
+            scaleRate={0.05}
+            noiseAmount={0.05}
+            followMouse={true}
+            mouseInfluence={0.15}
+            clickBurst={true}
+          />
+        </div>
+
+        {/* Antigravity background layer */}
+        <div className="absolute inset-0 pointer-events-none opacity-45 dark:opacity-35">
+          <Antigravity
+            count={150}
+            magnetRadius={7}
+            ringRadius={6}
+            waveSpeed={0.3}
+            waveAmplitude={0.6}
+            particleSize={1.4}
+            color={theme === "dark" ? halftoneParams.particleColor || "#a855f7" : halftoneParams.particleColor || "#6366f1"}
+            colors={halftoneParams.colors}
+            autoAnimate={true}
+            particleShape="capsule"
+          />
+        </div>
         {/* Ambient background blob */}
         <div className="pointer-events-none absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 animate-pulse duration-[8s]" aria-hidden="true">
           <div className="relative left-[calc(50%-15rem)] aspect-1155/678 w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-purple-500/10 to-indigo-600/15 opacity-40 dark:from-purple-500/15 dark:to-indigo-600/20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style={{ clipPath: "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" }} />
         </div>
 
-        <div className="grid items-center gap-16 lg:grid-cols-12 lg:gap-12 relative z-10">
+        <div className="mx-auto max-w-6xl px-6 md:px-8 relative z-10 w-full">
+          <div className="grid items-center gap-16 lg:grid-cols-12 lg:gap-12">
           {/* Hero Left Content */}
           <div className="flex flex-col items-start lg:col-span-7">
             <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-3.5 py-1.5 text-xs font-medium dark:border-zinc-800 dark:bg-zinc-900/50">
@@ -407,61 +525,125 @@ export default function LandingPageClient({
                     transition={{ duration: 0.2 }}
                     className="w-full flex justify-center"
                   >
-                    <InteractiveCard
-                      animated={true}
-                      glowColor="280 80 70"
-                      spotlightColor="rgba(168, 85, 247, 0.15)"
-                      colors={["#c084fc", "#f472b6", "#38bdf8"]}
-                      className="w-full max-w-[360px]"
-                      borderRadius={24}
-                    >
-                      <CardBody className="relative h-auto w-full p-6 text-zinc-150 flex flex-col justify-between">
+                    <div className="w-full max-w-[360px] rounded-2xl border border-zinc-200/80 bg-white/80 p-6 shadow-xl dark:border-zinc-800/80 dark:bg-zinc-950/80 backdrop-blur-md relative overflow-hidden group">
+                      <div className="relative z-10 flex flex-col gap-6">
+                        <div className="flex items-center justify-between">
+                          <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">Interactive Canvas Controls</span>
+                          <span className="h-2 w-2 rounded-full bg-purple-500 animate-pulse" />
+                        </div>
+
                         <div>
-                          <div className="flex items-center justify-between">
-                            <CardItem
-                              translateZ={40}
-                              className="text-[10px] font-semibold uppercase tracking-wider text-purple-400 px-2.5 py-0.5 rounded-full bg-purple-500/10 border border-purple-500/20"
-                            >
-                              Interact Me
-                            </CardItem>
-                            <span className="text-zinc-650 dark:text-zinc-550 text-[10px] font-mono select-none">
-                              Kanso UI
-                            </span>
+                          <h3 className="text-lg font-bold tracking-tight text-zinc-900 dark:text-white">Customize Background</h3>
+                          <p className="mt-1.5 text-xs text-zinc-500 dark:text-zinc-455 leading-relaxed">
+                            Select color palettes and modify parameters of the halftone dither grid in real-time.
+                          </p>
+                        </div>
+
+                        {/* Colors Option Grid */}
+                        <div className="flex flex-col gap-2.5">
+                          <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Color Themes</span>
+                          <div className="flex gap-3">
+                            {COLOR_THEMES.map((themeItem) => (
+                              <button
+                                key={themeItem.name}
+                                onClick={() =>
+                                  setHalftoneParams((prev) => ({
+                                    ...prev,
+                                    gradientFrom: themeItem.gradientFrom,
+                                    gradientTo: themeItem.gradientTo,
+                                    glowColor: themeItem.glowColor,
+                                    ringColor: themeItem.ringColor,
+                                    particleColor: themeItem.particleColor,
+                                    colors: themeItem.colors,
+                                    themeName: themeItem.name,
+                                  }))
+                                }
+                                className={cn(
+                                  "size-6 rounded-full border cursor-pointer transition-all hover:scale-110",
+                                  themeItem.colorClass,
+                                  halftoneParams.themeName === themeItem.name
+                                    ? "border-zinc-900 dark:border-white ring-2 ring-zinc-900/10 dark:ring-white/10 scale-105"
+                                    : "border-transparent"
+                                )}
+                                title={themeItem.label}
+                              />
+                            ))}
+                          </div>
+                        </div>
+
+                        {/* Controls */}
+                        <div className="flex flex-col gap-4">
+                          <div className="flex flex-col gap-1.5">
+                            <div className="flex justify-between text-[10px] font-semibold text-zinc-455 uppercase tracking-wider">
+                              <span>Dot Spacing</span>
+                              <span className="font-mono text-zinc-550">{halftoneParams.dotSpacing}px</span>
+                            </div>
+                            <input
+                              type="range"
+                              min="8"
+                              max="20"
+                              value={halftoneParams.dotSpacing}
+                              onChange={(e) =>
+                                setHalftoneParams((prev) => ({
+                                  ...prev,
+                                  dotSpacing: parseInt(e.target.value),
+                                }))
+                              }
+                              className="w-full accent-zinc-900 dark:accent-white cursor-pointer h-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none"
+                            />
                           </div>
 
-                          <CardItem
-                            translateZ={60}
-                            className="mt-6 text-2xl font-bold tracking-tight text-white"
-                          >
-                            Zen Interaction
-                          </CardItem>
+                          <div className="flex flex-col gap-1.5">
+                            <div className="flex justify-between text-[10px] font-semibold text-zinc-455 uppercase tracking-wider">
+                              <span>Dot Size</span>
+                              <span className="font-mono text-zinc-550">{halftoneParams.dotRadius}px</span>
+                            </div>
+                            <input
+                              type="range"
+                              min="1"
+                              max="3"
+                              step="0.5"
+                              value={halftoneParams.dotRadius}
+                              onChange={(e) =>
+                                setHalftoneParams((prev) => ({
+                                  ...prev,
+                                  dotRadius: parseFloat(e.target.value),
+                                }))
+                              }
+                              className="w-full accent-zinc-900 dark:accent-white cursor-pointer h-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none"
+                            />
+                          </div>
 
-                          <CardItem
-                            translateZ={30}
-                            className="mt-2.5 text-xs text-zinc-400 leading-relaxed"
-                          >
-                            Hover, tilt in 3D, and move your cursor to explore high-performance spotlights and conic mesh gradient borders.
-                          </CardItem>
+                          <div className="flex items-center justify-between">
+                            <span className="text-[10px] font-semibold text-zinc-455 uppercase tracking-wider">Sparkling Effect</span>
+                            <button
+                              onClick={() =>
+                                setHalftoneParams((prev) => ({
+                                  ...prev,
+                                  sparkle: !prev.sparkle,
+                                }))
+                              }
+                              className={cn(
+                                "relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-0",
+                                halftoneParams.sparkle ? "bg-zinc-900 dark:bg-white" : "bg-zinc-200 dark:bg-zinc-800"
+                              )}
+                            >
+                              <span
+                                className={cn(
+                                  "pointer-events-none inline-block size-4 transform rounded-full bg-white dark:bg-zinc-900 shadow-sm ring-0 transition duration-200 ease-in-out",
+                                  halftoneParams.sparkle ? "translate-x-4" : "translate-x-0"
+                                )}
+                              />
+                            </button>
+                          </div>
                         </div>
 
-                        <div className="flex items-center justify-between mt-8">
-                          <CardItem
-                            translateZ={25}
-                            className="text-xs font-semibold text-zinc-500 font-mono"
-                          >
-                            Copy-Paste Ready
-                          </CardItem>
-                          <CardItem
-                            translateZ={70}
-                            as={Link}
-                            href="/docs"
-                            className="rounded-lg bg-white px-3.5 py-2 text-xs font-semibold text-zinc-950 hover:bg-zinc-200 transition-colors cursor-pointer border border-transparent shadow-md"
-                          >
-                            Get Started
-                          </CardItem>
+                        <div className="pt-2 border-t border-zinc-150 dark:border-zinc-800 flex justify-between items-center text-[10px] text-zinc-400">
+                          <span>Active: Dither + Rings + Particles</span>
+                          <span className="font-mono text-zinc-550">Kanso Studio v1.2</span>
                         </div>
-                      </CardBody>
-                    </InteractiveCard>
+                      </div>
+                    </div>
                   </motion.div>
                 ) : (
                   <motion.div
@@ -484,6 +666,7 @@ export default function LandingPageClient({
               </AnimatePresence>
             </div>
           </div>
+        </div>
         </div>
       </section>
 
@@ -584,7 +767,7 @@ export default function LandingPageClient({
             </p>
           </div>
 
-          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {/* Card 1: Magnetic Button */}
             <Card className="flex flex-col justify-between border border-zinc-200 bg-white p-5 shadow-xs transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/40">
               <div>
@@ -660,6 +843,38 @@ export default function LandingPageClient({
                 </Button>
               </div>
             </Card>
+
+            {/* Card 4: Halftone Image */}
+            <Card className="flex flex-col justify-between border border-zinc-200 bg-white p-5 shadow-xs transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/40">
+              <div>
+                <h3 className="text-base font-semibold text-zinc-900 dark:text-white">Halftone Image</h3>
+                <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed min-h-[40px]">
+                  Converts images into custom halftone illustrations. Includes real-time mouse hover dither warp distortions.
+                </p>
+                <div className="mt-6 flex h-40 items-center justify-center rounded-lg border border-dashed border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30 p-4">
+                  <div className="size-24 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex items-center justify-center">
+                    <HalftoneImage
+                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200&h=200"
+                      dotSpacing={5}
+                      contrast={1.3}
+                      inkColor="currentColor"
+                      paperColor="transparent"
+                      className="size-full"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="mt-6 flex justify-end">
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="gap-1.5 px-0 text-zinc-950 dark:text-zinc-50"
+                  render={<Link href="/docs/components/effects/halftone-image" />}
+                >
+                  View Installation <ArrowUpRightIcon className="size-3.5" />
+                </Button>
+              </div>
+            </Card>
           </div>
         </div>
       </section>
@@ -682,6 +897,9 @@ export default function LandingPageClient({
               {([
                 { id: "buttons", label: "Buttons" },
                 { id: "cards", label: "Cards" },
+                { id: "halftone", label: "Halftone Screen" },
+                { id: "magic-rings", label: "Magic Rings" },
+                { id: "antigravity", label: "Antigravity" },
                 { id: "dialogs", label: "Dialogs" },
                 { id: "inputs", label: "Inputs" },
                 { id: "command", label: "Command Menu" },
@@ -706,51 +924,22 @@ export default function LandingPageClient({
               {/* Preview Box */}
               <div className="flex min-h-[320px] items-center justify-center rounded-xl border border-zinc-200/80 bg-zinc-50/50 p-6 sm:p-12 dark:border-zinc-800 dark:bg-zinc-900/10 w-full overflow-hidden">
                 {selectedShowcase === "buttons" && (
-                  <div className="flex flex-wrap items-center justify-center gap-4">
-                    <Button variant="default">Primary</Button>
-                    <Button variant="outline">Outline</Button>
-                    <Button variant="ghost">Ghost</Button>
-                    <Button variant="destructive">Destructive</Button>
-                    <Button variant="outline" size="icon-sm">
-                      <SearchIcon className="size-4" />
-                    </Button>
+                  <div className="flex flex-wrap items-center justify-center gap-6">
+                    <RealismButton variantColor="cyan">Cyan Glow</RealismButton>
+                    <KeyboardButton variantColor="dark">cmd</KeyboardButton>
+                    <GlowLineButton glowColor="rose">Rose Glow</GlowLineButton>
                   </div>
                 )}
 
                 {selectedShowcase === "cards" && (
-                  <Card className="w-full max-w-[360px] border border-zinc-200 bg-white shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-base font-semibold">Security Alert</CardTitle>
-                        <ShieldAlertIcon className="size-5 text-zinc-500" />
-                      </div>
-                      <CardDescription className="mt-1">
-                        A login attempt was detected from a new location.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-2.5 py-4 border-y border-zinc-100 dark:border-zinc-800 text-xs text-zinc-500 dark:text-zinc-400">
-                      <div className="flex justify-between">
-                        <span>Device</span>
-                        <span className="font-medium text-zinc-800 dark:text-zinc-300">Chrome (macOS)</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Location</span>
-                        <span className="font-medium text-zinc-800 dark:text-zinc-300">San Francisco, CA</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>IP Address</span>
-                        <span className="font-medium text-zinc-800 dark:text-zinc-300">192.168.1.84</span>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex justify-end gap-2 pt-4">
-                      <Button variant="ghost" size="sm">
-                        Dismiss
-                      </Button>
-                      <Button variant="default" size="sm">
-                        Verify Location
-                      </Button>
-                    </CardFooter>
-                  </Card>
+                  <div className="w-full max-w-[360px]">
+                    <LiquidMetalCard
+                      title="Liquid Metal"
+                      subtitle="Interactive"
+                      description="WebGL shader reflections on a copy-paste React container card."
+                      className="w-full"
+                    />
+                  </div>
                 )}
 
                 {selectedShowcase === "dialogs" && (
@@ -870,6 +1059,58 @@ export default function LandingPageClient({
                     </Card>
                   </div>
                 )}
+
+                {selectedShowcase === "halftone" && (
+                  <div className="relative w-full h-[280px] flex items-center justify-center overflow-hidden">
+                    <HalftoneGrid
+                      dotRadius={1.5}
+                      dotSpacing={14}
+                      gradientFrom="rgba(168, 85, 247, 0.35)"
+                      gradientTo="rgba(180, 151, 207, 0.25)"
+                      glowColor="#120F17"
+                      className="absolute inset-0"
+                    />
+                    <div className="relative size-44 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex items-center justify-center shadow-md">
+                      <HalftoneImage
+                        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300&h=300"
+                        dotSpacing={6}
+                        contrast={1.3}
+                        inkColor="currentColor"
+                        paperColor="transparent"
+                        className="size-full"
+                        alt="Halftone showcase preview"
+                      />
+                    </div>
+                  </div>
+                )}
+
+                {selectedShowcase === "magic-rings" && (
+                  <div className="relative w-full h-[320px] rounded-xl overflow-hidden bg-zinc-950 flex items-center justify-center p-6 border border-zinc-800">
+                    <MagicRings
+                      color="#fc42ff"
+                      colorTwo="#42fcff"
+                      speed={1}
+                      ringCount={6}
+                      followMouse={true}
+                      clickBurst={true}
+                    />
+                    <span className="relative z-10 text-white font-mono text-xs select-none bg-black/40 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-white/10">
+                      Hover & Click to Burst
+                    </span>
+                  </div>
+                )}
+
+                {selectedShowcase === "antigravity" && (
+                  <div className="relative w-full h-[320px] rounded-xl overflow-hidden bg-zinc-950 border border-zinc-800">
+                    <Antigravity
+                      count={200}
+                      color="#FF9FFC"
+                      particleShape="capsule"
+                      magnetRadius={10}
+                      autoAnimate={true}
+                    />
+                  </div>
+                )}
               </div>
 
               {/* Code Snippet Box */}
@@ -881,6 +1122,12 @@ export default function LandingPageClient({
                     ? "ButtonDemo.tsx"
                     : selectedShowcase === "cards"
                     ? "CardDemo.tsx"
+                    : selectedShowcase === "halftone"
+                    ? "HalftoneDemo.tsx"
+                    : selectedShowcase === "magic-rings"
+                    ? "MagicRingsDemo.tsx"
+                    : selectedShowcase === "antigravity"
+                    ? "AntigravityDemo.tsx"
                     : selectedShowcase === "dialogs"
                     ? "DialogDemo.tsx"
                     : selectedShowcase === "inputs"

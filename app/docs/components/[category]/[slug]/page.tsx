@@ -65,6 +65,10 @@ export default async function ComponentPage({ params }: PageProps) {
     notFound()
   }
 
+  const currentIndex = registry.findIndex((c) => c.name === slug)
+  const prevComponent = currentIndex > 0 ? registry[currentIndex - 1] : null
+  const nextComponent = currentIndex < registry.length - 1 ? registry[currentIndex + 1] : null
+
   // Read the raw source code
   const filePath = path.join(process.cwd(), component.filePath)
   let rawSource = ""
@@ -371,6 +375,48 @@ export default async function ComponentPage({ params }: PageProps) {
             </div>
           </section>
         )}
+
+        {/* ── Page Navigation Footer ─────────────────────────── */}
+        <div className="mt-16 pt-8 border-t border-zinc-200 dark:border-zinc-800 flex items-center justify-between gap-4">
+          {prevComponent ? (
+            <Link
+              href={`/docs/components/${prevComponent.category}/${prevComponent.name}`}
+              className="group flex flex-col items-start gap-1 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:border-zinc-350 dark:hover:border-zinc-700 bg-white dark:bg-zinc-950 transition-all hover:shadow-2xs max-w-[45%] min-w-[120px]"
+            >
+              <span className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold flex items-center gap-1">
+                ← Prev
+              </span>
+              <span className="text-sm font-semibold text-zinc-750 dark:text-zinc-300 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors truncate max-w-[180px]">
+                {prevComponent.title}
+              </span>
+            </Link>
+          ) : (
+            <div className="flex-1 max-w-[45%]" />
+          )}
+
+          <Link
+            href={`/docs/components/${category}`}
+            className="inline-flex items-center justify-center p-2.5 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:border-zinc-350 dark:hover:border-zinc-700 bg-zinc-50/50 dark:bg-zinc-900/10 text-xs font-bold text-zinc-500 hover:text-zinc-800 dark:hover:text-zinc-200 transition-all shadow-3xs"
+          >
+            Overview
+          </Link>
+
+          {nextComponent ? (
+            <Link
+              href={`/docs/components/${nextComponent.category}/${nextComponent.name}`}
+              className="group flex flex-col items-end gap-1 p-4 rounded-xl border border-zinc-200 dark:border-zinc-800 hover:border-zinc-350 dark:hover:border-zinc-700 bg-white dark:bg-zinc-950 transition-all hover:shadow-2xs text-right max-w-[45%] min-w-[120px]"
+            >
+              <span className="text-[10px] uppercase tracking-wider text-zinc-400 font-bold flex items-center gap-1">
+                Next →
+              </span>
+              <span className="text-sm font-semibold text-zinc-750 dark:text-zinc-300 group-hover:text-zinc-950 dark:group-hover:text-white transition-colors truncate max-w-[180px]">
+                {nextComponent.title}
+              </span>
+            </Link>
+          ) : (
+            <div className="flex-1 max-w-[45%]" />
+          )}
+        </div>
       </div>
     </div>
   )
