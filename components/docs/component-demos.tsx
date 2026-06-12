@@ -18,6 +18,8 @@ import { InteractiveCard } from "@/components/kanso/interactive-card"
 import { LiquidMetalCard } from "@/components/kanso/liquid-metal-card"
 import { HalftoneImage } from "@/components/kanso/halftone-image"
 import { HalftoneGrid } from "@/components/kanso/halftone-grid"
+import { MagicRings } from "@/components/kanso/magic-rings"
+import { Antigravity } from "@/components/kanso/antigravity"
 import {
   ColorPicker,
   ColorPickerSelection,
@@ -1504,68 +1506,287 @@ const demos: Record<string, React.ComponentType> = {
     )
   },
   "halftone-grid": function HalftoneGridDemo() {
-    const [spacing, setSpacing] = React.useState<number>(24)
-    const [baseRad, setBaseRad] = React.useState<number>(1.2)
-    const [maxRad, setMaxRad] = React.useState<number>(5.0)
-    const [hoverRad, setHoverRad] = React.useState<number>(120)
+    const [spacing, setSpacing] = React.useState<number>(14)
+    const [radius, setRadius] = React.useState<number>(1.5)
+    const [bulge, setBulge] = React.useState<number>(67)
+    const [cursorRad, setCursorRad] = React.useState<number>(500)
+    const [sparkle, setSparkle] = React.useState<boolean>(false)
+    const [colorTheme, setColorTheme] = React.useState<"purple" | "cyan" | "emerald" | "rose" | "amber">("purple")
+
+    const themes = {
+      purple: { from: "rgba(168, 85, 247, 0.35)", to: "rgba(180, 151, 207, 0.25)", glow: "#120F17", badge: "bg-purple-500" },
+      cyan: { from: "rgba(6, 182, 212, 0.35)", to: "rgba(34, 211, 238, 0.25)", glow: "#081E24", badge: "bg-cyan-500" },
+      emerald: { from: "rgba(16, 185, 129, 0.35)", to: "rgba(52, 211, 153, 0.25)", glow: "#051F14", badge: "bg-emerald-500" },
+      rose: { from: "rgba(244, 63, 94, 0.35)", to: "rgba(251, 113, 133, 0.25)", glow: "#240509", badge: "bg-rose-500" },
+      amber: { from: "rgba(245, 158, 11, 0.35)", to: "rgba(251, 191, 36, 0.25)", glow: "#241805", badge: "bg-amber-500" },
+    }
 
     return (
       <div className="flex flex-col gap-8 w-full max-w-lg items-center">
-        <HalftoneGrid
-          dotSpacing={spacing}
-          baseRadius={baseRad}
-          maxRadius={maxRad}
-          hoverRadius={hoverRad}
-          className="w-full h-[280px] border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950/20 rounded-xl relative overflow-hidden flex items-center justify-center text-center shadow-xs"
-        >
-          <div className="relative z-20 max-w-xs px-4">
+        <div className="w-full h-[300px] border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950/20 rounded-xl relative overflow-hidden flex items-center justify-center text-center shadow-xs">
+          <HalftoneGrid
+            dotRadius={radius}
+            dotSpacing={spacing}
+            cursorRadius={cursorRad}
+            bulgeStrength={bulge}
+            sparkle={sparkle}
+            gradientFrom={themes[colorTheme].from}
+            gradientTo={themes[colorTheme].to}
+            glowColor={themes[colorTheme].glow}
+            className="absolute inset-0"
+          />
+          <div className="relative z-20 max-w-xs px-4 bg-white/40 dark:bg-black/40 backdrop-blur-xs py-4 rounded-xl border border-white/10 shadow-sm animate-fade-in">
             <h4 className="text-lg font-bold text-zinc-950 dark:text-white mb-2">Interactive Ripple</h4>
             <p className="text-xs text-zinc-500 dark:text-zinc-400">
               Move your mouse over the background to see the dot matrix grid expand and warp dynamically.
             </p>
           </div>
-        </HalftoneGrid>
+        </div>
 
         {/* Control Panel */}
-        <div className="grid grid-cols-2 gap-4 w-full p-4 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
-          <div className="col-span-2 text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-1 font-sans">
-            Adjust Halftone Grid Props
+        <div className="grid grid-cols-2 gap-4 w-full p-5 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="col-span-2 flex flex-col gap-2">
+            <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest font-sans">
+              Adjust Halftone Grid Props
+            </div>
+
+            {/* Color Swatches */}
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-[10px] text-zinc-500 font-medium mr-2">Color Theme:</span>
+              {(Object.keys(themes) as Array<keyof typeof themes>).map((tKey) => (
+                <button
+                  key={tKey}
+                  onClick={() => setColorTheme(tKey)}
+                  className={cn(
+                    "size-5 rounded-full border cursor-pointer transition-all",
+                    themes[tKey].badge,
+                    colorTheme === tKey
+                      ? "border-zinc-900 dark:border-white ring-2 ring-zinc-900/10 dark:ring-white/10 scale-105"
+                      : "border-transparent"
+                  )}
+                />
+              ))}
+            </div>
           </div>
+
           <DialKitSlider
-            label="Grid Spacing"
-            min={16}
-            max={36}
-            step={2}
+            label="Dot Spacing"
+            min={8}
+            max={25}
+            step={1}
             value={spacing}
             onChange={setSpacing}
             suffix="px"
           />
           <DialKitSlider
-            label="Base Radius"
-            min={0.5}
+            label="Dot Radius"
+            min={1.0}
+            max={3.0}
+            step={0.5}
+            value={radius}
+            onChange={setRadius}
+            suffix="px"
+          />
+          <DialKitSlider
+            label="Bulge Strength"
+            min={20}
+            max={120}
+            step={5}
+            value={bulge}
+            onChange={setBulge}
+            suffix="px"
+          />
+          <DialKitSlider
+            label="Cursor Radius"
+            min={200}
+            max={800}
+            step={50}
+            value={cursorRad}
+            onChange={setCursorRad}
+            suffix="px"
+          />
+
+          <div className="col-span-2 flex items-center justify-between pt-2 border-t border-zinc-150 dark:border-zinc-800">
+            <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Sparkling Effect</span>
+            <input
+              type="checkbox"
+              checked={sparkle}
+              onChange={(e) => setSparkle(e.target.checked)}
+              className="accent-purple-500 cursor-pointer"
+            />
+          </div>
+        </div>
+      </div>
+    )
+  },
+  "magic-rings": function MagicRingsDemo() {
+    const [color, setColor] = React.useState("#fc42ff")
+    const [colorTwo, setColorTwo] = React.useState("#42fcff")
+    const [ringCount, setRingCount] = React.useState(6)
+    const [speed, setSpeed] = React.useState(1.0)
+    const [lineThickness, setLineThickness] = React.useState(2.0)
+    const [noiseAmount, setNoiseAmount] = React.useState(0.1)
+
+    return (
+      <div className="flex flex-col gap-8 w-full max-w-lg items-center">
+        <div className="w-full h-[320px] rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-950 relative shadow-md">
+          <MagicRings
+            color={color}
+            colorTwo={colorTwo}
+            ringCount={ringCount}
+            speed={speed}
+            lineThickness={lineThickness}
+            noiseAmount={noiseAmount}
+            followMouse={true}
+            clickBurst={true}
+          />
+          <div className="absolute top-4 left-4 z-20 pointer-events-none">
+            <span className="text-[10px] uppercase font-bold text-white/50 tracking-widest font-mono">
+              Hover & Click Interactive Shader
+            </span>
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div className="grid grid-cols-2 gap-4 w-full p-4 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="col-span-2 text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-1 font-sans">
+            Adjust Shader Uniform Props
+          </div>
+          <div className="flex flex-col gap-1.5 w-full">
+            <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Accent Color</span>
+            <input
+              type="color"
+              value={color}
+              onChange={(e) => setColor(e.target.value)}
+              className="w-full h-8 rounded border border-zinc-200 dark:border-zinc-800 bg-transparent p-0 cursor-pointer"
+            />
+          </div>
+          <div className="flex flex-col gap-1.5 w-full">
+            <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Gradient Color</span>
+            <input
+              type="color"
+              value={colorTwo}
+              onChange={(e) => setColorTwo(e.target.value)}
+              className="w-full h-8 rounded border border-zinc-200 dark:border-zinc-800 bg-transparent p-0 cursor-pointer"
+            />
+          </div>
+          <DialKitSlider
+            label="Ring Count"
+            min={1}
+            max={10}
+            step={1}
+            value={ringCount}
+            onChange={setRingCount}
+          />
+          <DialKitSlider
+            label="Wave Speed"
+            min={0.1}
             max={3.0}
             step={0.1}
-            value={baseRad}
-            onChange={setBaseRad}
-            suffix="px"
+            value={speed}
+            onChange={setSpeed}
           />
           <DialKitSlider
-            label="Hover Max Radius"
-            min={3.0}
-            max={10.0}
+            label="Line Thickness"
+            min={0.5}
+            max={5.0}
             step={0.5}
-            value={maxRad}
-            onChange={setMaxRad}
-            suffix="px"
+            value={lineThickness}
+            onChange={setLineThickness}
           />
           <DialKitSlider
-            label="Hover Trigger Radius"
-            min={60}
-            max={200}
-            step={10}
-            value={hoverRad}
-            onChange={setHoverRad}
-            suffix="px"
+            label="Noise Grain"
+            min={0.0}
+            max={0.5}
+            step={0.05}
+            value={noiseAmount}
+            onChange={setNoiseAmount}
+          />
+        </div>
+      </div>
+    )
+  },
+  "antigravity": function AntigravityDemo() {
+    const [count, setCount] = React.useState(250)
+    const [magnetRadius, setMagnetRadius] = React.useState(10)
+    const [ringRadius, setRingRadius] = React.useState(8)
+    const [particleSize, setParticleSize] = React.useState(2.0)
+    const [particleShape, setParticleShape] = React.useState<"capsule" | "sphere" | "box" | "tetrahedron">("capsule")
+
+    return (
+      <div className="flex flex-col gap-8 w-full max-w-lg items-center">
+        <div className="w-full h-[320px] rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-950 relative shadow-md">
+          <Antigravity
+            count={count}
+            magnetRadius={magnetRadius}
+            ringRadius={ringRadius}
+            particleSize={particleSize}
+            particleShape={particleShape}
+            color="#FF9FFC"
+            autoAnimate={true}
+          />
+          <div className="absolute top-4 left-4 z-20 pointer-events-none">
+            <span className="text-[10px] uppercase font-bold text-white/50 tracking-widest font-mono">
+              React Three Fiber Instanced Field
+            </span>
+          </div>
+        </div>
+
+        {/* Controls */}
+        <div className="grid grid-cols-2 gap-4 w-full p-4 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="col-span-2 text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-1 font-sans">
+            Adjust Particle Instancing Props
+          </div>
+          <div className="flex flex-col gap-1.5 w-full col-span-2">
+            <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Particle Geometry</span>
+            <div className="grid grid-cols-4 gap-2">
+              {(["capsule", "sphere", "box", "tetrahedron"] as const).map((shape) => (
+                <button
+                  key={shape}
+                  onClick={() => setParticleShape(shape)}
+                  className={cn(
+                    "text-[10px] font-semibold uppercase tracking-wider py-1.5 border rounded-lg transition-colors cursor-pointer",
+                    particleShape === shape
+                      ? "bg-zinc-900 border-zinc-900 text-white dark:bg-zinc-100 dark:border-zinc-100 dark:text-zinc-900"
+                      : "bg-white border-zinc-200 text-zinc-600 hover:bg-zinc-50 dark:bg-zinc-950 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900"
+                  )}
+                >
+                  {shape}
+                </button>
+              ))}
+            </div>
+          </div>
+          <DialKitSlider
+            label="Particles Count"
+            min={100}
+            max={500}
+            step={50}
+            value={count}
+            onChange={setCount}
+          />
+          <DialKitSlider
+            label="Magnet Radius"
+            min={4}
+            max={20}
+            step={1}
+            value={magnetRadius}
+            onChange={setMagnetRadius}
+          />
+          <DialKitSlider
+            label="Orbit Radius"
+            min={3}
+            max={15}
+            step={1}
+            value={ringRadius}
+            onChange={setRingRadius}
+          />
+          <DialKitSlider
+            label="Particle Scale"
+            min={0.5}
+            max={4.0}
+            step={0.5}
+            value={particleSize}
+            onChange={setParticleSize}
           />
         </div>
       </div>

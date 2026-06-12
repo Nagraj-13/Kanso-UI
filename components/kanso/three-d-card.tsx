@@ -162,7 +162,8 @@ function CardItem<T extends React.ElementType = "div">({
     }
   }, [isMouseEntered, translateX, translateY, translateZ, rotateX, rotateY, rotateZ])
 
-  const Tag = as || "div"
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const Tag = (as || "div") as any
 
   return (
     <Tag

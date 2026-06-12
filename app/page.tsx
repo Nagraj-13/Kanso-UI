@@ -115,7 +115,14 @@ export default function PriceCard() {
 export default function HalftoneDemo() {
   return (
     <div className="relative w-full h-[280px] flex items-center justify-center overflow-hidden">
-      <HalftoneGrid dotSpacing={22} baseRadius={1} maxRadius={4} className="absolute inset-0 text-zinc-900/5 dark:text-white/4" />
+      <HalftoneGrid
+        dotRadius={1.5}
+        dotSpacing={14}
+        gradientFrom="rgba(168, 85, 247, 0.35)"
+        gradientTo="rgba(180, 151, 207, 0.25)"
+        glowColor="#120F17"
+        className="absolute inset-0"
+      />
       <div className="relative size-44 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white">
         <HalftoneImage
           src="/avatar.jpg"
@@ -125,6 +132,36 @@ export default function HalftoneDemo() {
           paperColor="transparent"
         />
       </div>
+    </div>
+  )
+}`,
+  magicRings: `import { MagicRings } from "@/components/kanso/magic-rings"
+
+export default function MagicRingsDemo() {
+  return (
+    <div className="relative w-full h-[320px] rounded-xl overflow-hidden bg-zinc-950 flex items-center justify-center p-6">
+      <MagicRings
+        color="#fc42ff"
+        colorTwo="#42fcff"
+        speed={1}
+        ringCount={6}
+        followMouse={true}
+      />
+      <span className="relative z-10 text-white font-mono text-xs">Hover & Click to Burst</span>
+    </div>
+  )
+}`,
+  antigravity: `import { Antigravity } from "@/components/kanso/antigravity"
+
+export default function AntigravityDemo() {
+  return (
+    <div className="relative w-full h-[320px] rounded-xl overflow-hidden bg-zinc-950">
+      <Antigravity
+        count={200}
+        color="#FF9FFC"
+        particleShape="capsule"
+        magnetRadius={10}
+      />
     </div>
   )
 }`
@@ -166,6 +203,8 @@ export default async function Home() {
     command: highlighter.codeToHtml(showcaseCodes.command, { lang: "tsx", themes: { light: "github-light", dark: "github-dark" } }),
     pricing: highlighter.codeToHtml(showcaseCodes.pricing, { lang: "tsx", themes: { light: "github-light", dark: "github-dark" } }),
     halftone: highlighter.codeToHtml(showcaseCodes.halftone, { lang: "tsx", themes: { light: "github-light", dark: "github-dark" } }),
+    magicRings: highlighter.codeToHtml(showcaseCodes.magicRings, { lang: "tsx", themes: { light: "github-light", dark: "github-dark" } }),
+    antigravity: highlighter.codeToHtml(showcaseCodes.antigravity, { lang: "tsx", themes: { light: "github-light", dark: "github-dark" } }),
   }
 
   // Pre-highlight dx code
