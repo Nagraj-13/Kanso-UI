@@ -15,6 +15,9 @@ import { BorderGlow } from "@/components/kanso/border-glow"
 import { SpotlightCard } from "@/components/kanso/spotlight-card"
 import { CardContainer, CardBody, CardItem } from "@/components/kanso/three-d-card"
 import { InteractiveCard } from "@/components/kanso/interactive-card"
+import { LiquidMetalCard } from "@/components/kanso/liquid-metal-card"
+import { HalftoneImage } from "@/components/kanso/halftone-image"
+import { HalftoneGrid } from "@/components/kanso/halftone-grid"
 import {
   ColorPicker,
   ColorPickerSelection,
@@ -1161,6 +1164,409 @@ const demos: Record<string, React.ComponentType> = {
           <DialKitSlider label="Spotlight Radius" min={150} max={450} step={10} value={spotlightSize} onChange={setSpotlightSize} suffix="px" />
           <DialKitSlider label="Border Radius" min={12} max={36} step={1} value={borderRadius} onChange={setBorderRadius} suffix="px" />
           <DialKitSlider label="Glow Radius" min={20} max={80} step={5} value={glowRadius} onChange={setGlowRadius} suffix="px" />
+        </div>
+      </div>
+    )
+  },
+  "liquid-metal-card": function LiquidMetalCardDemo() {
+    const [repetition, setRepetition] = React.useState(6)
+    const [softness, setSoftness] = React.useState(0.8)
+    const [distortion, setDistortion] = React.useState(0.4)
+    const [speed, setSpeed] = React.useState(1.0)
+    const [scale, setScale] = React.useState(0.6)
+    const [colorTint, setColorTint] = React.useState("#2c5d72")
+    const [image, setImage] = React.useState("/Kansologo.png")
+    const [theme, setTheme] = React.useState<"default" | "gold" | "cyberpunk" | "emerald" | "amethyst" | "chrome" | "custom">("default")
+
+    const handleThemeChange = (t: "default" | "gold" | "cyberpunk" | "emerald" | "amethyst" | "chrome" | "custom") => {
+      setTheme(t)
+      if (t === "default") {
+        setColorTint("#2c5d72")
+        setRepetition(6)
+        setSoftness(0.8)
+        setDistortion(0.4)
+        setSpeed(1.0)
+        setScale(0.6)
+      } else if (t === "gold") {
+        setColorTint("#ffd700")
+        setRepetition(5)
+        setSoftness(0.6)
+        setDistortion(0.5)
+        setSpeed(0.8)
+        setScale(0.55)
+      } else if (t === "cyberpunk") {
+        setColorTint("#ff007f")
+        setRepetition(10)
+        setSoftness(0.8)
+        setDistortion(0.7)
+        setSpeed(1.2)
+        setScale(0.65)
+      } else if (t === "emerald") {
+        setColorTint("#10b981")
+        setRepetition(7)
+        setSoftness(0.5)
+        setDistortion(0.6)
+        setSpeed(1.1)
+        setScale(0.6)
+      } else if (t === "amethyst") {
+        setColorTint("#8a2be2")
+        setRepetition(6)
+        setSoftness(0.7)
+        setDistortion(0.45)
+        setSpeed(0.9)
+        setScale(0.58)
+      } else if (t === "chrome") {
+        setColorTint("#888888")
+        setRepetition(8)
+        setSoftness(0.4)
+        setDistortion(0.8)
+        setSpeed(1.5)
+        setScale(0.7)
+      }
+    }
+
+    return (
+      <div className="flex flex-col items-center gap-6 w-full max-w-md">
+        {/* Component Display */}
+        <LiquidMetalCard
+          title="Minimal Shader Card"
+          subtitle={theme === "custom" ? "Custom Preset" : `${theme.charAt(0).toUpperCase() + theme.slice(1)} Mode`}
+          description="Move your cursor and interact with the real-time liquid metal physics. Drag or hover to warp the liquid surface mask dynamically."
+          desktopShaderProps={{
+            repetition,
+            softness,
+            distortion,
+            speed,
+            scale,
+            colorTint,
+            image,
+          }}
+          className="w-full shadow-lg"
+        />
+
+        {/* Theme presets row */}
+        <div className="flex flex-col gap-3 w-full p-4 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">
+            Shader Theme Presets
+          </div>
+          
+          <div className="flex flex-wrap gap-1.5">
+            {(["default", "gold", "cyberpunk", "emerald", "amethyst", "chrome", "custom"] as const).map((t) => (
+              <button
+                key={t}
+                onClick={() => handleThemeChange(t)}
+                className={cn(
+                  "flex items-center gap-1.5 px-2.5 py-1 text-[11px] font-semibold rounded-md border transition-all cursor-pointer capitalize",
+                  theme === t
+                    ? "border-zinc-350 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50 shadow-xs"
+                    : "border-transparent text-zinc-500 hover:text-zinc-850 dark:text-zinc-400 dark:hover:text-zinc-200"
+                )}
+              >
+                {t !== "custom" && t !== "default" && (
+                  <span
+                    className="size-2 rounded-full shrink-0 border border-black/10 dark:border-white/10"
+                    style={{
+                      backgroundColor:
+                        t === "gold"
+                          ? "#ffd700"
+                          : t === "cyberpunk"
+                            ? "#ff007f"
+                            : t === "emerald"
+                              ? "#10b981"
+                              : t === "amethyst"
+                                ? "#8a2be2"
+                                : t === "chrome"
+                                  ? "#888888"
+                                  : undefined,
+                    }}
+                  />
+                )}
+                {t === "custom" ? "🎨 Custom Color" : t}
+              </button>
+            ))}
+          </div>
+
+          {(theme === "custom" || theme === "default") && (
+            <div className="flex items-center gap-3 mt-1.5 animate-in fade-in slide-in-from-top-1 duration-150">
+              <span className="text-xs text-zinc-400 font-sans">Color Tint:</span>
+              <Popover>
+                <PopoverTrigger className="flex items-center gap-2 px-2.5 py-1.5 text-xs border rounded-md bg-white dark:bg-zinc-950 cursor-pointer shadow-xs border-zinc-200 dark:border-zinc-800">
+                  <span
+                    className="size-3.5 rounded-full border border-black/10 dark:border-white/10 shrink-0"
+                    style={{ backgroundColor: colorTint }}
+                  />
+                  <span className="font-mono text-[10px] uppercase text-zinc-500">{colorTint}</span>
+                </PopoverTrigger>
+                <PopoverContent className="w-64 p-4">
+                  <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-2">Custom Color Tint</div>
+                  <ColorPicker
+                    value={colorTint}
+                    onChange={(val) => {
+                      setColorTint(val)
+                      setTheme("custom")
+                    }}
+                    className="h-auto w-full gap-3"
+                  >
+                    <ColorPickerSelection className="h-32 rounded-md border border-zinc-200 dark:border-zinc-800" />
+                    <ColorPickerHue />
+                    <ColorPickerAlpha />
+                  </ColorPicker>
+                </PopoverContent>
+              </Popover>
+            </div>
+          )}
+        </div>
+
+        {/* Shader texture image selection */}
+        <div className="flex flex-col gap-3 w-full p-4 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="text-[10px] font-semibold text-zinc-400 uppercase tracking-widest">
+            Shader Texture Image
+          </div>
+          <div className="flex flex-col gap-2.5">
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                { name: "Kanso", value: "/Kansologo.png" },
+                { name: "Next.js", value: "/next.svg" },
+                { name: "Vercel", value: "/vercel.svg" },
+                { name: "Globe", value: "/globe.svg" },
+                { name: "Window", value: "/window.svg" },
+                { name: "File", value: "/file.svg" },
+              ].map((img) => (
+                <button
+                  key={img.value}
+                  onClick={() => {
+                    setImage(img.value)
+                    setTheme("custom")
+                  }}
+                  className={cn(
+                    "px-2.5 py-1 text-[10px] font-semibold rounded-md border transition-all cursor-pointer",
+                    image === img.value
+                      ? "border-zinc-350 dark:border-zinc-700 bg-zinc-50 dark:bg-zinc-900 text-zinc-950 dark:text-zinc-50 shadow-xs"
+                      : "border-transparent text-zinc-500 hover:text-zinc-850 dark:text-zinc-400 dark:hover:text-zinc-200"
+                  )}
+                >
+                  {img.name}
+                </button>
+              ))}
+            </div>
+
+            <div className="flex items-center gap-2 mt-1">
+              <span className="text-[10px] text-zinc-400 dark:text-zinc-500 font-sans font-semibold shrink-0 uppercase tracking-wide">Custom URL:</span>
+              <input
+                type="text"
+                placeholder="Paste texture image URL..."
+                value={image}
+                onChange={(e) => {
+                  setImage(e.target.value)
+                  setTheme("custom")
+                }}
+                className="flex-1 text-xs border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-2 py-1 rounded-md text-zinc-800 dark:text-zinc-200 focus:outline-none focus:ring-1 focus:ring-zinc-400"
+              />
+            </div>
+          </div>
+        </div>
+
+        {/* Real-time Config Panel (DialKit) */}
+        <div className="grid grid-cols-2 gap-4 w-full p-4 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="col-span-2 text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-1 font-sans">
+            Fine-tune Shader Sliders (Props)
+          </div>
+          <DialKitSlider
+            label="Repetition"
+            min={1}
+            max={15}
+            step={1}
+            value={repetition}
+            onChange={(val) => {
+              setRepetition(val)
+              setTheme("custom")
+            }}
+          />
+          <DialKitSlider
+            label="Softness"
+            min={0.1}
+            max={2.0}
+            step={0.1}
+            value={softness}
+            onChange={(val) => {
+              setSoftness(val)
+              setTheme("custom")
+            }}
+          />
+          <DialKitSlider
+            label="Distortion"
+            min={0.1}
+            max={1.5}
+            step={0.05}
+            value={distortion}
+            onChange={(val) => {
+              setDistortion(val)
+              setTheme("custom")
+            }}
+          />
+          <DialKitSlider
+            label="Speed"
+            min={0.1}
+            max={3.0}
+            step={0.1}
+            value={speed}
+            onChange={(val) => {
+              setSpeed(val)
+              setTheme("custom")
+            }}
+          />
+          <DialKitSlider
+            label="Scale"
+            min={0.2}
+            max={1.5}
+            step={0.05}
+            value={scale}
+            onChange={(val) => {
+              setScale(val)
+              setTheme("custom")
+            }}
+          />
+        </div>
+      </div>
+    )
+  },
+  "halftone-image": function HalftoneImageDemo() {
+    const [dotSpacing, setDotSpacing] = React.useState<number>(8)
+    const [contrast, setContrast] = React.useState<number>(1.2)
+    const [brightness, setBrightness] = React.useState<number>(1.0)
+    const [distortion, setDistortion] = React.useState<number>(8)
+    const [interactive, setInteractive] = React.useState<boolean>(true)
+
+    return (
+      <div className="flex flex-col gap-8 w-full max-w-md items-center">
+        <div className="w-[300px] h-[300px] rounded-2xl overflow-hidden border border-zinc-200 bg-white shadow-xs dark:border-zinc-800 dark:bg-zinc-950 flex items-center justify-center">
+          <HalftoneImage
+            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400&h=400"
+            dotSpacing={dotSpacing}
+            contrast={contrast}
+            brightness={brightness}
+            distortionStrength={distortion}
+            interactive={interactive}
+            alt="Halftone portrait preview"
+          />
+        </div>
+
+        {/* Control Panel */}
+        <div className="grid grid-cols-2 gap-4 w-full p-4 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="col-span-2 text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-1 font-sans">
+            Adjust Halftone Image Props
+          </div>
+          <DialKitSlider
+            label="Dot Spacing"
+            min={4}
+            max={16}
+            step={1}
+            value={dotSpacing}
+            onChange={setDotSpacing}
+            suffix="px"
+          />
+          <DialKitSlider
+            label="Contrast"
+            min={0.5}
+            max={2.5}
+            step={0.1}
+            value={contrast}
+            onChange={setContrast}
+          />
+          <DialKitSlider
+            label="Brightness"
+            min={0.5}
+            max={2.0}
+            step={0.1}
+            value={brightness}
+            onChange={setBrightness}
+          />
+          <DialKitSlider
+            label="Warp Strength"
+            min={0}
+            max={20}
+            step={1}
+            value={distortion}
+            onChange={setDistortion}
+            suffix="px"
+          />
+          <div className="col-span-2 flex items-center justify-between text-xs pt-2 border-t border-zinc-100 dark:border-zinc-800/80">
+            <span className="text-zinc-500 font-medium">Interactive Hover Distortion</span>
+            <input
+              type="checkbox"
+              checked={interactive}
+              onChange={(e) => setInteractive(e.target.checked)}
+              className="accent-purple-500"
+            />
+          </div>
+        </div>
+      </div>
+    )
+  },
+  "halftone-grid": function HalftoneGridDemo() {
+    const [spacing, setSpacing] = React.useState<number>(24)
+    const [baseRad, setBaseRad] = React.useState<number>(1.2)
+    const [maxRad, setMaxRad] = React.useState<number>(5.0)
+    const [hoverRad, setHoverRad] = React.useState<number>(120)
+
+    return (
+      <div className="flex flex-col gap-8 w-full max-w-lg items-center">
+        <HalftoneGrid
+          dotSpacing={spacing}
+          baseRadius={baseRad}
+          maxRadius={maxRad}
+          hoverRadius={hoverRad}
+          className="w-full h-[280px] border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950/20 rounded-xl relative overflow-hidden flex items-center justify-center text-center shadow-xs"
+        >
+          <div className="relative z-20 max-w-xs px-4">
+            <h4 className="text-lg font-bold text-zinc-950 dark:text-white mb-2">Interactive Ripple</h4>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              Move your mouse over the background to see the dot matrix grid expand and warp dynamically.
+            </p>
+          </div>
+        </HalftoneGrid>
+
+        {/* Control Panel */}
+        <div className="grid grid-cols-2 gap-4 w-full p-4 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="col-span-2 text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-1 font-sans">
+            Adjust Halftone Grid Props
+          </div>
+          <DialKitSlider
+            label="Grid Spacing"
+            min={16}
+            max={36}
+            step={2}
+            value={spacing}
+            onChange={setSpacing}
+            suffix="px"
+          />
+          <DialKitSlider
+            label="Base Radius"
+            min={0.5}
+            max={3.0}
+            step={0.1}
+            value={baseRad}
+            onChange={setBaseRad}
+            suffix="px"
+          />
+          <DialKitSlider
+            label="Hover Max Radius"
+            min={3.0}
+            max={10.0}
+            step={0.5}
+            value={maxRad}
+            onChange={setMaxRad}
+            suffix="px"
+          />
+          <DialKitSlider
+            label="Hover Trigger Radius"
+            min={60}
+            max={200}
+            step={10}
+            value={hoverRad}
+            onChange={setHoverRad}
+            suffix="px"
+          />
         </div>
       </div>
     )

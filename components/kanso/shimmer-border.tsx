@@ -94,7 +94,7 @@ function ShimmerBorder({
 
       {/* 3. Inner content area */}
       <div
-        className="relative z-10 rounded-[var(--shimmer-inner-radius)] bg-white dark:bg-zinc-950 h-full w-full"
+        className="relative z-10 rounded-[var(--shimmer-inner-radius)] bg-white dark:bg-zinc-950 h-full w-full p-1"
         style={{
           background: background ?? undefined,
         }}

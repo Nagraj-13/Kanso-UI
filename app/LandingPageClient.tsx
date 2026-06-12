@@ -20,8 +20,7 @@ import {
   XIcon,
   SparkleIcon,
   SettingsIcon,
-  UserIcon,
-  ShieldAlertIcon
+  UserIcon
 } from "lucide-react"
 import { useTheme } from "next-themes"
 
@@ -36,14 +35,13 @@ import { GITHUB_URL } from "@/lib/constants"
 import { GithubButton } from "@/components/kanso/github-button"
 import { InteractiveCard, CardBody, CardItem } from "@/components/kanso/interactive-card"
 import { SpotlightCard } from "@/components/kanso/spotlight-card"
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from "@/components/ui/card"
+import { RealismButton } from "@/components/kanso/realism-button"
+import { KeyboardButton } from "@/components/kanso/keyboard-button"
+import { GlowLineButton } from "@/components/kanso/glow-line-button"
+import { LiquidMetalCard } from "@/components/kanso/liquid-metal-card"
+import { HalftoneImage } from "@/components/kanso/halftone-image"
+import { HalftoneGrid } from "@/components/kanso/halftone-grid"
+import { Card } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
   Dialog,
@@ -169,7 +167,7 @@ export default function LandingPageClient({
   const [mounted, setMounted] = React.useState(false)
   const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
   const [selectedShowcase, setSelectedShowcase] = React.useState<
-    "buttons" | "cards" | "dialogs" | "inputs" | "command" | "pricing"
+    "buttons" | "cards" | "dialogs" | "inputs" | "command" | "pricing" | "halftone"
   >("buttons")
   const [heroTab, setHeroTab] = React.useState<"preview" | "code">("preview")
   React.useEffect(() => {
@@ -329,6 +327,14 @@ export default function LandingPageClient({
 
       {/* Hero Section */}
       <section className="relative mx-auto max-w-7xl px-6 pt-24 pb-32 md:px-8 md:pt-32 overflow-hidden">
+        <HalftoneGrid
+          dotSpacing={24}
+          baseRadius={1}
+          maxRadius={4.5}
+          hoverRadius={130}
+          dotColor="currentColor"
+          className="absolute inset-0 text-zinc-950/[0.04] dark:text-zinc-50/[0.04]"
+        />
         {/* Ambient background blob */}
         <div className="pointer-events-none absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 animate-pulse duration-[8s]" aria-hidden="true">
           <div className="relative left-[calc(50%-15rem)] aspect-1155/678 w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-purple-500/10 to-indigo-600/15 opacity-40 dark:from-purple-500/15 dark:to-indigo-600/20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style={{ clipPath: "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" }} />
@@ -584,7 +590,7 @@ export default function LandingPageClient({
             </p>
           </div>
 
-          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {/* Card 1: Magnetic Button */}
             <Card className="flex flex-col justify-between border border-zinc-200 bg-white p-5 shadow-xs transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/40">
               <div>
@@ -660,6 +666,38 @@ export default function LandingPageClient({
                 </Button>
               </div>
             </Card>
+
+            {/* Card 4: Halftone Image */}
+            <Card className="flex flex-col justify-between border border-zinc-200 bg-white p-5 shadow-xs transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/40">
+              <div>
+                <h3 className="text-base font-semibold text-zinc-900 dark:text-white">Halftone Image</h3>
+                <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed min-h-[40px]">
+                  Converts images into custom halftone illustrations. Includes real-time mouse hover dither warp distortions.
+                </p>
+                <div className="mt-6 flex h-40 items-center justify-center rounded-lg border border-dashed border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30 p-4">
+                  <div className="size-24 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex items-center justify-center">
+                    <HalftoneImage
+                      src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200&h=200"
+                      dotSpacing={5}
+                      contrast={1.3}
+                      inkColor="currentColor"
+                      paperColor="transparent"
+                      className="size-full"
+                    />
+                  </div>
+                </div>
+              </div>
+              <div className="mt-6 flex justify-end">
+                <Button
+                  variant="link"
+                  size="sm"
+                  className="gap-1.5 px-0 text-zinc-950 dark:text-zinc-50"
+                  render={<Link href="/docs/components/effects/halftone-image" />}
+                >
+                  View Installation <ArrowUpRightIcon className="size-3.5" />
+                </Button>
+              </div>
+            </Card>
           </div>
         </div>
       </section>
@@ -682,6 +720,7 @@ export default function LandingPageClient({
               {([
                 { id: "buttons", label: "Buttons" },
                 { id: "cards", label: "Cards" },
+                { id: "halftone", label: "Halftone Screen" },
                 { id: "dialogs", label: "Dialogs" },
                 { id: "inputs", label: "Inputs" },
                 { id: "command", label: "Command Menu" },
@@ -706,51 +745,22 @@ export default function LandingPageClient({
               {/* Preview Box */}
               <div className="flex min-h-[320px] items-center justify-center rounded-xl border border-zinc-200/80 bg-zinc-50/50 p-6 sm:p-12 dark:border-zinc-800 dark:bg-zinc-900/10 w-full overflow-hidden">
                 {selectedShowcase === "buttons" && (
-                  <div className="flex flex-wrap items-center justify-center gap-4">
-                    <Button variant="default">Primary</Button>
-                    <Button variant="outline">Outline</Button>
-                    <Button variant="ghost">Ghost</Button>
-                    <Button variant="destructive">Destructive</Button>
-                    <Button variant="outline" size="icon-sm">
-                      <SearchIcon className="size-4" />
-                    </Button>
+                  <div className="flex flex-wrap items-center justify-center gap-6">
+                    <RealismButton variantColor="cyan">Cyan Glow</RealismButton>
+                    <KeyboardButton variantColor="dark">cmd</KeyboardButton>
+                    <GlowLineButton glowColor="rose">Rose Glow</GlowLineButton>
                   </div>
                 )}
 
                 {selectedShowcase === "cards" && (
-                  <Card className="w-full max-w-[360px] border border-zinc-200 bg-white shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40">
-                    <CardHeader>
-                      <div className="flex items-center justify-between">
-                        <CardTitle className="text-base font-semibold">Security Alert</CardTitle>
-                        <ShieldAlertIcon className="size-5 text-zinc-500" />
-                      </div>
-                      <CardDescription className="mt-1">
-                        A login attempt was detected from a new location.
-                      </CardDescription>
-                    </CardHeader>
-                    <CardContent className="space-y-2.5 py-4 border-y border-zinc-100 dark:border-zinc-800 text-xs text-zinc-500 dark:text-zinc-400">
-                      <div className="flex justify-between">
-                        <span>Device</span>
-                        <span className="font-medium text-zinc-800 dark:text-zinc-300">Chrome (macOS)</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>Location</span>
-                        <span className="font-medium text-zinc-800 dark:text-zinc-300">San Francisco, CA</span>
-                      </div>
-                      <div className="flex justify-between">
-                        <span>IP Address</span>
-                        <span className="font-medium text-zinc-800 dark:text-zinc-300">192.168.1.84</span>
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex justify-end gap-2 pt-4">
-                      <Button variant="ghost" size="sm">
-                        Dismiss
-                      </Button>
-                      <Button variant="default" size="sm">
-                        Verify Location
-                      </Button>
-                    </CardFooter>
-                  </Card>
+                  <div className="w-full max-w-[360px]">
+                    <LiquidMetalCard
+                      title="Liquid Metal"
+                      subtitle="Interactive"
+                      description="WebGL shader reflections on a copy-paste React container card."
+                      className="w-full"
+                    />
+                  </div>
                 )}
 
                 {selectedShowcase === "dialogs" && (
@@ -870,6 +880,30 @@ export default function LandingPageClient({
                     </Card>
                   </div>
                 )}
+
+                {selectedShowcase === "halftone" && (
+                  <div className="relative w-full h-[280px] flex items-center justify-center overflow-hidden">
+                    <HalftoneGrid
+                      dotSpacing={22}
+                      baseRadius={1}
+                      maxRadius={4}
+                      hoverRadius={120}
+                      dotColor="currentColor"
+                      className="absolute inset-0 text-zinc-950/[0.04] dark:text-zinc-50/[0.04]"
+                    />
+                    <div className="relative size-44 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex items-center justify-center shadow-md">
+                      <HalftoneImage
+                        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300&h=300"
+                        dotSpacing={6}
+                        contrast={1.3}
+                        inkColor="currentColor"
+                        paperColor="transparent"
+                        className="size-full"
+                        alt="Halftone showcase preview"
+                      />
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Code Snippet Box */}
@@ -881,6 +915,8 @@ export default function LandingPageClient({
                     ? "ButtonDemo.tsx"
                     : selectedShowcase === "cards"
                     ? "CardDemo.tsx"
+                    : selectedShowcase === "halftone"
+                    ? "HalftoneDemo.tsx"
                     : selectedShowcase === "dialogs"
                     ? "DialogDemo.tsx"
                     : selectedShowcase === "inputs"

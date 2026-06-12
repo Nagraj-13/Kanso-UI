@@ -850,6 +850,249 @@ export default function InteractiveCardDemo() {
       },
     ],
   },
+  {
+    name: "liquid-metal-card",
+    title: "Liquid Metal Card",
+    description:
+      "A premium minimalist card featuring a real-time, interactive WebGL liquid metal shader overlay.",
+    category: "cards",
+    dependencies: ["@paper-design/shaders-react"],
+    internalDeps: ["lib/utils", "components/ui/button", "components/ui/badge"],
+    filePath: "components/kanso/liquid-metal-card.tsx",
+    tags: ["card", "shader", "webgl", "liquid-metal", "interactive", "animation"],
+    usage: `import { LiquidMetalCard } from "@/components/kanso/liquid-metal-card"
+
+export default function LiquidMetalCardDemo() {
+  return (
+    <LiquidMetalCard
+      title="Liquid Metal"
+      subtitle="Interact"
+      description="WebGL liquid metal shader effect running on a Kanso UI card container."
+      className="max-w-sm"
+    />
+  )
+}`,
+    props: [
+      {
+        name: "srTitle",
+        type: "string",
+        default: '"Kanso UI"',
+        description: "Screen reader only title of the card.",
+      },
+      {
+        name: "title",
+        type: "React.ReactNode",
+        default: "Kanso UI",
+        description: "The primary header text of the card.",
+      },
+      {
+        name: "subtitle",
+        type: "React.ReactNode",
+        default: "Simplicity",
+        description: "Secondary header suffix or subtitle text.",
+      },
+      {
+        name: "description",
+        type: "React.ReactNode",
+        description: "The main description body copy text of the card.",
+      },
+      {
+        name: "showCta",
+        type: "boolean",
+        default: "true",
+        description: "Whether to render the action CTA button.",
+      },
+      {
+        name: "ctaProps",
+        type: "Partial<LiquidMetalCardCTAProps>",
+        description: "Custom configuration props passed directly to the CTA button link.",
+      },
+      {
+        name: "showBadges",
+        type: "boolean",
+        default: "true",
+        description: "Whether to display the metadata tech stack badges row.",
+      },
+      {
+        name: "techStack",
+        type: "LiquidMetalCardTechItem[]",
+        description: "Array of tech elements (name, version, icon) to show inside the badges row.",
+      },
+      {
+        name: "desktopShaderProps",
+        type: "Partial<LiquidMetalProps>",
+        description: "Shader custom parameters specifically for desktop sizes.",
+      },
+      {
+        name: "mobileShaderProps",
+        type: "Partial<LiquidMetalProps>",
+        description: "Shader custom parameters specifically for mobile sizes.",
+      },
+    ],
+  },
+  {
+    name: "halftone-image",
+    title: "Halftone Image",
+    description: "Convert any image into a gorgeous, interactive halftone dither artwork with mouse hover distortion.",
+    category: "effects",
+    dependencies: [],
+    internalDeps: ["lib/utils"],
+    filePath: "components/kanso/halftone-image.tsx",
+    tags: ["image", "halftone", "dither", "canvas", "hover", "interactive"],
+    usage: `import { HalftoneImage } from "@/components/kanso/halftone-image"
+
+export default function HalftoneImageDemo() {
+  return (
+    <div className="w-[300px] h-[300px] rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800">
+      <HalftoneImage
+        src="/avatar.jpg"
+        dotSpacing={7}
+        contrast={1.3}
+        inkColor="currentColor"
+        paperColor="transparent"
+      />
+    </div>
+  )
+}`,
+    props: [
+      {
+        name: "src",
+        type: "string",
+        required: true,
+        description: "The source image URL.",
+      },
+      {
+        name: "dotSpacing",
+        type: "number",
+        default: "8",
+        description: "The spacing between dots in pixels (density). Lower value = higher detail.",
+      },
+      {
+        name: "maxDotRadius",
+        type: "number",
+        description: "The maximum dot radius. Defaults to dotSpacing * 0.7.",
+      },
+      {
+        name: "inkColor",
+        type: "string",
+        default: '"currentColor"',
+        description: "Color of the halftone dots. If 'currentColor', it reads the text color of parent elements.",
+      },
+      {
+        name: "paperColor",
+        type: "string",
+        default: '"transparent"',
+        description: "Color of the background paper layer. If 'transparent', the original page background shows through.",
+      },
+      {
+        name: "contrast",
+        type: "number",
+        default: "1.2",
+        description: "Contrast adjustment factor (e.g. 1.0 = normal, 1.5 = high contrast).",
+      },
+      {
+        name: "brightness",
+        type: "number",
+        default: "1.0",
+        description: "Brightness adjustment factor (e.g. 1.0 = normal, 1.2 = brighter).",
+      },
+      {
+        name: "interactive",
+        type: "boolean",
+        default: "true",
+        description: "Toggle interactive mouse hover warp effect.",
+      },
+      {
+        name: "hoverRadius",
+        type: "number",
+        default: "100",
+        description: "The radius of mouse influence for distortion in pixels.",
+      },
+      {
+        name: "distortionStrength",
+        type: "number",
+        default: "8",
+        description: "The strength of the warping push/pull distortion.",
+      },
+      {
+        name: "dotScaleStrength",
+        type: "number",
+        default: "1.2",
+        description: "Scale factor of the dots under the cursor (e.g., 0.5 to shrink, 1.5 to grow).",
+      },
+    ],
+  },
+  {
+    name: "halftone-grid",
+    title: "Halftone Grid",
+    description: "An interactive, mouse-responsive dithered background grid that modulates dot sizes dynamically based on the cursor's proximity.",
+    category: "effects",
+    dependencies: [],
+    internalDeps: ["lib/utils"],
+    filePath: "components/kanso/halftone-grid.tsx",
+    tags: ["grid", "background", "dots", "ripple", "hover", "interactive"],
+    usage: `import { HalftoneGrid } from "@/components/kanso/halftone-grid"
+
+export default function HalftoneGridDemo() {
+  return (
+    <HalftoneGrid
+      dotSpacing={20}
+      baseRadius={1}
+      maxRadius={4.5}
+      hoverRadius={100}
+      className="w-full h-[300px] border border-zinc-200 dark:border-zinc-800 rounded-xl"
+    >
+      <div className="flex items-center justify-center h-full">
+        <span className="text-zinc-400 font-medium">Interactive Grid Background</span>
+      </div>
+    </HalftoneGrid>
+  )
+}`,
+    props: [
+      {
+        name: "dotSpacing",
+        type: "number",
+        default: "24",
+        description: "The spacing between dots in pixels.",
+      },
+      {
+        name: "baseRadius",
+        type: "number",
+        default: "1.2",
+        description: "The base radius of the dots when mouse is far away.",
+      },
+      {
+        name: "maxRadius",
+        type: "number",
+        default: "5",
+        description: "The maximum radius of dots when mouse is hovering directly on them.",
+      },
+      {
+        name: "hoverRadius",
+        type: "number",
+        default: "120",
+        description: "The radius of mouse influence in pixels.",
+      },
+      {
+        name: "dotColor",
+        type: "string",
+        default: '"currentColor"',
+        description: "The dot color. If 'currentColor', it uses the text color of the parent.",
+      },
+      {
+        name: "paperColor",
+        type: "string",
+        default: '"transparent"',
+        description: "The background color. Default is transparent.",
+      },
+      {
+        name: "interactive",
+        type: "boolean",
+        default: "true",
+        description: "Enable mouse hover scaling effect.",
+      },
+    ],
+  },
 ]
 
 /**
