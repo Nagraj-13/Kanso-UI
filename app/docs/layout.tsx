@@ -1,6 +1,6 @@
 //app/docs/layout.tsx
 import * as React from "react"
-import { getCategories } from "@/lib/registry"
+import { getCategories, getComponentsByCategory } from "@/lib/registry"
 import { DocsLayoutClient } from "./layout-client"
 
 export const metadata = {
@@ -19,10 +19,6 @@ const categoryMeta: Record<string, { label: string; icon: string }> = {
   "data-display": { label: "Data Display", icon: "▤" },
 }
 
-/**
- * Docs layout with elegant sidebar navigation listing all registered components.
- * Server component that builds sidebar data from the registry.
- */
 export default function DocsLayout({
   children,
 }: {
@@ -30,24 +26,53 @@ export default function DocsLayout({
 }) {
   const categories = getCategories()
 
-  // Build sidebar data with categories as items under a single group
   const sidebarGroups = [
     {
-      category: "components",
-      label: "Components",
-      icon: "▣",
-      items: categories.map((cat) => {
-        const meta = categoryMeta[cat] ?? {
-          label: cat.charAt(0).toUpperCase() + cat.slice(1).replace("-", " "),
-          icon: "•",
-        }
-        return {
-          name: cat,
-          title: meta.label,
-          href: `/docs/components/${cat}`,
-        }
-      }),
+      category: "follow",
+      label: "Follow for updates",
+      icon: "⚡",
+      items: [
+        {
+          name: "twitter",
+          title: "X @Nagraj013",
+          href: "https://x.com/Nagraj013",
+          isExternal: true,
+        },
+      ],
     },
+    {
+      category: "installation",
+      label: "Installation",
+      icon: "↓",
+      items: [
+        { name: "nextjs", title: "Install Next.js", href: "/docs/installation/nextjs" },
+        { name: "tailwindcss", title: "Install Tailwind CSS", href: "/docs/installation/tailwindcss" },
+        { name: "utilities", title: "Add utilities", href: "/docs/installation/utilities" },
+        { name: "cli", title: "CLI", href: "/docs/installation/cli" },
+      ],
+    },
+    ...categories.map((cat) => {
+      const meta = categoryMeta[cat] ?? {
+        label: cat.charAt(0).toUpperCase() + cat.slice(1).replace("-", " "),
+        icon: "•",
+      }
+      const components = getComponentsByCategory(cat)
+      return {
+        category: cat,
+        label: meta.label,
+        icon: meta.icon,
+        items: components.map((c) => {
+          // Add "New" badge to some components to match the Vengeance UI aesthetic
+          const isNew = ["magnetic-button", "keyboard-button", "glow-line-button", "border-glow", "interactive-card"].includes(c.name)
+          return {
+            name: c.name,
+            title: c.title,
+            href: `/docs/components/${cat}/${c.name}`,
+            badge: isNew ? "New" : undefined,
+          }
+        }),
+      }
+    }),
   ]
 
   return (
