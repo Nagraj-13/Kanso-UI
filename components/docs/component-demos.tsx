@@ -1801,7 +1801,7 @@ const demos: Record<string, React.ComponentType> = {
     const [particleSize, setParticleSize] = React.useState(2.0)
     const [particleShape, setParticleShape] = React.useState<"capsule" | "sphere" | "box" | "tetrahedron">("capsule")
     const [color, setColor] = React.useState<string>("#FF9FFC")
-    const [useMulticolor, setUseMulticolor] = React.useState<boolean>(false)
+    const [useMulticolor, setUseMulticolor] = React.useState<boolean>(true)
     const colorsList = ["#FF9FFC", "#3b82f6", "#10b981", "#f43f5e", "#f59e0b", "#a855f7"]
 
     return (
