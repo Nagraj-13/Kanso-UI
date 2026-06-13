@@ -59,6 +59,37 @@ const HalftoneGrid = React.memo(
       const svgRef = React.useRef<SVGSVGElement>(null)
       const glowRef = React.useRef<SVGCircleElement>(null)
       const dotsRef = React.useRef<Dot[]>([])
+
+      const [isDarkMode, setIsDarkMode] = React.useState(true)
+
+      React.useEffect(() => {
+        if (typeof window === "undefined") return
+        const observer = new MutationObserver(() => {
+          setIsDarkMode(document.documentElement.classList.contains("dark"))
+        })
+        
+        setIsDarkMode(document.documentElement.classList.contains("dark"))
+        
+        observer.observe(document.documentElement, {
+          attributes: true,
+          attributeFilter: ["class"]
+        })
+        
+        return () => observer.disconnect()
+      }, [])
+
+      const resolvedGlowColor = React.useMemo(() => {
+        if (isDarkMode) {
+          return glowColor
+        }
+        const lowerGlow = glowColor.toLowerCase()
+        if (lowerGlow.startsWith("#120f17")) return "rgba(168, 85, 247, 0.12)"
+        if (lowerGlow.startsWith("#081e24")) return "rgba(6, 182, 212, 0.12)"
+        if (lowerGlow.startsWith("#051f14")) return "rgba(16, 185, 129, 0.12)"
+        if (lowerGlow.startsWith("#240509")) return "rgba(244, 63, 94, 0.12)"
+        if (lowerGlow.startsWith("#241805")) return "rgba(245, 158, 11, 0.12)"
+        return glowColor
+      }, [isDarkMode, glowColor])
       const mouseRef = React.useRef({ x: -9999, y: -9999, prevX: -9999, prevY: -9999, speed: 0 })
       const rafRef = React.useRef<number | null>(null)
       const sizeRef = React.useRef({ w: 0, h: 0, offsetX: 0, offsetY: 0 })
@@ -333,8 +364,8 @@ const HalftoneGrid = React.memo(
           >
             <defs>
               <radialGradient id={glowId}>
-                <stop offset="0%" stopColor={glowColor} />
-                <stop offset="100%" stopColor="transparent" />
+                <stop offset="0%" stopColor={resolvedGlowColor} />
+                <stop offset="100%" stopColor={resolvedGlowColor} stopOpacity={0} />
               </radialGradient>
             </defs>
             <circle

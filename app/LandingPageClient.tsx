@@ -33,12 +33,11 @@ import { ShimmerBorder } from "@/components/kanso/shimmer-border"
 import { TextReveal } from "@/components/kanso/text-reveal"
 import { GITHUB_URL } from "@/lib/constants"
 import { GithubButton } from "@/components/kanso/github-button"
-import { InteractiveCard } from "@/components/kanso/interactive-card"
 import { SpotlightCard } from "@/components/kanso/spotlight-card"
 import { RealismButton } from "@/components/kanso/realism-button"
 import { KeyboardButton } from "@/components/kanso/keyboard-button"
 import { GlowLineButton } from "@/components/kanso/glow-line-button"
-import { LiquidMetalCard } from "@/components/kanso/liquid-metal-card"
+import { LiquidMetalCard, LiquidMetalCardRoot, LiquidMetalCardVisual } from "@/components/kanso/liquid-metal-card"
 import { HalftoneImage } from "@/components/kanso/halftone-image"
 import { HalftoneGrid } from "@/components/kanso/halftone-grid"
 import { MagicRings } from "@/components/kanso/magic-rings"
@@ -252,6 +251,49 @@ export default function LandingPageClient({
     const handle = requestAnimationFrame(() => setMounted(true))
     return () => cancelAnimationFrame(handle)
   }, [])
+
+  const [copied, setCopied] = React.useState(false)
+  const handleCopy = () => {
+    navigator.clipboard.writeText("npx kanso-ui add magnetic-button")
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  const heroCardRef = React.useRef<HTMLDivElement>(null)
+  
+  const handleCardPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const card = heroCardRef.current
+    if (!card) return
+    const rect = card.getBoundingClientRect()
+    const tiltX = (e.clientX - rect.left - rect.width / 2) / 18
+    const tiltY = (e.clientY - rect.top - rect.height / 2) / -18
+    card.style.transition = "none"
+    card.style.transform = `perspective(1000px) rotateY(${tiltX}deg) rotateX(${tiltY}deg) translateZ(4px)`
+  }
+
+  const handleCardPointerLeave = () => {
+    const card = heroCardRef.current
+    if (!card) return
+    card.style.transition = "transform 0.5s cubic-bezier(0.03, 0.98, 0.52, 0.99)"
+    card.style.transform = "perspective(1000px) rotateY(0deg) rotateX(0deg) translateZ(0)"
+  }
+
+  const resolvedColorTint = React.useMemo(() => {
+    const isDark = theme === "dark" || (theme !== "light" && typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    if (isDark) {
+      return halftoneParams.ringColor || "#a855f7"
+    } else {
+      const colorMap: Record<string, string> = {
+        multicolor: "#6366f1",
+        purple: "#7c3aed",
+        cyan: "#0891b2",
+        emerald: "#059669",
+        rose: "#e11d48",
+        amber: "#d97706"
+      }
+      return colorMap[halftoneParams.themeName] || "#27272a"
+    }
+  }, [theme, halftoneParams.themeName, halftoneParams.ringColor])
 
   return (
     <div className="min-h-screen bg-[#fafafa] text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white dark:bg-zinc-950 dark:text-zinc-50 dark:selection:bg-zinc-50 dark:selection:text-zinc-950">
@@ -492,30 +534,47 @@ export default function LandingPageClient({
           </div>
 
           {/* Hero Right Sandbox Card */}
-          <div className="flex flex-col items-center justify-center lg:col-span-5 w-full min-w-0">
-            <InteractiveCard
-              containerClassName="py-0 flex items-center justify-center w-full"
-              className="w-full max-w-[380px] rounded-2xl border border-zinc-200/80 bg-white/70 dark:border-zinc-800/80 dark:bg-zinc-950/70 p-5 shadow-xl backdrop-blur-md relative overflow-hidden group select-none"
-              glowColor={halftoneParams.themeName === "multicolor" ? "280 80 70" : halftoneParams.ringColor ? halftoneParams.ringColor.replace("#", "") : "280 80 70"}
-              colors={halftoneParams.colors}
-              borderRadius={20}
+          <div 
+            className="flex flex-col items-center justify-center lg:col-span-5 w-full min-w-0"
+            style={{ perspective: "1000px" }}
+          >
+            <LiquidMetalCardRoot
+              ref={heroCardRef}
+              onPointerMove={handleCardPointerMove}
+              onPointerLeave={handleCardPointerLeave}
+              className="w-full max-w-[380px] rounded-2xl border border-zinc-200/80 bg-white/70 dark:border-zinc-800/80 dark:bg-zinc-950/70 p-5 shadow-xl backdrop-blur-md relative overflow-hidden group select-none transition-transform duration-300 ease-out"
+              style={{ transformStyle: "preserve-3d" }}
+              colorTint={resolvedColorTint}
+              distortion={0.5}
+              softness={0.7}
+              repetition={8}
+              scale={0.55}
+              image="/Kansologo.png"
             >
               <div className="flex flex-col gap-4 w-full relative z-10">
                 {/* Sandbox Header */}
                 <div className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
-                    <span className="relative flex h-2 w-2">
-                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
-                    </span>
-                    <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
-                      Zen Workbench
-                    </span>
+                    
+                   
                   </div>
                   <span className="text-[9px] font-mono text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded-full border border-zinc-200/40 dark:border-zinc-800/50">
                     kanso-sandbox.tsx
                   </span>
                 </div>
+
+                {/* Visual metallic logo container */}
+                <LiquidMetalCardVisual 
+                  className="h-28 w-full overflow-hidden rounded-xl bg-zinc-50 dark:bg-zinc-950 relative border border-zinc-200/40 dark:border-zinc-800/40 flex items-center justify-center"
+                  desktopShaderProps={{
+                    image: "/Kansologo.png",
+                    colorTint: resolvedColorTint,
+                    distortion: 0.45,
+                    softness: 0.8,
+                    repetition: 7,
+                    scale: 0.52,
+                  }}
+                />
 
                 {/* Compact Color Themes row */}
                 <div className="flex flex-col gap-2 p-3 rounded-xl border border-zinc-200/30 bg-zinc-50/40 dark:border-zinc-800/30 dark:bg-zinc-900/20">
@@ -523,7 +582,7 @@ export default function LandingPageClient({
                     <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
                       Ambient Palette Space
                     </span>
-                    <span className="text-[9px] font-mono text-zinc-500 capitalize">
+                    <span className="text-xs font-mono text-zinc-500 capitalize">
                       {halftoneParams.themeName}
                     </span>
                   </div>
@@ -560,44 +619,54 @@ export default function LandingPageClient({
                   </div>
                 </div>
 
-                {/* Tactile UI Playground Area */}
-                <div className="flex flex-col gap-3 items-center justify-center p-4 rounded-xl border border-zinc-200/50 bg-zinc-50/20 dark:border-zinc-800/40 dark:bg-zinc-900/20 relative overflow-hidden h-28">
-                  {/* Subtle decorative grid background in Sandbox */}
-                  <div className="absolute inset-0 bg-[radial-gradient(#e4e4e7_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:12px_12px] opacity-40" />
-                  
-                  {/* Local mini Antigravity visual overlay container */}
-                  <div className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-30">
-                    <Antigravity
-                      count={25}
-                      magnetRadius={3.5}
-                      ringRadius={3}
-                      waveSpeed={0.4}
-                      waveAmplitude={0.5}
-                      particleSize={1.1}
-                      colors={halftoneParams.colors}
-                      autoAnimate={true}
-                      particleShape="capsule"
-                    />
+                {/* Tactile copy/paste mechanical combo */}
+                <div className="flex flex-col gap-2 p-3 rounded-xl border border-zinc-200/30 bg-zinc-50/40 dark:border-zinc-800/30 dark:bg-zinc-900/20 relative overflow-hidden">
+                  <div className="flex items-center justify-between text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
+                    <span>Tactile Copy Code</span>
+                    <span className="font-mono text-zinc-500 font-semibold">{copied ? "Copied!" : "Click key combination"}</span>
                   </div>
-
-                  <div className="relative z-10 flex flex-col gap-3 items-center w-full">
-                    {/* Magnetic Button */}
-                    <MagneticButton className="px-4 py-2 text-[11px] font-semibold rounded-full border bg-white dark:bg-zinc-950 shadow-xs transition-all text-zinc-900 dark:text-zinc-50 border-zinc-200/60 dark:border-zinc-800 hover:border-zinc-350 dark:hover:border-zinc-700 select-none">
-                      Hover Magnet
-                    </MagneticButton>
-
-                    {/* Helper Skeuomorphic row */}
-                    <div className="flex items-center gap-2">
-                      <KeyboardButton variantColor="dark" className="scale-85 text-[9px]">
-                        esc
-                      </KeyboardButton>
-                      <KeyboardButton variantColor="light" className="scale-85 text-[9px]">
-                        tab
-                      </KeyboardButton>
-                      <RealismButton variantColor="cyan" className="scale-85 h-7 px-2 text-[9px]">
-                        Realism
-                      </RealismButton>
-                    </div>
+                  <div className="flex items-center justify-center gap-1.5 py-1">
+                    {/* Ctrl Key */}
+                    <button 
+                      onClick={handleCopy}
+                      className={cn(
+                        "flex flex-col items-start justify-between text-[10px] border border-black/10 p-2 rounded-t-[10px] rounded-b-[8px] cursor-pointer relative h-[45px] w-[50px] select-none transition-all duration-100 ease-in-out [transform:perspective(50px)_rotateX(5deg)] active:[transform:perspective(50px)_rotateX(5deg)_translateY(2px)_scale(0.96)] focus:outline-none focus-visible:ring-1 bg-zinc-900 text-zinc-50 shadow-[inset_-2px_-5px_0px_rgba(255,255,255,0.3),inset_-2px_-4px_0px_rgba(0,0,0,0.3),0px_1px_1px_rgba(0,0,0,0.3)] hover:bg-zinc-800 font-semibold uppercase font-sans tracking-tight"
+                      )}
+                    >
+                      <span className="text-[7px] opacity-60 self-start">ctrl</span>
+                      <span className="self-end mt-auto text-[8px] font-bold">Ctrl</span>
+                    </button>
+                    <span className="text-zinc-400 font-bold text-[9px] select-none">+</span>
+                    {/* C Key */}
+                    <button 
+                      onClick={handleCopy}
+                      className={cn(
+                        "flex flex-col items-start justify-between text-[10px] border border-black/10 p-2 rounded-t-[10px] rounded-b-[8px] cursor-pointer relative h-[45px] w-[45px] select-none transition-all duration-100 ease-in-out [transform:perspective(50px)_rotateX(5deg)] active:[transform:perspective(50px)_rotateX(5deg)_translateY(2px)_scale(0.96)] focus:outline-none focus-visible:ring-1 bg-zinc-100 text-zinc-950 border-zinc-200/50 shadow-[inset_-2px_-5px_0px_rgba(255,255,255,0.8),inset_-2px_-4px_0px_rgba(0,0,0,0.1),0px_1px_1px_rgba(0,0,0,0.15)] hover:bg-zinc-50 font-semibold uppercase font-sans tracking-tight"
+                      )}
+                    >
+                      <span className="text-[7px] opacity-60 self-start">copy</span>
+                      <span className="self-end mt-auto text-[9px] font-bold">C</span>
+                    </button>
+                    <span className="text-zinc-400 font-bold text-[9px] select-none">+</span>
+                    {/* V Key */}
+                    <button 
+                      onClick={handleCopy}
+                      className={cn(
+                        "flex flex-col items-start justify-between text-[10px] border border-black/10 p-2 rounded-t-[10px] rounded-b-[8px] cursor-pointer relative h-[45px] w-[45px] select-none transition-all duration-100 ease-in-out [transform:perspective(50px)_rotateX(5deg)] active:[transform:perspective(50px)_rotateX(5deg)_translateY(2px)_scale(0.96)] focus:outline-none focus-visible:ring-1 bg-blue-600 text-white border-blue-700/50 shadow-[inset_-2px_-5px_0px_rgba(255,255,255,0.4),inset_-2px_-4px_0px_rgba(0,0,0,0.3),0px_1px_1px_rgba(0,0,0,0.3)] hover:bg-blue-500 font-semibold uppercase font-sans tracking-tight"
+                      )}
+                    >
+                      <span className="text-[7px] opacity-60 self-start">paste</span>
+                      <span className="self-end mt-auto text-[9px] font-bold">V</span>
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-zinc-400 dark:text-zinc-500 bg-white/5 dark:bg-black/10 p-1.5 rounded border border-zinc-200/25 dark:border-zinc-800/40">
+                    <span className="font-mono text-zinc-500 select-all">npx kanso-ui add magnetic-button</span>
+                    <button 
+                      onClick={handleCopy}
+                      className="text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 cursor-pointer font-sans font-semibold transition-colors"
+                    >
+                      {copied ? "Copied" : "Copy"}
+                    </button>
                   </div>
                 </div>
 
@@ -607,7 +676,7 @@ export default function LandingPageClient({
                   <span className="font-sans font-medium">v1.0.0</span>
                 </div>
               </div>
-            </InteractiveCard>
+            </LiquidMetalCardRoot>
           </div>
         </div>
         </div>
