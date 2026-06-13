@@ -3,23 +3,6 @@ import LandingPageClient from "./LandingPageClient"
 
 // --- Static Code Snippets for Shiki to highlight on Server ---
 
-const heroCode = `import { InteractiveCard, CardBody, CardItem } from "@kanso/ui"
-
-export default function CardDemo() {
-  return (
-    <InteractiveCard animated glowColor="280 80 70">
-      <CardBody className="p-6">
-        <CardItem translateZ={50} className="text-xl font-bold text-white">
-          Zen Interaction
-        </CardItem>
-        <CardItem translateZ={30} className="text-zinc-400 mt-2">
-          3D tilt, cursor spotlight, and edge border glow.
-        </CardItem>
-      </CardBody>
-    </InteractiveCard>
-  )
-}`
-
 const showcaseCodes = {
   buttons: `import { RealismButton } from "@/components/kanso/realism-button"
 import { KeyboardButton } from "@/components/kanso/keyboard-button"
@@ -185,15 +168,6 @@ export default async function Home() {
     langs: ["tsx"],
   })
 
-  // Pre-highlight hero code
-  const heroHtml = highlighter.codeToHtml(heroCode, {
-    lang: "tsx",
-    themes: {
-      light: "github-light",
-      dark: "github-dark",
-    },
-  })
-
   // Pre-highlight showcase codes
   const showcaseHtmls = {
     buttons: highlighter.codeToHtml(showcaseCodes.buttons, { lang: "tsx", themes: { light: "github-light", dark: "github-dark" } }),
@@ -221,8 +195,6 @@ export default async function Home() {
 
   return (
     <LandingPageClient
-      heroHtml={heroHtml}
-      heroRaw={heroCode}
       showcaseHtmls={showcaseHtmls}
       showcaseRaws={showcaseCodes}
       dxHtml={dxHtml}

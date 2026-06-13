@@ -33,7 +33,7 @@ import { ShimmerBorder } from "@/components/kanso/shimmer-border"
 import { TextReveal } from "@/components/kanso/text-reveal"
 import { GITHUB_URL } from "@/lib/constants"
 import { GithubButton } from "@/components/kanso/github-button"
-import { InteractiveCard, CardBody, CardItem } from "@/components/kanso/interactive-card"
+import { InteractiveCard } from "@/components/kanso/interactive-card"
 import { SpotlightCard } from "@/components/kanso/spotlight-card"
 import { RealismButton } from "@/components/kanso/realism-button"
 import { KeyboardButton } from "@/components/kanso/keyboard-button"
@@ -149,8 +149,6 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
 }
 
 interface LandingPageClientProps {
-  heroHtml: string
-  heroRaw: string
   showcaseHtmls: Record<string, string>
   showcaseRaws: Record<string, string>
   dxHtml: string
@@ -158,6 +156,17 @@ interface LandingPageClientProps {
 }
 
 const COLOR_THEMES = [
+  {
+    name: "multicolor",
+    label: "Multicolor",
+    gradientFrom: "rgba(168, 85, 247, 0.35)",
+    gradientTo: "rgba(6, 182, 212, 0.25)",
+    glowColor: "#120F17",
+    ringColor: "#ec4899",
+    particleColor: "#a855f7",
+    colors: ["#a855f7", "#06b6d4", "#10b981", "#f43f5e", "#f59e0b"],
+    colorClass: "bg-gradient-to-tr from-purple-500 via-pink-500 to-cyan-500",
+  },
   {
     name: "purple",
     label: "Purple",
@@ -216,8 +225,6 @@ const COLOR_THEMES = [
 ]
 
 export default function LandingPageClient({
-  heroHtml,
-  heroRaw,
   showcaseHtmls,
   showcaseRaws,
   dxHtml,
@@ -234,14 +241,13 @@ export default function LandingPageClient({
     dotSpacing: 12,
     sparkle: true,
     gradientFrom: "rgba(168, 85, 247, 0.35)",
-    gradientTo: "rgba(180, 151, 207, 0.25)",
+    gradientTo: "rgba(6, 182, 212, 0.25)",
     glowColor: "#120F17",
-    ringColor: "#a855f7",
+    ringColor: "#ec4899",
     particleColor: "#a855f7",
-    colors: ["#a855f7", "#c084fc", "#e9d5ff", "#c084fc"],
-    themeName: "purple",
+    colors: ["#a855f7", "#06b6d4", "#10b981", "#f43f5e", "#f59e0b"],
+    themeName: "multicolor",
   })
-  const [heroTab, setHeroTab] = React.useState<"preview" | "code">("preview")
   React.useEffect(() => {
     const handle = requestAnimationFrame(() => setMounted(true))
     return () => cancelAnimationFrame(handle)
@@ -485,186 +491,123 @@ export default function LandingPageClient({
             </div>
           </div>
 
-          {/* Hero Right Code Card (Floating Tabbed Showcase) */}
-          <div className="flex flex-col items-center justify-center lg:col-span-5 w-full min-w-0 gap-6">
-            {/* Tab Selector Buttons */}
-            <div className="flex rounded-lg border border-zinc-200/80 p-0.5 bg-zinc-150/40 dark:border-zinc-800 dark:bg-zinc-900/60 shadow-xs">
-              <button
-                onClick={() => setHeroTab("preview")}
-                className={cn(
-                  "px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer",
-                  heroTab === "preview"
-                    ? "bg-white dark:bg-zinc-800 text-zinc-950 dark:text-white shadow-xs"
-                    : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-                )}
-              >
-                Interactive Preview
-              </button>
-              <button
-                onClick={() => setHeroTab("code")}
-                className={cn(
-                  "px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer",
-                  heroTab === "code"
-                    ? "bg-white dark:bg-zinc-800 text-zinc-950 dark:text-white shadow-xs"
-                    : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-                )}
-              >
-                Code Snippet
-              </button>
-            </div>
+          {/* Hero Right Sandbox Card */}
+          <div className="flex flex-col items-center justify-center lg:col-span-5 w-full min-w-0">
+            <InteractiveCard
+              containerClassName="py-0 flex items-center justify-center w-full"
+              className="w-full max-w-[380px] rounded-2xl border border-zinc-200/80 bg-white/70 dark:border-zinc-800/80 dark:bg-zinc-950/70 p-5 shadow-xl backdrop-blur-md relative overflow-hidden group select-none"
+              glowColor={halftoneParams.themeName === "multicolor" ? "280 80 70" : halftoneParams.ringColor ? halftoneParams.ringColor.replace("#", "") : "280 80 70"}
+              colors={halftoneParams.colors}
+              borderRadius={20}
+            >
+              <div className="flex flex-col gap-4 w-full relative z-10">
+                {/* Sandbox Header */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <span className="relative flex h-2 w-2">
+                      <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
+                      <span className="relative inline-flex rounded-full h-2 w-2 bg-emerald-500"></span>
+                    </span>
+                    <span className="text-[10px] font-mono font-semibold uppercase tracking-wider text-zinc-400 dark:text-zinc-500">
+                      Zen Workbench
+                    </span>
+                  </div>
+                  <span className="text-[9px] font-mono text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded-full border border-zinc-200/40 dark:border-zinc-800/50">
+                    kanso-sandbox.tsx
+                  </span>
+                </div>
 
-            {/* Display container */}
-            <div className="w-full max-w-[420px] min-h-[400px] flex items-center justify-center min-w-0">
-              <AnimatePresence mode="wait">
-                {heroTab === "preview" ? (
-                  <motion.div
-                    key="preview"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className="w-full flex justify-center"
-                  >
-                    <div className="w-full max-w-[360px] rounded-2xl border border-zinc-200/80 bg-white/80 p-6 shadow-xl dark:border-zinc-800/80 dark:bg-zinc-950/80 backdrop-blur-md relative overflow-hidden group">
-                      <div className="relative z-10 flex flex-col gap-6">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">Interactive Canvas Controls</span>
-                          <span className="h-2 w-2 rounded-full bg-purple-500 animate-pulse" />
-                        </div>
+                {/* Compact Color Themes row */}
+                <div className="flex flex-col gap-2 p-3 rounded-xl border border-zinc-200/30 bg-zinc-50/40 dark:border-zinc-800/30 dark:bg-zinc-900/20">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
+                      Ambient Palette Space
+                    </span>
+                    <span className="text-[9px] font-mono text-zinc-500 capitalize">
+                      {halftoneParams.themeName}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    {COLOR_THEMES.map((themeItem) => (
+                      <button
+                        key={themeItem.name}
+                        onClick={() =>
+                          setHalftoneParams((prev) => ({
+                            ...prev,
+                            gradientFrom: themeItem.gradientFrom,
+                            gradientTo: themeItem.gradientTo,
+                            glowColor: themeItem.glowColor,
+                            ringColor: themeItem.ringColor,
+                            particleColor: themeItem.particleColor,
+                            colors: themeItem.colors,
+                            themeName: themeItem.name,
+                          }))
+                        }
+                        className={cn(
+                          "size-5 rounded-full border cursor-pointer transition-all hover:scale-110 flex items-center justify-center shrink-0",
+                          themeItem.colorClass,
+                          halftoneParams.themeName === themeItem.name
+                            ? "border-zinc-900 dark:border-white ring-2 ring-zinc-900/10 dark:ring-white/10 scale-105"
+                            : "border-transparent"
+                        )}
+                        title={themeItem.label}
+                      >
+                        {halftoneParams.themeName === themeItem.name && (
+                          <CheckIcon className="size-2 text-white mix-blend-difference" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-                        <div>
-                          <h3 className="text-lg font-bold tracking-tight text-zinc-900 dark:text-white">Customize Background</h3>
-                          <p className="mt-1.5 text-xs text-zinc-500 dark:text-zinc-455 leading-relaxed">
-                            Select color palettes and modify parameters of the halftone dither grid in real-time.
-                          </p>
-                        </div>
-
-                        {/* Colors Option Grid */}
-                        <div className="flex flex-col gap-2.5">
-                          <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Color Themes</span>
-                          <div className="flex gap-3">
-                            {COLOR_THEMES.map((themeItem) => (
-                              <button
-                                key={themeItem.name}
-                                onClick={() =>
-                                  setHalftoneParams((prev) => ({
-                                    ...prev,
-                                    gradientFrom: themeItem.gradientFrom,
-                                    gradientTo: themeItem.gradientTo,
-                                    glowColor: themeItem.glowColor,
-                                    ringColor: themeItem.ringColor,
-                                    particleColor: themeItem.particleColor,
-                                    colors: themeItem.colors,
-                                    themeName: themeItem.name,
-                                  }))
-                                }
-                                className={cn(
-                                  "size-6 rounded-full border cursor-pointer transition-all hover:scale-110",
-                                  themeItem.colorClass,
-                                  halftoneParams.themeName === themeItem.name
-                                    ? "border-zinc-900 dark:border-white ring-2 ring-zinc-900/10 dark:ring-white/10 scale-105"
-                                    : "border-transparent"
-                                )}
-                                title={themeItem.label}
-                              />
-                            ))}
-                          </div>
-                        </div>
-
-                        {/* Controls */}
-                        <div className="flex flex-col gap-4">
-                          <div className="flex flex-col gap-1.5">
-                            <div className="flex justify-between text-[10px] font-semibold text-zinc-455 uppercase tracking-wider">
-                              <span>Dot Spacing</span>
-                              <span className="font-mono text-zinc-550">{halftoneParams.dotSpacing}px</span>
-                            </div>
-                            <input
-                              type="range"
-                              min="8"
-                              max="20"
-                              value={halftoneParams.dotSpacing}
-                              onChange={(e) =>
-                                setHalftoneParams((prev) => ({
-                                  ...prev,
-                                  dotSpacing: parseInt(e.target.value),
-                                }))
-                              }
-                              className="w-full accent-zinc-900 dark:accent-white cursor-pointer h-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none"
-                            />
-                          </div>
-
-                          <div className="flex flex-col gap-1.5">
-                            <div className="flex justify-between text-[10px] font-semibold text-zinc-455 uppercase tracking-wider">
-                              <span>Dot Size</span>
-                              <span className="font-mono text-zinc-550">{halftoneParams.dotRadius}px</span>
-                            </div>
-                            <input
-                              type="range"
-                              min="1"
-                              max="3"
-                              step="0.5"
-                              value={halftoneParams.dotRadius}
-                              onChange={(e) =>
-                                setHalftoneParams((prev) => ({
-                                  ...prev,
-                                  dotRadius: parseFloat(e.target.value),
-                                }))
-                              }
-                              className="w-full accent-zinc-900 dark:accent-white cursor-pointer h-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none"
-                            />
-                          </div>
-
-                          <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-semibold text-zinc-455 uppercase tracking-wider">Sparkling Effect</span>
-                            <button
-                              onClick={() =>
-                                setHalftoneParams((prev) => ({
-                                  ...prev,
-                                  sparkle: !prev.sparkle,
-                                }))
-                              }
-                              className={cn(
-                                "relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-0",
-                                halftoneParams.sparkle ? "bg-zinc-900 dark:bg-white" : "bg-zinc-200 dark:bg-zinc-800"
-                              )}
-                            >
-                              <span
-                                className={cn(
-                                  "pointer-events-none inline-block size-4 transform rounded-full bg-white dark:bg-zinc-900 shadow-sm ring-0 transition duration-200 ease-in-out",
-                                  halftoneParams.sparkle ? "translate-x-4" : "translate-x-0"
-                                )}
-                              />
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className="pt-2 border-t border-zinc-150 dark:border-zinc-800 flex justify-between items-center text-[10px] text-zinc-400">
-                          <span>Active: Dither + Rings + Particles</span>
-                          <span className="font-mono text-zinc-550">Kanso Studio v1.2</span>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="code"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className="w-full min-w-0"
-                  >
-                    <CodeBlock
-                      html={heroHtml}
-                      rawCode={heroRaw}
-                      filename="CardDemo.tsx"
-                      showLineNumbers={true}
-                      collapsible={false}
+                {/* Tactile UI Playground Area */}
+                <div className="flex flex-col gap-3 items-center justify-center p-4 rounded-xl border border-zinc-200/50 bg-zinc-50/20 dark:border-zinc-800/40 dark:bg-zinc-900/20 relative overflow-hidden h-28">
+                  {/* Subtle decorative grid background in Sandbox */}
+                  <div className="absolute inset-0 bg-[radial-gradient(#e4e4e7_1px,transparent_1px)] dark:bg-[radial-gradient(#27272a_1px,transparent_1px)] [background-size:12px_12px] opacity-40" />
+                  
+                  {/* Local mini Antigravity visual overlay container */}
+                  <div className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-30">
+                    <Antigravity
+                      count={25}
+                      magnetRadius={3.5}
+                      ringRadius={3}
+                      waveSpeed={0.4}
+                      waveAmplitude={0.5}
+                      particleSize={1.1}
+                      colors={halftoneParams.colors}
+                      autoAnimate={true}
+                      particleShape="capsule"
                     />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                  </div>
+
+                  <div className="relative z-10 flex flex-col gap-3 items-center w-full">
+                    {/* Magnetic Button */}
+                    <MagneticButton className="px-4 py-2 text-[11px] font-semibold rounded-full border bg-white dark:bg-zinc-950 shadow-xs transition-all text-zinc-900 dark:text-zinc-50 border-zinc-200/60 dark:border-zinc-800 hover:border-zinc-350 dark:hover:border-zinc-700 select-none">
+                      Hover Magnet
+                    </MagneticButton>
+
+                    {/* Helper Skeuomorphic row */}
+                    <div className="flex items-center gap-2">
+                      <KeyboardButton variantColor="dark" className="scale-85 text-[9px]">
+                        esc
+                      </KeyboardButton>
+                      <KeyboardButton variantColor="light" className="scale-85 text-[9px]">
+                        tab
+                      </KeyboardButton>
+                      <RealismButton variantColor="cyan" className="scale-85 h-7 px-2 text-[9px]">
+                        Realism
+                      </RealismButton>
+                    </div>
+                  </div>
+                </div>
+
+                {/* Footer Section */}
+                <div className="pt-2 border-t border-zinc-150 dark:border-zinc-800/60 flex justify-between items-center text-[9px] text-zinc-400 dark:text-zinc-500 font-mono">
+                  <span>Interactive Sandbox</span>
+                  <span className="font-sans font-medium">v1.0.0</span>
+                </div>
+              </div>
+            </InteractiveCard>
           </div>
         </div>
         </div>
