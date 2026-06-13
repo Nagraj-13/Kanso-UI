@@ -6,6 +6,7 @@ import { createHighlighter } from "shiki"
 import { registry, getComponent } from "@/lib/registry"
 import { ComponentDemo } from "@/components/docs/component-demos"
 import { CodeBlock, TerminalBlock } from "@/components/docs/code-block"
+import { TableOfContents } from "@/components/docs/table-of-contents"
 import Link from "next/link"
 import { ArrowLeftIcon } from "lucide-react"
 import {
@@ -418,6 +419,11 @@ export default async function ComponentPage({ params }: PageProps) {
           )}
         </div>
       </div>
+      
+      {/* Table of Contents (Right Sidebar) */}
+      <aside className="hidden xl:block w-60 shrink-0 sticky top-20 self-start">
+        <TableOfContents hasProps={component.props.length > 0} />
+      </aside>
     </div>
   )
 }

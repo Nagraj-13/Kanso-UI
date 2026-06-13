@@ -53,6 +53,7 @@ const AntigravityInner: React.FC<AntigravityProps> = ({
   const meshRef = React.useRef<THREE.InstancedMesh>(null)
   const { viewport } = useThree()
   const dummy = React.useMemo(() => new THREE.Object3D(), [])
+  const hasColors = colors && colors.length > 0
 
   const lastMousePos = React.useRef({ x: 0, y: 0 })
   const lastMouseMoveTime = React.useRef(0)
@@ -133,7 +134,6 @@ const AntigravityInner: React.FC<AntigravityProps> = ({
 
     const globalRotation = state.clock.getElapsedTime() * rotationSpeed
     const colorObj = new THREE.Color()
-    const hasColors = colors && colors.length > 0
 
     particles.forEach((particle, i) => {
       let { t } = particle
@@ -211,7 +211,7 @@ const AntigravityInner: React.FC<AntigravityProps> = ({
       {particleShape === "sphere" && <sphereGeometry args={[0.2, 16, 16]} />}
       {particleShape === "box" && <boxGeometry args={[0.3, 0.3, 0.3]} />}
       {particleShape === "tetrahedron" && <tetrahedronGeometry args={[0.3]} />}
-      <meshBasicMaterial color={color} />
+      <meshBasicMaterial color={hasColors ? "#ffffff" : color} />
     </instancedMesh>
   )
 }

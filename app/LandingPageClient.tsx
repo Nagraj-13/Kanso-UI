@@ -33,12 +33,11 @@ import { ShimmerBorder } from "@/components/kanso/shimmer-border"
 import { TextReveal } from "@/components/kanso/text-reveal"
 import { GITHUB_URL } from "@/lib/constants"
 import { GithubButton } from "@/components/kanso/github-button"
-import { InteractiveCard, CardBody, CardItem } from "@/components/kanso/interactive-card"
 import { SpotlightCard } from "@/components/kanso/spotlight-card"
 import { RealismButton } from "@/components/kanso/realism-button"
 import { KeyboardButton } from "@/components/kanso/keyboard-button"
 import { GlowLineButton } from "@/components/kanso/glow-line-button"
-import { LiquidMetalCard } from "@/components/kanso/liquid-metal-card"
+import { LiquidMetalCard, LiquidMetalCardRoot, LiquidMetalCardVisual } from "@/components/kanso/liquid-metal-card"
 import { HalftoneImage } from "@/components/kanso/halftone-image"
 import { HalftoneGrid } from "@/components/kanso/halftone-grid"
 import { MagicRings } from "@/components/kanso/magic-rings"
@@ -149,8 +148,6 @@ function AnimatedCounter({ value, suffix = "" }: { value: string; suffix?: strin
 }
 
 interface LandingPageClientProps {
-  heroHtml: string
-  heroRaw: string
   showcaseHtmls: Record<string, string>
   showcaseRaws: Record<string, string>
   dxHtml: string
@@ -158,6 +155,17 @@ interface LandingPageClientProps {
 }
 
 const COLOR_THEMES = [
+  {
+    name: "multicolor",
+    label: "Multicolor",
+    gradientFrom: "rgba(168, 85, 247, 0.35)",
+    gradientTo: "rgba(6, 182, 212, 0.25)",
+    glowColor: "#120F17",
+    ringColor: "#ec4899",
+    particleColor: "#a855f7",
+    colors: ["#a855f7", "#06b6d4", "#10b981", "#f43f5e", "#f59e0b"],
+    colorClass: "bg-gradient-to-tr from-purple-500 via-pink-500 to-cyan-500",
+  },
   {
     name: "purple",
     label: "Purple",
@@ -216,8 +224,6 @@ const COLOR_THEMES = [
 ]
 
 export default function LandingPageClient({
-  heroHtml,
-  heroRaw,
   showcaseHtmls,
   showcaseRaws,
   dxHtml,
@@ -234,18 +240,60 @@ export default function LandingPageClient({
     dotSpacing: 12,
     sparkle: true,
     gradientFrom: "rgba(168, 85, 247, 0.35)",
-    gradientTo: "rgba(180, 151, 207, 0.25)",
+    gradientTo: "rgba(6, 182, 212, 0.25)",
     glowColor: "#120F17",
-    ringColor: "#a855f7",
+    ringColor: "#ec4899",
     particleColor: "#a855f7",
-    colors: ["#a855f7", "#c084fc", "#e9d5ff", "#c084fc"],
-    themeName: "purple",
+    colors: ["#a855f7", "#06b6d4", "#10b981", "#f43f5e", "#f59e0b"],
+    themeName: "multicolor",
   })
-  const [heroTab, setHeroTab] = React.useState<"preview" | "code">("preview")
   React.useEffect(() => {
     const handle = requestAnimationFrame(() => setMounted(true))
     return () => cancelAnimationFrame(handle)
   }, [])
+
+  const [copied, setCopied] = React.useState(false)
+  const handleCopy = () => {
+    navigator.clipboard.writeText("npx kanso-ui add magnetic-button")
+    setCopied(true)
+    setTimeout(() => setCopied(false), 2000)
+  }
+
+  const heroCardRef = React.useRef<HTMLDivElement>(null)
+  
+  const handleCardPointerMove = (e: React.PointerEvent<HTMLDivElement>) => {
+    const card = heroCardRef.current
+    if (!card) return
+    const rect = card.getBoundingClientRect()
+    const tiltX = (e.clientX - rect.left - rect.width / 2) / 18
+    const tiltY = (e.clientY - rect.top - rect.height / 2) / -18
+    card.style.transition = "none"
+    card.style.transform = `perspective(1000px) rotateY(${tiltX}deg) rotateX(${tiltY}deg) translateZ(4px)`
+  }
+
+  const handleCardPointerLeave = () => {
+    const card = heroCardRef.current
+    if (!card) return
+    card.style.transition = "transform 0.5s cubic-bezier(0.03, 0.98, 0.52, 0.99)"
+    card.style.transform = "perspective(1000px) rotateY(0deg) rotateX(0deg) translateZ(0)"
+  }
+
+  const resolvedColorTint = React.useMemo(() => {
+    const isDark = theme === "dark" || (theme !== "light" && typeof window !== "undefined" && window.matchMedia("(prefers-color-scheme: dark)").matches)
+    if (isDark) {
+      return halftoneParams.ringColor || "#a855f7"
+    } else {
+      const colorMap: Record<string, string> = {
+        multicolor: "#6366f1",
+        purple: "#7c3aed",
+        cyan: "#0891b2",
+        emerald: "#059669",
+        rose: "#e11d48",
+        amber: "#d97706"
+      }
+      return colorMap[halftoneParams.themeName] || "#27272a"
+    }
+  }, [theme, halftoneParams.themeName, halftoneParams.ringColor])
 
   return (
     <div className="min-h-screen bg-[#fafafa] text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white dark:bg-zinc-950 dark:text-zinc-50 dark:selection:bg-zinc-50 dark:selection:text-zinc-950">
@@ -485,186 +533,150 @@ export default function LandingPageClient({
             </div>
           </div>
 
-          {/* Hero Right Code Card (Floating Tabbed Showcase) */}
-          <div className="flex flex-col items-center justify-center lg:col-span-5 w-full min-w-0 gap-6">
-            {/* Tab Selector Buttons */}
-            <div className="flex rounded-lg border border-zinc-200/80 p-0.5 bg-zinc-150/40 dark:border-zinc-800 dark:bg-zinc-900/60 shadow-xs">
-              <button
-                onClick={() => setHeroTab("preview")}
-                className={cn(
-                  "px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer",
-                  heroTab === "preview"
-                    ? "bg-white dark:bg-zinc-800 text-zinc-950 dark:text-white shadow-xs"
-                    : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-                )}
-              >
-                Interactive Preview
-              </button>
-              <button
-                onClick={() => setHeroTab("code")}
-                className={cn(
-                  "px-3.5 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer",
-                  heroTab === "code"
-                    ? "bg-white dark:bg-zinc-800 text-zinc-950 dark:text-white shadow-xs"
-                    : "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-200"
-                )}
-              >
-                Code Snippet
-              </button>
-            </div>
+          {/* Hero Right Sandbox Card */}
+          <div 
+            className="flex flex-col items-center justify-center lg:col-span-5 w-full min-w-0"
+            style={{ perspective: "1000px" }}
+          >
+            <LiquidMetalCardRoot
+              ref={heroCardRef}
+              onPointerMove={handleCardPointerMove}
+              onPointerLeave={handleCardPointerLeave}
+              className="w-full max-w-[380px] rounded-2xl border border-zinc-200/80 bg-white/70 dark:border-zinc-800/80 dark:bg-zinc-950/70 p-5 shadow-xl backdrop-blur-md relative overflow-hidden group select-none transition-transform duration-300 ease-out"
+              style={{ transformStyle: "preserve-3d" }}
+              colorTint={resolvedColorTint}
+              distortion={0.5}
+              softness={0.7}
+              repetition={8}
+              scale={0.55}
+              image="/Kansologo.png"
+            >
+              <div className="flex flex-col gap-4 w-full relative z-10">
+                {/* Sandbox Header */}
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    
+                   
+                  </div>
+                  <span className="text-[9px] font-mono text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded-full border border-zinc-200/40 dark:border-zinc-800/50">
+                    kanso-sandbox.tsx
+                  </span>
+                </div>
 
-            {/* Display container */}
-            <div className="w-full max-w-[420px] min-h-[400px] flex items-center justify-center min-w-0">
-              <AnimatePresence mode="wait">
-                {heroTab === "preview" ? (
-                  <motion.div
-                    key="preview"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className="w-full flex justify-center"
-                  >
-                    <div className="w-full max-w-[360px] rounded-2xl border border-zinc-200/80 bg-white/80 p-6 shadow-xl dark:border-zinc-800/80 dark:bg-zinc-950/80 backdrop-blur-md relative overflow-hidden group">
-                      <div className="relative z-10 flex flex-col gap-6">
-                        <div className="flex items-center justify-between">
-                          <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">Interactive Canvas Controls</span>
-                          <span className="h-2 w-2 rounded-full bg-purple-500 animate-pulse" />
-                        </div>
+                {/* Visual metallic logo container */}
+                <LiquidMetalCardVisual 
+                  className="h-28 w-full overflow-hidden rounded-xl bg-zinc-50 dark:bg-zinc-950 relative border border-zinc-200/40 dark:border-zinc-800/40 flex items-center justify-center"
+                  desktopShaderProps={{
+                    image: "/Kansologo.png",
+                    colorTint: resolvedColorTint,
+                    distortion: 0.45,
+                    softness: 0.8,
+                    repetition: 7,
+                    scale: 0.52,
+                  }}
+                />
 
-                        <div>
-                          <h3 className="text-lg font-bold tracking-tight text-zinc-900 dark:text-white">Customize Background</h3>
-                          <p className="mt-1.5 text-xs text-zinc-500 dark:text-zinc-455 leading-relaxed">
-                            Select color palettes and modify parameters of the halftone dither grid in real-time.
-                          </p>
-                        </div>
+                {/* Compact Color Themes row */}
+                <div className="flex flex-col gap-2 p-3 rounded-xl border border-zinc-200/30 bg-zinc-50/40 dark:border-zinc-800/30 dark:bg-zinc-900/20">
+                  <div className="flex items-center justify-between">
+                    <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
+                      Ambient Palette Space
+                    </span>
+                    <span className="text-xs font-mono text-zinc-500 capitalize">
+                      {halftoneParams.themeName}
+                    </span>
+                  </div>
+                  <div className="flex items-center gap-2 mt-0.5">
+                    {COLOR_THEMES.map((themeItem) => (
+                      <button
+                        key={themeItem.name}
+                        onClick={() =>
+                          setHalftoneParams((prev) => ({
+                            ...prev,
+                            gradientFrom: themeItem.gradientFrom,
+                            gradientTo: themeItem.gradientTo,
+                            glowColor: themeItem.glowColor,
+                            ringColor: themeItem.ringColor,
+                            particleColor: themeItem.particleColor,
+                            colors: themeItem.colors,
+                            themeName: themeItem.name,
+                          }))
+                        }
+                        className={cn(
+                          "size-5 rounded-full border cursor-pointer transition-all hover:scale-110 flex items-center justify-center shrink-0",
+                          themeItem.colorClass,
+                          halftoneParams.themeName === themeItem.name
+                            ? "border-zinc-900 dark:border-white ring-2 ring-zinc-900/10 dark:ring-white/10 scale-105"
+                            : "border-transparent"
+                        )}
+                        title={themeItem.label}
+                      >
+                        {halftoneParams.themeName === themeItem.name && (
+                          <CheckIcon className="size-2 text-white mix-blend-difference" />
+                        )}
+                      </button>
+                    ))}
+                  </div>
+                </div>
 
-                        {/* Colors Option Grid */}
-                        <div className="flex flex-col gap-2.5">
-                          <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Color Themes</span>
-                          <div className="flex gap-3">
-                            {COLOR_THEMES.map((themeItem) => (
-                              <button
-                                key={themeItem.name}
-                                onClick={() =>
-                                  setHalftoneParams((prev) => ({
-                                    ...prev,
-                                    gradientFrom: themeItem.gradientFrom,
-                                    gradientTo: themeItem.gradientTo,
-                                    glowColor: themeItem.glowColor,
-                                    ringColor: themeItem.ringColor,
-                                    particleColor: themeItem.particleColor,
-                                    colors: themeItem.colors,
-                                    themeName: themeItem.name,
-                                  }))
-                                }
-                                className={cn(
-                                  "size-6 rounded-full border cursor-pointer transition-all hover:scale-110",
-                                  themeItem.colorClass,
-                                  halftoneParams.themeName === themeItem.name
-                                    ? "border-zinc-900 dark:border-white ring-2 ring-zinc-900/10 dark:ring-white/10 scale-105"
-                                    : "border-transparent"
-                                )}
-                                title={themeItem.label}
-                              />
-                            ))}
-                          </div>
-                        </div>
+                {/* Tactile copy/paste mechanical combo */}
+                <div className="flex flex-col gap-2 p-3 rounded-xl border border-zinc-200/30 bg-zinc-50/40 dark:border-zinc-800/30 dark:bg-zinc-900/20 relative overflow-hidden">
+                  <div className="flex items-center justify-between text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
+                    <span>Tactile Copy Code</span>
+                    <span className="font-mono text-zinc-500 font-semibold">{copied ? "Copied!" : "Click key combination"}</span>
+                  </div>
+                  <div className="flex items-center justify-center gap-1.5 py-1">
+                    {/* Ctrl Key */}
+                    <button 
+                      onClick={handleCopy}
+                      className={cn(
+                        "flex flex-col items-start justify-between text-[10px] border border-black/10 p-2 rounded-t-[10px] rounded-b-[8px] cursor-pointer relative h-[45px] w-[50px] select-none transition-all duration-100 ease-in-out [transform:perspective(50px)_rotateX(5deg)] active:[transform:perspective(50px)_rotateX(5deg)_translateY(2px)_scale(0.96)] focus:outline-none focus-visible:ring-1 bg-zinc-900 text-zinc-50 shadow-[inset_-2px_-5px_0px_rgba(255,255,255,0.3),inset_-2px_-4px_0px_rgba(0,0,0,0.3),0px_1px_1px_rgba(0,0,0,0.3)] hover:bg-zinc-800 font-semibold uppercase font-sans tracking-tight"
+                      )}
+                    >
+                      <span className="text-[7px] opacity-60 self-start">ctrl</span>
+                      <span className="self-end mt-auto text-[8px] font-bold">Ctrl</span>
+                    </button>
+                    <span className="text-zinc-400 font-bold text-[9px] select-none">+</span>
+                    {/* C Key */}
+                    <button 
+                      onClick={handleCopy}
+                      className={cn(
+                        "flex flex-col items-start justify-between text-[10px] border border-black/10 p-2 rounded-t-[10px] rounded-b-[8px] cursor-pointer relative h-[45px] w-[45px] select-none transition-all duration-100 ease-in-out [transform:perspective(50px)_rotateX(5deg)] active:[transform:perspective(50px)_rotateX(5deg)_translateY(2px)_scale(0.96)] focus:outline-none focus-visible:ring-1 bg-zinc-100 text-zinc-950 border-zinc-200/50 shadow-[inset_-2px_-5px_0px_rgba(255,255,255,0.8),inset_-2px_-4px_0px_rgba(0,0,0,0.1),0px_1px_1px_rgba(0,0,0,0.15)] hover:bg-zinc-50 font-semibold uppercase font-sans tracking-tight"
+                      )}
+                    >
+                      <span className="text-[7px] opacity-60 self-start">copy</span>
+                      <span className="self-end mt-auto text-[9px] font-bold">C</span>
+                    </button>
+                    <span className="text-zinc-400 font-bold text-[9px] select-none">+</span>
+                    {/* V Key */}
+                    <button 
+                      onClick={handleCopy}
+                      className={cn(
+                        "flex flex-col items-start justify-between text-[10px] border border-black/10 p-2 rounded-t-[10px] rounded-b-[8px] cursor-pointer relative h-[45px] w-[45px] select-none transition-all duration-100 ease-in-out [transform:perspective(50px)_rotateX(5deg)] active:[transform:perspective(50px)_rotateX(5deg)_translateY(2px)_scale(0.96)] focus:outline-none focus-visible:ring-1 bg-blue-600 text-white border-blue-700/50 shadow-[inset_-2px_-5px_0px_rgba(255,255,255,0.4),inset_-2px_-4px_0px_rgba(0,0,0,0.3),0px_1px_1px_rgba(0,0,0,0.3)] hover:bg-blue-500 font-semibold uppercase font-sans tracking-tight"
+                      )}
+                    >
+                      <span className="text-[7px] opacity-60 self-start">paste</span>
+                      <span className="self-end mt-auto text-[9px] font-bold">V</span>
+                    </button>
+                  </div>
+                  <div className="flex items-center justify-between text-xs text-zinc-400 dark:text-zinc-500 bg-white/5 dark:bg-black/10 p-1.5 rounded border border-zinc-200/25 dark:border-zinc-800/40">
+                    <span className="font-mono text-zinc-500 select-all">npx kanso-ui add magnetic-button</span>
+                    <button 
+                      onClick={handleCopy}
+                      className="text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 cursor-pointer font-sans font-semibold transition-colors"
+                    >
+                      {copied ? "Copied" : "Copy"}
+                    </button>
+                  </div>
+                </div>
 
-                        {/* Controls */}
-                        <div className="flex flex-col gap-4">
-                          <div className="flex flex-col gap-1.5">
-                            <div className="flex justify-between text-[10px] font-semibold text-zinc-455 uppercase tracking-wider">
-                              <span>Dot Spacing</span>
-                              <span className="font-mono text-zinc-550">{halftoneParams.dotSpacing}px</span>
-                            </div>
-                            <input
-                              type="range"
-                              min="8"
-                              max="20"
-                              value={halftoneParams.dotSpacing}
-                              onChange={(e) =>
-                                setHalftoneParams((prev) => ({
-                                  ...prev,
-                                  dotSpacing: parseInt(e.target.value),
-                                }))
-                              }
-                              className="w-full accent-zinc-900 dark:accent-white cursor-pointer h-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none"
-                            />
-                          </div>
-
-                          <div className="flex flex-col gap-1.5">
-                            <div className="flex justify-between text-[10px] font-semibold text-zinc-455 uppercase tracking-wider">
-                              <span>Dot Size</span>
-                              <span className="font-mono text-zinc-550">{halftoneParams.dotRadius}px</span>
-                            </div>
-                            <input
-                              type="range"
-                              min="1"
-                              max="3"
-                              step="0.5"
-                              value={halftoneParams.dotRadius}
-                              onChange={(e) =>
-                                setHalftoneParams((prev) => ({
-                                  ...prev,
-                                  dotRadius: parseFloat(e.target.value),
-                                }))
-                              }
-                              className="w-full accent-zinc-900 dark:accent-white cursor-pointer h-1 bg-zinc-200 dark:bg-zinc-800 rounded-lg appearance-none"
-                            />
-                          </div>
-
-                          <div className="flex items-center justify-between">
-                            <span className="text-[10px] font-semibold text-zinc-455 uppercase tracking-wider">Sparkling Effect</span>
-                            <button
-                              onClick={() =>
-                                setHalftoneParams((prev) => ({
-                                  ...prev,
-                                  sparkle: !prev.sparkle,
-                                }))
-                              }
-                              className={cn(
-                                "relative inline-flex h-5 w-9 shrink-0 cursor-pointer rounded-full border-2 border-transparent transition-colors duration-200 ease-in-out focus:outline-none focus:ring-0",
-                                halftoneParams.sparkle ? "bg-zinc-900 dark:bg-white" : "bg-zinc-200 dark:bg-zinc-800"
-                              )}
-                            >
-                              <span
-                                className={cn(
-                                  "pointer-events-none inline-block size-4 transform rounded-full bg-white dark:bg-zinc-900 shadow-sm ring-0 transition duration-200 ease-in-out",
-                                  halftoneParams.sparkle ? "translate-x-4" : "translate-x-0"
-                                )}
-                              />
-                            </button>
-                          </div>
-                        </div>
-
-                        <div className="pt-2 border-t border-zinc-150 dark:border-zinc-800 flex justify-between items-center text-[10px] text-zinc-400">
-                          <span>Active: Dither + Rings + Particles</span>
-                          <span className="font-mono text-zinc-550">Kanso Studio v1.2</span>
-                        </div>
-                      </div>
-                    </div>
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="code"
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.2 }}
-                    className="w-full min-w-0"
-                  >
-                    <CodeBlock
-                      html={heroHtml}
-                      rawCode={heroRaw}
-                      filename="CardDemo.tsx"
-                      showLineNumbers={true}
-                      collapsible={false}
-                    />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div>
+                {/* Footer Section */}
+                <div className="pt-2 border-t border-zinc-150 dark:border-zinc-800/60 flex justify-between items-center text-[9px] text-zinc-400 dark:text-zinc-500 font-mono">
+                  <span>Interactive Sandbox</span>
+                  <span className="font-sans font-medium">v1.0.0</span>
+                </div>
+              </div>
+            </LiquidMetalCardRoot>
           </div>
         </div>
         </div>
