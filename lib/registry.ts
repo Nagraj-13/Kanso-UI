@@ -368,6 +368,168 @@ export default function GithubButtonDemo() {
     ],
   },
   {
+    name: "three-d-masonry-orbit",
+    title: "3D Masonry Orbit",
+    description:
+      "An interactive 3D cylindrical gallery that orbits images in a masonry layout. Responds to mouse drags, scrolls, and raycasted hover-scaling.",
+    category: "data-display",
+    dependencies: ["three", "@types/three"],
+    internalDeps: ["lib/utils"],
+    filePath: "components/kanso/three-d-masonry-orbit.tsx",
+    tags: ["3d", "gallery", "orbit", "masonry", "threejs", "hover", "interactive"],
+    usage: `import { ThreeDMasonryOrbit } from "@/components/kanso/three-d-masonry-orbit"
+
+export default function ThreeDMasonryOrbitDemo() {
+  return (
+    <div className="w-full h-[600px] border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden bg-[#09090b]">
+      <ThreeDMasonryOrbit height="100%" />
+    </div>
+  )
+}`,
+    props: [
+      {
+        name: "images",
+        type: "string[]",
+        description: "List of image URLs. If omitted, uses a curated list of anime/aesthetic images.",
+      },
+      {
+        name: "columns",
+        type: "number",
+        default: "14",
+        description: "Number of columns around the circle.",
+      },
+      {
+        name: "rows",
+        type: "number",
+        default: "3",
+        description: "Number of vertical tiers.",
+      },
+      {
+        name: "radius",
+        type: "number",
+        default: "16",
+        description: "Orbit radius distance from the center.",
+      },
+      {
+        name: "autoRotationSpeed",
+        type: "number",
+        default: "0.002",
+        description: "Base auto-rotation speed around the Y axis.",
+      },
+      {
+        name: "fogColor",
+        type: "string",
+        default: '"#09090b"',
+        description: "Background/fog color.",
+      },
+      {
+        name: "fogDensity",
+        type: "number",
+        default: "0.025",
+        description: "Fog density coefficient.",
+      },
+      {
+        name: "height",
+        type: "string | number",
+        default: '"100vh"',
+        description: "Height of the viewport/canvas container.",
+      },
+      {
+        name: "hideUI",
+        type: "boolean",
+        default: "false",
+        description: "When true, hides the overlay title/desc text.",
+      },
+      {
+        name: "titleText",
+        type: "string",
+        default: '"Gallery"',
+        description: "Custom overlay title text.",
+      },
+      {
+        name: "descText",
+        type: "string",
+        default: '"Drag to explore • Hover to focus"',
+        description: "Custom overlay description text.",
+      },
+      {
+        name: "borderRadius",
+        type: "number",
+        default: "0.15",
+        description: "Card border radius in 3D world units.",
+      },
+      {
+        name: "columnSpacing",
+        type: "number",
+        default: "1.0",
+        description: "Column width/spacing multiplier factor.",
+      },
+    ],
+  },
+  {
+    name: "three-d-photo-carousel",
+    title: "3D Photo Carousel",
+    description:
+      "A responsive 3D cylindrical image carousel built with Framer Motion. Responds to drag rotation, handles image modal expansions, and supports custom spacing, border-radius, and keyboard interactions.",
+    category: "data-display",
+    dependencies: ["framer-motion"],
+    internalDeps: ["lib/utils"],
+    filePath: "components/kanso/three-d-photo-carousel.tsx",
+    tags: ["3d", "carousel", "gallery", "orbit", "framer-motion", "drag", "interactive"],
+    usage: `import { ThreeDPhotoCarousel } from "@/components/kanso/three-d-photo-carousel"
+
+export default function ThreeDPhotoCarouselDemo() {
+  return (
+    <div className="w-full border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden bg-zinc-950/5 dark:bg-zinc-950/40">
+      <ThreeDPhotoCarousel height="500px" />
+    </div>
+  )
+}`,
+    props: [
+      {
+        name: "images",
+        type: "string[]",
+        description: "Array of image URLs. If omitted, uses curated aesthetic anime/cyberpunk images.",
+      },
+      {
+        name: "spacing",
+        type: "number",
+        default: "1.0",
+        description: "Cylinder width multiplier scale factor. Controls column distance from center.",
+      },
+      {
+        name: "borderRadius",
+        type: "string",
+        default: '"12px"',
+        description: "Border radius of the carousel cards.",
+      },
+      {
+        name: "cylinderWidth",
+        type: "number",
+        default: "1800",
+        description: "Cylinder width at full desktop viewport.",
+      },
+      {
+        name: "height",
+        type: "string | number",
+        default: '"500px"',
+        description: "Height of the carousel viewport.",
+      },
+      {
+        name: "autoRotationSpeed",
+        type: "number",
+        default: "0",
+        description: "Auto rotation speed (degrees per frame). Use 0 to disable.",
+      },
+      {
+        name: "hideOverlayUI",
+        type: "boolean",
+        default: "false",
+        description: "Hide the overlay caption UI in the enlarged modal.",
+      },
+    ],
+  },
+  {
     name: "shimmer-border",
     title: "Shimmer Border",
     description:
