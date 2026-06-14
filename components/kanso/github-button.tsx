@@ -108,11 +108,15 @@ const GithubButton = React.forwardRef<HTMLButtonElement, GithubButtonProps>(
     }
 
     // Dynamic Live Star Count State
-    const [starCount, setStarCount] = React.useState<number | string>(stars ?? "...")
-    const [isLoading, setIsLoading] = React.useState(true)
+    const resolvedInitial = stars ?? "..."
+    const [starCount, setStarCount] = React.useState<number | string>(resolvedInitial)
+    const [isLoading, setIsLoading] = React.useState(!stars)
 
     React.useEffect(() => {
-      setStarCount(stars)
+      if (stars !== undefined) {
+        setStarCount(stars)
+        setIsLoading(false)
+      }
     }, [stars])
 
     React.useEffect(() => {
@@ -125,14 +129,20 @@ const GithubButton = React.forwardRef<HTMLButtonElement, GithubButtonProps>(
         }
       }
 
-      if (!targetRepo) return
+      if (!targetRepo) {
+        setIsLoading(false)
+        return
+      }
 
       if (starCache.has(targetRepo)) {
         setStarCount(starCache.get(targetRepo)!)
+        setIsLoading(false)
+        return
       }
 
       const unsubscribe = subscribeToRepoStars(targetRepo, (count) => {
         setStarCount(count)
+        setIsLoading(false)
       })
 
       fetchRepoStars(targetRepo).then((count) => {
