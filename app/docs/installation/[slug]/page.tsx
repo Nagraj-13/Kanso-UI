@@ -172,7 +172,7 @@ export default async function InstallationPage({ params }: InstallationPageProps
   }
 
   return (
-    <div className="w-full max-w-3xl">
+    <div className="w-full ">
       {/* Header */}
       <div className="mb-10">
         <div className="mb-3 inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-50 px-2.5 py-0.5 text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-400">
