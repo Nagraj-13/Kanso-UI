@@ -257,3 +257,10 @@ html.dark .docs-sidebar-link[data-active="true"]::before {
     linear-gradient(#121213 50%, rgba(18, 18, 19, 0.6) 80%, rgba(18, 18, 19, 0)),
     linear-gradient(90deg, hsl(0, 100%, 63%), hsl(90, 100%, 63%), hsl(210, 100%, 63%), hsl(195, 100%, 63%), hsl(270, 100%, 63%)) !important;
 }
+
+/* Kanso UI docs layout fixes - hide header logo when sidebar is expanded on desktop */
+@media (min-width: 768px) {
+  [data-slot="sidebar"][data-state="expanded"] ~ .content-pane .header-logo-container {
+    display: none !important;
+  }
+}

@@ -34,8 +34,8 @@ export default function DocsLayout({
       items: [
         {
           name: "twitter",
-          title: "X @Nagraj013",
-          href: "https://x.com/Nagraj013",
+          title: "X @Nagraj Bhandare",
+          href: "https://x.com/_nagraj_13",
           isExternal: true,
         },
       ],
