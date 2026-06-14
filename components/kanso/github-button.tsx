@@ -6,7 +6,7 @@ export interface GithubButtonProps
   extends React.ComponentPropsWithoutRef<typeof Button> {
   /** The design variant of the GitHub button */
   variantDesign?: "rainbow" | "classic" | "tooltip" | "glow"
-  /** Number of stars to display (static or fallback value) */
+  /** Number of stars to display (optional fallback value; defaults to live fetch) */
   stars?: number | string
   /** The repository link or target URL */
   href?: string
@@ -73,7 +73,7 @@ const fetchRepoStars = async (repo: string): Promise<number> => {
 }
 
 const GithubButton = React.forwardRef<HTMLButtonElement, GithubButtonProps>(
-  ({ className, variantDesign = "classic", stars = 11, href, glowColor, repo, children, ...props }, ref) => {
+  ({ className, variantDesign = "classic", stars, href, glowColor, repo, children, ...props }, ref) => {
     // Shared GitHub SVG Logo path
     const githubIcon = (
       <svg className="size-4 shrink-0" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true">
@@ -108,7 +108,8 @@ const GithubButton = React.forwardRef<HTMLButtonElement, GithubButtonProps>(
     }
 
     // Dynamic Live Star Count State
-    const [starCount, setStarCount] = React.useState<number | string>(stars)
+    const [starCount, setStarCount] = React.useState<number | string>(stars ?? "...")
+    const [isLoading, setIsLoading] = React.useState(true)
 
     React.useEffect(() => {
       setStarCount(stars)
@@ -135,9 +136,12 @@ const GithubButton = React.forwardRef<HTMLButtonElement, GithubButtonProps>(
       })
 
       fetchRepoStars(targetRepo).then((count) => {
+        setIsLoading(false)
         if (count > 0) {
           setStarCount(count)
         }
+      }).catch(() => {
+        setIsLoading(false)
       })
 
       return () => unsubscribe()
@@ -192,7 +196,10 @@ const GithubButton = React.forwardRef<HTMLButtonElement, GithubButtonProps>(
               >
                 <path d="M12 17.27L18.18 21l-1.64-7.03L22 9.24l-7.19-.61L12 2 9.19 8.63 2 9.24l5.46 4.73L5.82 21z" />
               </svg>
-              <span className="tabular-nums font-semibold text-zinc-600 dark:text-zinc-400">
+              <span className={cn(
+                "tabular-nums font-semibold text-zinc-600 dark:text-zinc-400",
+                isLoading && "animate-pulse"
+              )}>
                 {starCount}
               </span>
             </div>
@@ -272,7 +279,10 @@ const GithubButton = React.forwardRef<HTMLButtonElement, GithubButtonProps>(
               <span className="bg-gradient-to-b ml-0.5 dark:from-white dark:to-white/50 from-neutral-950 to-neutral-950/60 bg-clip-text text-xs text-transparent font-semibold">
                 {children || "Star on Github"}
               </span>
-              <span className="ml-1.5 tabular-nums text-[10px] font-semibold bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 px-1.5 py-0.5 rounded-full">
+              <span className={cn(
+                "ml-1.5 tabular-nums text-[10px] font-semibold bg-neutral-200 dark:bg-neutral-800 text-neutral-600 dark:text-neutral-400 px-1.5 py-0.5 rounded-full",
+                isLoading && "animate-pulse"
+              )}>
                 {starCount}
               </span>
             </span>
