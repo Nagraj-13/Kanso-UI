@@ -347,7 +347,7 @@ export function DocsLayoutClient({
             </span>
           </div>
           
-          <main className="px-4 py-8 sm:px-6 lg:px-12 lg:py-10 flex-1 min-w-0 overflow-x-clip max-w-5xl w-full mx-auto">
+          <main className="px-4 py-8 sm:px-6 lg:px-12 lg:py-10 flex-1 min-w-0 overflow-x-clip max-w-7xl w-full mx-auto">
             {children}
           </main>
         </div>

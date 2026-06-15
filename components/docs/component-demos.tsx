@@ -20,7 +20,7 @@ import { HalftoneImage } from "@/components/kanso/halftone-image"
 import { HalftoneGrid } from "@/components/kanso/halftone-grid"
 import { MagicRings } from "@/components/kanso/magic-rings"
 import { Antigravity } from "@/components/kanso/antigravity"
-import { ThreeDMasonryOrbit } from "@/components/kanso/three-d-masonry-orbit"
+import { ThreeDMasonryOrbit, CurvedRingArchive } from "@/components/kanso/three-d-masonry-orbit"
 import { ThreeDPhotoCarousel } from "@/components/kanso/three-d-photo-carousel"
 import {
   ColorPicker,
@@ -1926,6 +1926,7 @@ const demos: Record<string, React.ComponentType> = {
     )
   },
   "three-d-masonry-orbit": function ThreeDMasonryOrbitDemo() {
+    const [variant, setVariant] = React.useState<"threejs" | "gsap">("threejs")
     const [columns, setColumns] = React.useState(14)
     const [rows, setRows] = React.useState(3)
     const [radius, setRadius] = React.useState(16)
@@ -1938,121 +1939,155 @@ const demos: Record<string, React.ComponentType> = {
     const [desc, setDesc] = React.useState("Drag to explore • Hover to focus")
 
     return (
-      <div className="flex flex-col gap-8 w-full max-w-lg items-center">
-        <div className="w-full h-[500px] rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-[#09090b] relative shadow-md">
-          <ThreeDMasonryOrbit
-            columns={columns}
-            rows={rows}
-            radius={radius}
-            borderRadius={borderRadius}
-            columnSpacing={columnSpacing}
-            autoRotationSpeed={speed}
-            fogDensity={density}
-            hideUI={hideUI}
-            titleText={title}
-            descText={desc}
-            height="100%"
-          />
+      <div className="flex flex-col gap-6 w-full max-w-5xl  items-center">
+        {/* Variant selection tabs */}
+        <div className="flex rounded-md border border-zinc-200 dark:border-zinc-800 p-0.5 w-fit bg-zinc-100/50 dark:bg-zinc-950/40">
+          <button
+            onClick={() => setVariant("threejs")}
+            className={cn(
+              "px-3 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer",
+              variant === "threejs"
+                ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 shadow-xs"
+                : "text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-100"
+            )}
+          >
+            Three.js Cylindrical Grid
+          </button>
+          <button
+            onClick={() => setVariant("gsap")}
+            className={cn(
+              "px-3 py-1.5 text-xs font-semibold rounded-md transition-all cursor-pointer",
+              variant === "gsap"
+                ? "bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 shadow-xs"
+                : "text-zinc-500 hover:text-zinc-950 dark:text-zinc-400 dark:hover:text-zinc-100"
+            )}
+          >
+            GSAP Curved Ring Archive
+          </button>
         </div>
 
-        {/* Controls */}
-        <div className="grid grid-cols-2 gap-4 w-full p-4 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
-          <div className="col-span-2 text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-1 font-sans">
-            Adjust 3D Masonry Orbit Props
-          </div>
-          <DialKitSlider
-            label="Columns"
-            min={6}
-            max={20}
-            step={1}
-            value={columns}
-            onChange={setColumns}
-          />
-          <DialKitSlider
-            label="Rows"
-            min={1}
-            max={5}
-            step={1}
-            value={rows}
-            onChange={setRows}
-          />
-          <DialKitSlider
-            label="Radius"
-            min={10}
-            max={25}
-            step={1}
-            value={radius}
-            onChange={setRadius}
-            suffix="px"
-          />
-          <DialKitSlider
-            label="Border Radius"
-            min={0.0}
-            max={0.5}
-            step={0.05}
-            value={borderRadius}
-            onChange={setBorderRadius}
-          />
-          <DialKitSlider
-            label="Column Width/Spacing"
-            min={0.4}
-            max={2.0}
-            step={0.1}
-            value={columnSpacing}
-            onChange={setColumnSpacing}
-          />
-          <DialKitSlider
-            label="Rotation Speed"
-            min={0}
-            max={0.01}
-            step={0.0005}
-            value={speed}
-            onChange={setSpeed}
-          />
-          <div className="col-span-2">
-            <DialKitSlider
-              label="Fog Density"
-              min={0.0}
-              max={0.1}
-              step={0.005}
-              value={density}
-              onChange={setDensity}
-            />
-          </div>
+        {variant === "threejs" ? (
+          <div className="flex flex-col gap-6 w-full max-w-5xl items-center">
+            <div className="w-full  h-[500px] rounded-xl overflow-hidden border-3 border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-[#09090b] relative shadow-md animate-fade-in">
+              <ThreeDMasonryOrbit
+                columns={columns}
+                rows={rows}
+                radius={radius}
+                borderRadius={borderRadius}
+                columnSpacing={columnSpacing}
+                autoRotationSpeed={speed}
+                fogDensity={density}
+                hideUI={hideUI}
+                titleText={title}
+                descText={desc}
+                height="100%"
+              />
+            </div>
 
-          <div className="col-span-2 flex items-center justify-between pt-2 border-t border-zinc-150 dark:border-zinc-800">
-            <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Hide Overlay UI</span>
-            <input
-              type="checkbox"
-              checked={hideUI}
-              onChange={(e) => setHideUI(e.target.checked)}
-              className="accent-purple-500 cursor-pointer"
-            />
-          </div>
-
-          {!hideUI && (
-            <>
-              <div className="flex flex-col gap-1.5 w-full col-span-2 pt-2 border-t border-zinc-150 dark:border-zinc-800">
-                <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Title Text</span>
-                <input
-                  type="text"
-                  value={title}
-                  onChange={(e) => setTitle(e.target.value)}
-                  className="w-full text-xs border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-1.5 rounded-md text-zinc-850 dark:text-zinc-200 focus:outline-none focus:ring-1 focus:ring-zinc-400"
+            {/* Controls */}
+            <div className="grid grid-cols-2 gap-4 w-full p-4 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+              <div className="col-span-2 text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-1 font-sans">
+                Adjust 3D Masonry Orbit Props
+              </div>
+              <DialKitSlider
+                label="Columns"
+                min={6}
+                max={20}
+                step={1}
+                value={columns}
+                onChange={setColumns}
+              />
+              <DialKitSlider
+                label="Rows"
+                min={1}
+                max={5}
+                step={1}
+                value={rows}
+                onChange={setRows}
+              />
+              <DialKitSlider
+                label="Radius"
+                min={10}
+                max={25}
+                step={1}
+                value={radius}
+                onChange={setRadius}
+                suffix="px"
+              />
+              <DialKitSlider
+                label="Border Radius"
+                min={0.0}
+                max={0.5}
+                step={0.05}
+                value={borderRadius}
+                onChange={setBorderRadius}
+              />
+              <DialKitSlider
+                label="Column Width/Spacing"
+                min={0.4}
+                max={2.0}
+                step={0.1}
+                value={columnSpacing}
+                onChange={setColumnSpacing}
+              />
+              <DialKitSlider
+                label="Rotation Speed"
+                min={0}
+                max={0.01}
+                step={0.0005}
+                value={speed}
+                onChange={setSpeed}
+              />
+              <div className="col-span-2">
+                <DialKitSlider
+                  label="Fog Density"
+                  min={0.0}
+                  max={0.1}
+                  step={0.005}
+                  value={density}
+                  onChange={setDensity}
                 />
               </div>
-              <div className="flex flex-col gap-1.5 w-full col-span-2">
-                <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Description Text</span>
+
+              <div className="col-span-2 flex items-center justify-between pt-2 border-t border-zinc-150 dark:border-zinc-800">
+                <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Hide Overlay UI</span>
                 <input
-                  type="text"
-                  value={desc}
-                  onChange={(e) => setDesc(e.target.value)}
-                  className="w-full text-xs border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-1.5 rounded-md text-zinc-850 dark:text-zinc-200 focus:outline-none focus:ring-1 focus:ring-zinc-400"
+                  type="checkbox"
+                  checked={hideUI}
+                  onChange={(e) => setHideUI(e.target.checked)}
+                  className="accent-purple-500 cursor-pointer"
                 />
               </div>
-            </>
-          )}
-        </div>
+
+              {!hideUI && (
+                <>
+                  <div className="flex flex-col gap-1.5 w-full col-span-2 pt-2 border-t border-zinc-150 dark:border-zinc-800">
+                    <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Title Text</span>
+                    <input
+                      type="text"
+                      value={title}
+                      onChange={(e) => setTitle(e.target.value)}
+                      className="w-full text-xs border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-1.5 rounded-md text-zinc-850 dark:text-zinc-200 focus:outline-none focus:ring-1 focus:ring-zinc-400"
+                    />
+                  </div>
+                  <div className="flex flex-col gap-1.5 w-full col-span-2">
+                    <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">Description Text</span>
+                    <input
+                      type="text"
+                      value={desc}
+                      onChange={(e) => setDesc(e.target.value)}
+                      className="w-full text-xs border border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-950 px-2.5 py-1.5 rounded-md text-zinc-850 dark:text-zinc-200 focus:outline-none focus:ring-1 focus:ring-zinc-400"
+                    />
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        ) : (
+          <div className="w-full max-w-5xl h-[650px] rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 relative shadow-md">
+            <CurvedRingArchive embedded={true} />
+          </div>
+        )}
       </div>
     )
   },
@@ -2064,7 +2099,7 @@ const demos: Record<string, React.ComponentType> = {
     const [hideUI, setHideUI] = React.useState(false)
 
     return (
-      <div className="flex flex-col gap-8 w-full max-w-lg items-center">
+      <div className="flex flex-col gap-8 w-full max-w-5xl items-center">
         <div className="w-full h-[500px] rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-950/5 dark:bg-zinc-950/40 relative shadow-md animate-fade-in">
           <ThreeDPhotoCarousel
             spacing={spacing}
