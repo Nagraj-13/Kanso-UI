@@ -33,7 +33,6 @@ import { ShimmerBorder } from "@/components/kanso/shimmer-border"
 import { TextReveal } from "@/components/kanso/text-reveal"
 import { GITHUB_URL } from "@/lib/constants"
 import { GithubButton } from "@/components/kanso/github-button"
-import { SpotlightCard } from "@/components/kanso/spotlight-card"
 import { RealismButton } from "@/components/kanso/realism-button"
 import { KeyboardButton } from "@/components/kanso/keyboard-button"
 import { GlowLineButton } from "@/components/kanso/glow-line-button"
@@ -42,7 +41,7 @@ import { HalftoneImage } from "@/components/kanso/halftone-image"
 import { HalftoneGrid } from "@/components/kanso/halftone-grid"
 import { MagicRings } from "@/components/kanso/magic-rings"
 import { Antigravity } from "@/components/kanso/antigravity"
-import { Card } from "@/components/ui/card"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import {
   Dialog,
@@ -235,6 +234,7 @@ export default function LandingPageClient({
   const [selectedShowcase, setSelectedShowcase] = React.useState<
     "buttons" | "cards" | "dialogs" | "inputs" | "command" | "pricing" | "halftone" | "magic-rings" | "antigravity"
   >("buttons")
+  const [activeSandboxTab, setActiveSandboxTab] = React.useState<"preview" | "code">("preview")
   const [halftoneParams, setHalftoneParams] = React.useState({
     dotRadius: 1.5,
     dotSpacing: 12,
@@ -298,8 +298,8 @@ export default function LandingPageClient({
   return (
     <div className="min-h-screen bg-[#fafafa] text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white dark:bg-zinc-950 dark:text-zinc-50 dark:selection:bg-zinc-50 dark:selection:text-zinc-950">
       {/* Navigation Header */}
-      <header className="sticky top-0 z-40 w-full border-b border-zinc-200/60 bg-white/70 backdrop-blur-md dark:border-zinc-800/60 dark:bg-zinc-950/70">
-        <div className="mx-auto flex h-16 max-w-6xl items-center justify-between px-6 md:px-8">
+      <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-zinc-200/60 bg-white/70 backdrop-blur-md dark:border-zinc-800/60 dark:bg-zinc-950/70">
+        <div className="mx-auto flex h-16 items-center justify-between px-6 md:px-8">
           <div className="flex items-center gap-3">
             <Image
               src="/Kansologo.png"
@@ -445,80 +445,123 @@ export default function LandingPageClient({
         </AnimatePresence>
       </header>
 
-      {/* Hero Section */}
-      <section className="relative w-full pt-24 pb-32 md:pt-32 overflow-hidden">
-        {/* Halftone background grid layer */}
-        <div className="absolute inset-0 pointer-events-none opacity-40 dark:opacity-30">
-          <HalftoneGrid
-            dotRadius={halftoneParams.dotRadius}
-            dotSpacing={halftoneParams.dotSpacing}
-            sparkle={halftoneParams.sparkle}
-            gradientFrom={halftoneParams.gradientFrom}
-            gradientTo={halftoneParams.gradientTo}
-            glowColor={halftoneParams.glowColor}
-            colors={halftoneParams.colors}
+      {/* Redesigned Hero Section (Next.js & Evervault Inspired) */}
+      <section className="relative w-full pt-20 pb-6 overflow-hidden bg-background text-foreground">
+        <div className="relative m-4 md:m-6 py-12 md:py-20 rounded-3xl overflow-hidden bg-[linear-gradient(to_bottom,_var(--background)_30%,_#6d18ff_75%,_#9569fe_100%)]">
+          <div className="absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[95%] bg-[var(--background)] blur-3xl rounded-full z-0"></div>
+          
+          {/* Halftone & Particles background overlays */}
+          {/* <div className="absolute inset-0 pointer-events-none opacity-20 z-0">
+            <HalftoneGrid
+              dotRadius={halftoneParams.dotRadius}
+              dotSpacing={halftoneParams.dotSpacing}
+              sparkle={halftoneParams.sparkle}
+              gradientFrom={halftoneParams.gradientFrom}
+              gradientTo={halftoneParams.gradientTo}
+              glowColor={halftoneParams.glowColor}
+              colors={halftoneParams.colors}
+            />
+          </div> */}
+
+          {/* <div className="absolute inset-0 pointer-events-none opacity-15 z-0">
+            <Antigravity
+              count={80}
+              magnetRadius={6}
+              ringRadius={5}
+              waveSpeed={0.2}
+              waveAmplitude={0.4}
+              particleSize={1.2}
+              color={halftoneParams.particleColor || "#a855f7"}
+              colors={halftoneParams.colors}
+              autoAnimate={true}
+              particleShape="capsule"
+            />
+          </div> */}
+
+          {/* Evervault Styled Upward-Sweeping Gradient Aura at the bottom */}
+          <div 
+            className="absolute inset-x-0 bottom-0 h-[420px] pointer-events-none transition-all duration-500 opacity-95 z-0"
+            style={{
+              background: "radial-gradient(ellipse 70% 60% at 50% 100%, rgba(99, 102, 241, 0.35) 0%, rgba(139, 92, 246, 0.18) 45%, rgba(168, 85, 247, 0.05) 70%, transparent 100%)"
+            }}
           />
-        </div>
 
-        {/* Magic Rings background layer */}
-        <div className="absolute inset-0 pointer-events-none opacity-30 dark:opacity-20 mix-blend-multiply dark:mix-blend-screen">
-          <MagicRings
-            color={theme === "dark" ? halftoneParams.ringColor || "#a855f7" : halftoneParams.ringColor || "#8b5cf6"}
-            colorTwo={theme === "dark" ? "#3b82f6" : "#06b6d4"}
-            speed={0.6}
-            ringCount={5}
-            attenuation={12}
-            lineThickness={1.5}
-            baseRadius={0.25}
-            radiusStep={0.08}
-            scaleRate={0.05}
-            noiseAmount={0.05}
-            followMouse={true}
-            mouseInfluence={0.15}
-            clickBurst={true}
-          />
-        </div>
+          {/* Hero Content Container - Split Layout */}
+          <div className="mx-auto max-w-7xl px-6 md:px-8 relative z-10 w-full grid gap-12 lg:grid-cols-12 items-center pt-8">
+          
+          {/* Left Column: Text Content */}
+          <div className="lg:col-span-7 flex flex-col items-start text-left">
+            {/* Introducing Badge - using shadcn component style */}
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.4 }}
+              className="mb-6 inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-100/60 dark:border-zinc-800 dark:bg-zinc-900/60 px-3 py-1 text-xs font-semibold text-zinc-800 dark:text-zinc-300 shadow-xs select-none"
+            >
+              <SparklesIcon className="size-3 text-zinc-500 dark:text-zinc-400" />
+              <span>Introducing Kanso UI</span>
+            </motion.div>
 
-        {/* Antigravity background layer */}
-        <div className="absolute inset-0 pointer-events-none opacity-45 dark:opacity-35">
-          <Antigravity
-            count={150}
-            magnetRadius={7}
-            ringRadius={6}
-            waveSpeed={0.3}
-            waveAmplitude={0.6}
-            particleSize={1.4}
-            color={theme === "dark" ? halftoneParams.particleColor || "#a855f7" : halftoneParams.particleColor || "#6366f1"}
-            colors={halftoneParams.colors}
-            autoAnimate={true}
-            particleShape="capsule"
-          />
-        </div>
-        {/* Ambient background blob */}
-        <div className="pointer-events-none absolute inset-x-0 -top-40 -z-10 transform-gpu overflow-hidden blur-3xl sm:-top-80 animate-pulse duration-[8s]" aria-hidden="true">
-          <div className="relative left-[calc(50%-15rem)] aspect-1155/678 w-[36.125rem] -translate-x-1/2 rotate-[30deg] bg-gradient-to-tr from-purple-500/10 to-indigo-600/15 opacity-40 dark:from-purple-500/15 dark:to-indigo-600/20 sm:left-[calc(50%-30rem)] sm:w-[72.1875rem]" style={{ clipPath: "polygon(74.1% 44.1%, 100% 61.6%, 97.5% 26.9%, 85.5% 0.1%, 80.7% 2%, 72.5% 32.5%, 60.2% 62.4%, 52.4% 68.1%, 47.5% 58.3%, 45.2% 34.5%, 27.5% 76.7%, 0.1% 64.9%, 17.9% 100%, 27.6% 76.8%, 76.1% 97.7%, 74.1% 44.1%)" }} />
-        </div>
-
-        <div className="mx-auto max-w-6xl px-6 md:px-8 relative z-10 w-full">
-          <div className="grid items-center gap-16 lg:grid-cols-12 lg:gap-12">
-          {/* Hero Left Content */}
-          <div className="flex flex-col items-start lg:col-span-7">
-            <div className="mb-6 inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-3.5 py-1.5 text-xs font-medium dark:border-zinc-800 dark:bg-zinc-900/50">
-              <SparklesIcon className="size-3.5 text-zinc-650 dark:text-zinc-400" />
-              <span className="text-zinc-600 dark:text-zinc-400">Introducing Kanso UI</span>
-            </div>
-
-            <h1 className="max-w-2xl font-sans text-4xl font-semibold tracking-tight text-zinc-950 sm:text-5xl md:text-6xl md:leading-[1.1] dark:text-white">
-              Build Beautiful Interfaces Without Complexity
+            {/* Staggered Word Reveal Animated Headline */}
+            <h1 className="max-w-2xl font-sans text-4xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-5xl md:text-6xl md:leading-[1.1] flex flex-wrap justify-start gap-x-3 gap-y-1">
+              {"Build Beautiful Interfaces Without Complexity".split(" ").map((word, i) => (
+                <motion.span
+                  key={i}
+                  initial={{ opacity: 0, y: 15 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.5,
+                    delay: i * 0.05 + 0.1,
+                    ease: [0.215, 0.61, 0.355, 1],
+                  }}
+                  className={cn(
+                    "inline-block",
+                    (word === "Beautiful" || word === "Complexity") && 
+                    "text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-600 dark:from-violet-400 dark:via-fuchsia-300 dark:to-indigo-400"
+                  )}
+                >
+                  {word}
+                </motion.span>
+              ))}
             </h1>
 
-            <p className="mt-6 max-w-lg text-lg leading-relaxed text-zinc-500 dark:text-zinc-455">
-              Thoughtfully designed React components for modern applications. Inspired by Zen minimalism and engineered for peak performance and copy-paste ease.
-            </p>
+            {/* Subtitle with fade-in delay */}
+            <motion.p 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.6 }}
+              className="mt-6 max-w-xl text-base md:text-lg leading-relaxed text-zinc-650 dark:text-zinc-400"
+            >
+              Thoughtfully designed React components for modern applications. Inspired by Japanese minimalism and engineered for copy-paste ease, customizability, and WCAG accessibility.
+            </motion.p>
 
-            <div className="mt-10 flex flex-wrap gap-4 w-full sm:w-auto items-center">
+            {/* Command Install Pill Badge */}
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.75 }}
+              className="mt-8 flex items-center gap-2.5 rounded-full border border-zinc-200 bg-zinc-100/40 dark:border-zinc-800 dark:bg-zinc-900/40 pl-3.5 pr-2 py-1 font-mono text-[11px] text-zinc-655 dark:text-zinc-400 shadow-xs hover:border-zinc-300 hover:bg-zinc-100/60 dark:hover:border-zinc-700 dark:hover:bg-zinc-900/60 transition-all select-all group"
+            >
+              <span>$</span>
+              <span>npx kanso-ui add magnetic-button</span>
+              <button 
+                onClick={handleCopy}
+                className="ml-2.5 p-1 rounded-full text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200/50 dark:text-zinc-400 dark:hover:text-white dark:hover:bg-zinc-800/50 cursor-pointer transition-colors animate-in fade-in"
+                title="Copy to clipboard"
+              >
+                {copied ? <CheckIcon className="size-3.5 text-green-500" /> : <CopyIcon className="size-3.5" />}
+              </button>
+            </motion.div>
+
+            {/* Action Button Group */}
+            <motion.div 
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.9 }}
+              className="mt-8 flex flex-col sm:flex-row gap-4 w-full sm:w-auto items-center"
+            >
               <Button
-                className="w-full sm:w-auto px-6 h-11 text-sm font-semibold cursor-pointer shadow-sm"
+                className="w-full sm:w-auto px-8 h-11 text-sm font-semibold cursor-pointer shadow-sm rounded-full bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 border-none"
                 render={<Link href="/docs" />}
               >
                 Browse Components
@@ -526,345 +569,384 @@ export default function LandingPageClient({
               <GithubButton
                 variantDesign="rainbow"
                 href={GITHUB_URL}
-                className="w-full h-11"
+                className="w-full sm:w-auto h-11 rounded-full font-semibold"
               >
                 Star on GitHub
               </GithubButton>
-            </div>
+            </motion.div>
           </div>
 
-          {/* Hero Right Sandbox Card */}
-          <div 
-            className="flex flex-col items-center justify-center lg:col-span-5 w-full min-w-0"
-            style={{ perspective: "1000px" }}
-          >
-            <LiquidMetalCardRoot
-              ref={heroCardRef}
-              onPointerMove={handleCardPointerMove}
-              onPointerLeave={handleCardPointerLeave}
-              className="w-full max-w-[380px] rounded-2xl border border-zinc-200/80 bg-white/70 dark:border-zinc-800/80 dark:bg-zinc-950/70 p-5 shadow-xl backdrop-blur-md relative overflow-hidden group select-none transition-transform duration-300 ease-out"
-              style={{ transformStyle: "preserve-3d" }}
-              colorTint={resolvedColorTint}
-              distortion={0.5}
-              softness={0.7}
-              repetition={8}
-              scale={0.55}
-              image="/Kansologo.png"
+          {/* Right Column: LiquidMetalCard Sandbox Mockup */}
+          <div className="lg:col-span-5 flex justify-center w-full relative z-20">
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.8, delay: 1.1 }}
+              className="w-full max-w-[400px] shrink-0"
+              style={{ perspective: "1000px" }}
             >
-              <div className="flex flex-col gap-4 w-full relative z-10">
-                {/* Sandbox Header */}
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-2">
-                    
-                   
-                  </div>
-                  <span className="text-[9px] font-mono text-zinc-400 dark:text-zinc-500 bg-zinc-100 dark:bg-zinc-900 px-2 py-0.5 rounded-full border border-zinc-200/40 dark:border-zinc-800/50">
-                    kanso-sandbox.tsx
-                  </span>
-                </div>
-
-                {/* Visual metallic logo container */}
-                <LiquidMetalCardVisual 
-                  className="h-28 w-full overflow-hidden rounded-xl bg-zinc-50 dark:bg-zinc-950 relative border border-zinc-200/40 dark:border-zinc-800/40 flex items-center justify-center"
-                  desktopShaderProps={{
-                    image: "/Kansologo.png",
-                    colorTint: resolvedColorTint,
-                    distortion: 0.45,
-                    softness: 0.8,
-                    repetition: 7,
-                    scale: 0.52,
-                  }}
-                />
-
-                {/* Compact Color Themes row */}
-                <div className="flex flex-col gap-2 p-3 rounded-xl border border-zinc-200/30 bg-zinc-50/40 dark:border-zinc-800/30 dark:bg-zinc-900/20">
+              <LiquidMetalCardRoot
+                ref={heroCardRef}
+                onPointerMove={handleCardPointerMove}
+                onPointerLeave={handleCardPointerLeave}
+                className="w-full rounded-2xl border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bgbackground p-5 shadow-2xl backdrop-blur-md relative overflow-hidden group select-none transition-transform duration-300 ease-out"
+                style={{ transformStyle: "preserve-3d" }}
+                colorTint={resolvedColorTint}
+                distortion={0.5}
+                softness={0.7}
+                repetition={8}
+                scale={0.55}
+                image="/Kansologo.png"
+              >
+                <div className="flex flex-col gap-4 w-full relative z-10 text-left">
+                  {/* Sandbox Header */}
                   <div className="flex items-center justify-between">
-                    <span className="text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
-                      Ambient Palette Space
-                    </span>
-                    <span className="text-xs font-mono text-zinc-500 capitalize">
-                      {halftoneParams.themeName}
+                    <div className="flex items-center gap-1.5">
+                      <span className="size-2 rounded-full bg-red-400" />
+                      <span className="size-2 rounded-full bg-yellow-400" />
+                      <span className="size-2 rounded-full bg-green-400" />
+                    </div>
+                    <span className="text-[9px] font-mono text-zinc-500 bg-zinc-100 px-2 py-0.5 rounded-full border border-zinc-200 dark:text-zinc-400 dark:bg-zinc-900 dark:border-zinc-800">
+                      kanso-sandbox.tsx
                     </span>
                   </div>
-                  <div className="flex items-center gap-2 mt-0.5">
-                    {COLOR_THEMES.map((themeItem) => (
-                      <button
-                        key={themeItem.name}
-                        onClick={() =>
-                          setHalftoneParams((prev) => ({
-                            ...prev,
-                            gradientFrom: themeItem.gradientFrom,
-                            gradientTo: themeItem.gradientTo,
-                            glowColor: themeItem.glowColor,
-                            ringColor: themeItem.ringColor,
-                            particleColor: themeItem.particleColor,
-                            colors: themeItem.colors,
-                            themeName: themeItem.name,
-                          }))
-                        }
+
+                  {/* Visual metallic logo container */}
+                  <LiquidMetalCardVisual 
+                    className="h-28 w-full overflow-hidden rounded-xl bg-zinc-950 relative border border-zinc-800/80 flex items-center justify-center"
+                    desktopShaderProps={{
+                      image: "/Kansologo.png",
+                      colorTint: resolvedColorTint,
+                      distortion: 0.45,
+                      softness: 0.8,
+                      repetition: 7,
+                      scale: 0.52,
+                    }}
+                  />
+
+                  {/* Compact Color Themes row */}
+                  <div className="flex flex-col gap-2 p-3 rounded-xl border border-zinc-200/50 bg-zinc-100/20 dark:border-zinc-800/50 dark:bg-zinc-900/20">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">
+                        Ambient Palette Space
+                      </span>
+                      <span className="text-xs font-mono text-zinc-600 dark:text-zinc-400 capitalize">
+                        {halftoneParams.themeName}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 mt-0.5">
+                      {COLOR_THEMES.map((themeItem) => (
+                        <button
+                          key={themeItem.name}
+                          onClick={() =>
+                            setHalftoneParams((prev) => ({
+                              ...prev,
+                              gradientFrom: themeItem.gradientFrom,
+                              gradientTo: themeItem.gradientTo,
+                              glowColor: themeItem.glowColor,
+                              ringColor: themeItem.ringColor,
+                              particleColor: themeItem.particleColor,
+                              colors: themeItem.colors,
+                              themeName: themeItem.name,
+                            }))
+                          }
+                          className={cn(
+                            "size-5 rounded-full border cursor-pointer transition-all hover:scale-110 flex items-center justify-center shrink-0",
+                            themeItem.colorClass,
+                            halftoneParams.themeName === themeItem.name
+                              ? "border-white ring-2 ring-white/10 scale-105"
+                              : "border-transparent"
+                          )}
+                          title={themeItem.label}
+                        >
+                          {halftoneParams.themeName === themeItem.name && (
+                            <CheckIcon className="size-2 text-white mix-blend-difference" />
+                          )}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Tactile copy/paste mechanical combo */}
+                  <div className="flex flex-col gap-2 p-3 rounded-xl border border-zinc-200/50 bg-zinc-100/20 dark:border-zinc-800/50 dark:bg-zinc-900/20 relative overflow-hidden">
+                    <div className="flex items-center justify-between text-[9px] font-bold text-zinc-550 dark:text-zinc-400 uppercase tracking-widest">
+                      <span>Tactile Copy Code</span>
+                      <span className="font-mono text-zinc-600 dark:text-zinc-400 font-semibold">{copied ? "Copied!" : "Click key combination"}</span>
+                    </div>
+                    <div className="flex items-center justify-center gap-1.5 py-1">
+                      {/* Ctrl Key */}
+                      <button 
+                        onClick={handleCopy}
                         className={cn(
-                          "size-5 rounded-full border cursor-pointer transition-all hover:scale-110 flex items-center justify-center shrink-0",
-                          themeItem.colorClass,
-                          halftoneParams.themeName === themeItem.name
-                            ? "border-zinc-900 dark:border-white ring-2 ring-zinc-900/10 dark:ring-white/10 scale-105"
-                            : "border-transparent"
+                          "flex flex-col items-start justify-between text-[10px] border border-black/10 p-2 rounded-t-[10px] rounded-b-[8px] cursor-pointer relative h-[45px] w-[50px] select-none transition-all duration-100 ease-in-out [transform:perspective(50px)_rotateX(5deg)] active:[transform:perspective(50px)_rotateX(5deg)_translateY(2px)_scale(0.96)] focus:outline-none focus-visible:ring-1 bg-zinc-900 text-zinc-50 shadow-[inset_-2px_-5px_0px_rgba(255,255,255,0.3),inset_-2px_-4px_0px_rgba(0,0,0,0.3),0px_1px_1px_rgba(0,0,0,0.3)] hover:bg-zinc-800 font-semibold uppercase font-sans tracking-tight"
                         )}
-                        title={themeItem.label}
                       >
-                        {halftoneParams.themeName === themeItem.name && (
-                          <CheckIcon className="size-2 text-white mix-blend-difference" />
-                        )}
+                        <span className="text-[7px] opacity-60 self-start">ctrl</span>
+                        <span className="self-end mt-auto text-[8px] font-bold">Ctrl</span>
                       </button>
-                    ))}
+                      <span className="text-zinc-500 font-bold text-[9px] select-none">+</span>
+                      {/* C Key */}
+                      <button 
+                        onClick={handleCopy}
+                        className={cn(
+                          "flex flex-col items-start justify-between text-[10px] border border-black/10 p-2 rounded-t-[10px] rounded-b-[8px] cursor-pointer relative h-[45px] w-[45px] select-none transition-all duration-100 ease-in-out [transform:perspective(50px)_rotateX(5deg)] active:[transform:perspective(50px)_rotateX(5deg)_translateY(2px)_scale(0.96)] focus:outline-none focus-visible:ring-1 bg-zinc-800 text-zinc-100 border-zinc-700 shadow-[inset_-2px_-5px_0px_rgba(255,255,255,0.2),inset_-2px_-4px_0px_rgba(0,0,0,0.3),0px_1px_1px_rgba(0,0,0,0.3)] hover:bg-zinc-700 font-semibold uppercase font-sans tracking-tight"
+                        )}
+                      >
+                        <span className="text-[7px] opacity-60 self-start">copy</span>
+                        <span className="self-end mt-auto text-[9px] font-bold">C</span>
+                      </button>
+                      <span className="text-zinc-500 font-bold text-[9px] select-none">+</span>
+                      {/* V Key */}
+                      <button 
+                        onClick={handleCopy}
+                        className={cn(
+                          "flex flex-col items-start justify-between text-[10px] border border-black/10 p-2 rounded-t-[10px] rounded-b-[8px] cursor-pointer relative h-[45px] w-[45px] select-none transition-all duration-100 ease-in-out [transform:perspective(50px)_rotateX(5deg)] active:[transform:perspective(50px)_rotateX(5deg)_translateY(2px)_scale(0.96)] focus:outline-none focus-visible:ring-1 bg-blue-600 text-white border-blue-700/50 shadow-[inset_-2px_-5px_0px_rgba(255,255,255,0.4),inset_-2px_-4px_0px_rgba(0,0,0,0.3),0px_1px_1px_rgba(0,0,0,0.3)] hover:bg-blue-500 font-semibold uppercase font-sans tracking-tight"
+                        )}
+                      >
+                        <span className="text-[7px] opacity-60 self-start">paste</span>
+                        <span className="self-end mt-auto text-[9px] font-bold">V</span>
+                      </button>
+                    </div>
+                    <div className="flex items-center justify-between text-xs text-zinc-650 bg-zinc-200/50 dark:text-zinc-450 dark:bg-black/40 p-1.5 rounded border border-zinc-350 dark:border-zinc-800">
+                      <span className="font-mono text-zinc-700 dark:text-zinc-400 select-all">npx kanso-ui add magnetic-button</span>
+                      <button 
+                        onClick={handleCopy}
+                        className="text-zinc-800 hover:text-zinc-950 dark:text-zinc-300 dark:hover:text-white cursor-pointer font-sans font-semibold transition-colors"
+                      >
+                        {copied ? "Copied" : "Copy"}
+                      </button>
+                    </div>
                   </div>
-                </div>
 
-                {/* Tactile copy/paste mechanical combo */}
-                <div className="flex flex-col gap-2 p-3 rounded-xl border border-zinc-200/30 bg-zinc-50/40 dark:border-zinc-800/30 dark:bg-zinc-900/20 relative overflow-hidden">
-                  <div className="flex items-center justify-between text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest">
-                    <span>Tactile Copy Code</span>
-                    <span className="font-mono text-zinc-500 font-semibold">{copied ? "Copied!" : "Click key combination"}</span>
-                  </div>
-                  <div className="flex items-center justify-center gap-1.5 py-1">
-                    {/* Ctrl Key */}
-                    <button 
-                      onClick={handleCopy}
-                      className={cn(
-                        "flex flex-col items-start justify-between text-[10px] border border-black/10 p-2 rounded-t-[10px] rounded-b-[8px] cursor-pointer relative h-[45px] w-[50px] select-none transition-all duration-100 ease-in-out [transform:perspective(50px)_rotateX(5deg)] active:[transform:perspective(50px)_rotateX(5deg)_translateY(2px)_scale(0.96)] focus:outline-none focus-visible:ring-1 bg-zinc-900 text-zinc-50 shadow-[inset_-2px_-5px_0px_rgba(255,255,255,0.3),inset_-2px_-4px_0px_rgba(0,0,0,0.3),0px_1px_1px_rgba(0,0,0,0.3)] hover:bg-zinc-800 font-semibold uppercase font-sans tracking-tight"
-                      )}
-                    >
-                      <span className="text-[7px] opacity-60 self-start">ctrl</span>
-                      <span className="self-end mt-auto text-[8px] font-bold">Ctrl</span>
-                    </button>
-                    <span className="text-zinc-400 font-bold text-[9px] select-none">+</span>
-                    {/* C Key */}
-                    <button 
-                      onClick={handleCopy}
-                      className={cn(
-                        "flex flex-col items-start justify-between text-[10px] border border-black/10 p-2 rounded-t-[10px] rounded-b-[8px] cursor-pointer relative h-[45px] w-[45px] select-none transition-all duration-100 ease-in-out [transform:perspective(50px)_rotateX(5deg)] active:[transform:perspective(50px)_rotateX(5deg)_translateY(2px)_scale(0.96)] focus:outline-none focus-visible:ring-1 bg-zinc-100 text-zinc-950 border-zinc-200/50 shadow-[inset_-2px_-5px_0px_rgba(255,255,255,0.8),inset_-2px_-4px_0px_rgba(0,0,0,0.1),0px_1px_1px_rgba(0,0,0,0.15)] hover:bg-zinc-50 font-semibold uppercase font-sans tracking-tight"
-                      )}
-                    >
-                      <span className="text-[7px] opacity-60 self-start">copy</span>
-                      <span className="self-end mt-auto text-[9px] font-bold">C</span>
-                    </button>
-                    <span className="text-zinc-400 font-bold text-[9px] select-none">+</span>
-                    {/* V Key */}
-                    <button 
-                      onClick={handleCopy}
-                      className={cn(
-                        "flex flex-col items-start justify-between text-[10px] border border-black/10 p-2 rounded-t-[10px] rounded-b-[8px] cursor-pointer relative h-[45px] w-[45px] select-none transition-all duration-100 ease-in-out [transform:perspective(50px)_rotateX(5deg)] active:[transform:perspective(50px)_rotateX(5deg)_translateY(2px)_scale(0.96)] focus:outline-none focus-visible:ring-1 bg-blue-600 text-white border-blue-700/50 shadow-[inset_-2px_-5px_0px_rgba(255,255,255,0.4),inset_-2px_-4px_0px_rgba(0,0,0,0.3),0px_1px_1px_rgba(0,0,0,0.3)] hover:bg-blue-500 font-semibold uppercase font-sans tracking-tight"
-                      )}
-                    >
-                      <span className="text-[7px] opacity-60 self-start">paste</span>
-                      <span className="self-end mt-auto text-[9px] font-bold">V</span>
-                    </button>
-                  </div>
-                  <div className="flex items-center justify-between text-xs text-zinc-400 dark:text-zinc-500 bg-white/5 dark:bg-black/10 p-1.5 rounded border border-zinc-200/25 dark:border-zinc-800/40">
-                    <span className="font-mono text-zinc-500 select-all">npx kanso-ui add magnetic-button</span>
-                    <button 
-                      onClick={handleCopy}
-                      className="text-zinc-400 hover:text-zinc-900 dark:hover:text-zinc-100 cursor-pointer font-sans font-semibold transition-colors"
-                    >
-                      {copied ? "Copied" : "Copy"}
-                    </button>
+                  {/* Footer Section */}
+                  <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800/60 flex justify-between items-center text-[9px] text-zinc-500 font-mono">
+                    <span>Interactive Sandbox</span>
+                    <span className="font-sans font-medium">v1.0.0</span>
                   </div>
                 </div>
-
-                {/* Footer Section */}
-                <div className="pt-2 border-t border-zinc-150 dark:border-zinc-800/60 flex justify-between items-center text-[9px] text-zinc-400 dark:text-zinc-500 font-mono">
-                  <span>Interactive Sandbox</span>
-                  <span className="font-sans font-medium">v1.0.0</span>
-                </div>
-              </div>
-            </LiquidMetalCardRoot>
+              </LiquidMetalCardRoot>
+            </motion.div>
           </div>
         </div>
         </div>
       </section>
 
       {/* Features Section */}
-      <section id="features" className="border-t border-zinc-200/60 bg-zinc-50/50 py-28 dark:border-zinc-900 dark:bg-zinc-950/20">
-        <div className="mx-auto max-w-6xl px-6 md:px-8">
+      <section id="features" className="py-28 ">
+        <div className="mx-auto max-w-7xl px-6 md:px-8">
           <div className="flex flex-col items-start gap-4">
-            <h2 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-white">
+            <h2 className="text-3xl font-semibold tracking-tight text-foreground">
               Simplicity, Engineered.
             </h2>
-            <p className="max-w-xl text-base text-zinc-500 dark:text-zinc-400">
+            <p className="max-w-xl text-base text-muted-foreground">
               Each feature is focused on making interfaces clean, robust, accessible, and enjoyable to build.
             </p>
           </div>
 
           <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {/* Feature 1 */}
-            <SpotlightCard className="p-6 border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-900/40 shadow-xs rounded-2xl">
-              <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-                <AccessibilityIcon className="size-5 text-zinc-650 dark:text-zinc-400" />
-              </div>
-              <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-50">Accessible by Default</h3>
-              <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                Engineered using Radix and Base UI primitive outlines. Full keyboard navigation and proper screen reader support.
-              </p>
-            </SpotlightCard>
+            <Card className="border border-border bg-card dark:bg-card/40 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 shadow-xs hover:shadow-sm hover:-translate-y-0.5">
+              <CardHeader className="pb-2">
+                <div className="flex size-10 items-center justify-center rounded-lg border border-border bg-muted dark:bg-muted/50">
+                  <AccessibilityIcon className="size-5 text-muted-foreground" />
+                </div>
+                <CardTitle className="mt-4 text-base font-semibold text-foreground">Accessible by Default</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-xs text-muted-foreground leading-relaxed">
+                  Engineered using Radix and Base UI primitive outlines. Full keyboard navigation and proper screen reader support.
+                </CardDescription>
+              </CardContent>
+            </Card>
 
             {/* Feature 2 */}
-            <SpotlightCard className="p-6 border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-900/40 shadow-xs rounded-2xl">
-              <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-                <CopyIcon className="size-5 text-zinc-650 dark:text-zinc-400" />
-              </div>
-              <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-50">Copy-Paste Components</h3>
-              <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                No complex setup or heavy registry dependencies. Copy the component code directly into your folder structure.
-              </p>
-            </SpotlightCard>
+            <Card className="border border-border bg-card dark:bg-card/40 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 shadow-xs hover:shadow-sm hover:-translate-y-0.5">
+              <CardHeader className="pb-2">
+                <div className="flex size-10 items-center justify-center rounded-lg border border-border bg-muted dark:bg-muted/50">
+                  <CopyIcon className="size-5 text-muted-foreground" />
+                </div>
+                <CardTitle className="mt-4 text-base font-semibold text-foreground">Copy-Paste Components</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-xs text-muted-foreground leading-relaxed">
+                  No complex setup or heavy registry dependencies. Copy the component code directly into your folder structure.
+                </CardDescription>
+              </CardContent>
+            </Card>
 
             {/* Feature 3 */}
-            <SpotlightCard className="p-6 border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-900/40 shadow-xs rounded-2xl">
-              <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-                <Code2Icon className="size-5 text-zinc-650 dark:text-zinc-400" />
-              </div>
-              <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-50">TypeScript First</h3>
-              <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                Fully typed components with explicit contracts. Get code completion and compile-time warnings right in your editor.
-              </p>
-            </SpotlightCard>
+            <Card className="border border-border bg-card dark:bg-card/40 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 shadow-xs hover:shadow-sm hover:-translate-y-0.5">
+              <CardHeader className="pb-2">
+                <div className="flex size-10 items-center justify-center rounded-lg border border-border bg-muted dark:bg-muted/50">
+                  <Code2Icon className="size-5 text-muted-foreground" />
+                </div>
+                <CardTitle className="mt-4 text-base font-semibold text-foreground">TypeScript First</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-xs text-muted-foreground leading-relaxed">
+                  Fully typed components with explicit contracts. Get code completion and compile-time warnings right in your editor.
+                </CardDescription>
+              </CardContent>
+            </Card>
 
             {/* Feature 4 */}
-            <SpotlightCard className="p-6 border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-900/40 shadow-xs rounded-2xl">
-              <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-                <MoonIcon className="size-5 text-zinc-650 dark:text-zinc-400" />
-              </div>
-              <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-50">Dark Mode Ready</h3>
-              <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                Native class-based dark mode design. Easily adapt color schemes using CSS variables and Tailwind variables.
-              </p>
-            </SpotlightCard>
+            <Card className="border border-border bg-card dark:bg-card/40 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 shadow-xs hover:shadow-sm hover:-translate-y-0.5">
+              <CardHeader className="pb-2">
+                <div className="flex size-10 items-center justify-center rounded-lg border border-border bg-muted dark:bg-muted/50">
+                  <MoonIcon className="size-5 text-muted-foreground" />
+                </div>
+                <CardTitle className="mt-4 text-base font-semibold text-foreground">Dark Mode Ready</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-xs text-muted-foreground leading-relaxed">
+                  Native class-based dark mode design. Easily adapt color schemes using CSS variables and Tailwind variables.
+                </CardDescription>
+              </CardContent>
+            </Card>
 
             {/* Feature 5 */}
-            <SpotlightCard className="p-6 border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-900/40 shadow-xs rounded-2xl">
-              <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-                <SparkleIcon className="size-5 text-zinc-650 dark:text-zinc-400" />
-              </div>
-              <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-50">Beautiful Defaults</h3>
-              <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                Clean, minimalist aesthetics inspired by Zen. Neutral borders, clear indicators, and generous spacing.
-              </p>
-            </SpotlightCard>
+            <Card className="border border-border bg-card dark:bg-card/40 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 shadow-xs hover:shadow-sm hover:-translate-y-0.5">
+              <CardHeader className="pb-2">
+                <div className="flex size-10 items-center justify-center rounded-lg border border-border bg-muted dark:bg-muted/50">
+                  <SparkleIcon className="size-5 text-muted-foreground" />
+                </div>
+                <CardTitle className="mt-4 text-base font-semibold text-foreground">Beautiful Defaults</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-xs text-muted-foreground leading-relaxed">
+                  Clean, minimalist aesthetics inspired by Zen. Neutral borders, clear indicators, and generous spacing.
+                </CardDescription>
+              </CardContent>
+            </Card>
 
             {/* Feature 6 */}
-            <SpotlightCard className="p-6 border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-zinc-900/40 shadow-xs rounded-2xl">
-              <div className="flex size-10 items-center justify-center rounded-lg border border-zinc-200 bg-zinc-50 dark:border-zinc-800 dark:bg-zinc-900">
-                <CheckCircle2Icon className="size-5 text-zinc-650 dark:text-zinc-400" />
-              </div>
-              <h3 className="mt-4 text-base font-semibold text-zinc-900 dark:text-zinc-50">Production Ready</h3>
-              <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed">
-                Optimized for fast rendering and minimal bundle overhead. Battle-tested component design for scaling web apps.
-              </p>
-            </SpotlightCard>
+            <Card className="border border-border bg-card dark:bg-card/40 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 shadow-xs hover:shadow-sm hover:-translate-y-0.5">
+              <CardHeader className="pb-2">
+                <div className="flex size-10 items-center justify-center rounded-lg border border-border bg-muted dark:bg-muted/50">
+                  <CheckCircle2Icon className="size-5 text-muted-foreground" />
+                </div>
+                <CardTitle className="mt-4 text-base font-semibold text-foreground">Production Ready</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <CardDescription className="text-xs text-muted-foreground leading-relaxed">
+                  Optimized for fast rendering and minimal bundle overhead. Battle-tested component design for scaling web apps.
+                </CardDescription>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
       {/* Kanso Custom Components Section */}
-      <section id="premium-components" className="border-t border-zinc-200/60 py-28 dark:border-zinc-900 dark:bg-zinc-950">
-        <div className="mx-auto max-w-6xl px-6 md:px-8">
+      <section id="premium-components" className="  py-28 bg-background">
+        <div className="mx-auto max-w-7xl px-6 md:px-8">
           <div className="flex flex-col items-start gap-4">
-            <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-zinc-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-zinc-500 dark:border-zinc-800 dark:bg-zinc-900/50 dark:text-zinc-400">
+            <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
               ✦ Zen Interactions
             </div>
-            <h2 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-white">
+            <h2 className="text-3xl font-semibold tracking-tight text-foreground">
               Premium Kanso Effects
             </h2>
-            <p className="max-w-xl text-base text-zinc-500 dark:text-zinc-400">
+            <p className="max-w-xl text-base text-muted-foreground">
               Add polish to your interface with our copy-paste motion effects. Experience the interactive previews below and click to view installation guides.
             </p>
           </div>
 
           <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
             {/* Card 1: Magnetic Button */}
-            <Card className="flex flex-col justify-between border border-zinc-200 bg-white p-5 shadow-xs transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/40">
-              <div>
-                <h3 className="text-base font-semibold text-zinc-900 dark:text-white">Magnetic Button</h3>
-                <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed min-h-[40px]">
+            <Card className="flex flex-col justify-between border border-border bg-card shadow-xs hover:shadow-md transition-all duration-300 dark:bg-card/40 hover:-translate-y-0.5">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base font-semibold text-foreground">Magnetic Button</CardTitle>
+                <CardDescription className="text-xs text-muted-foreground leading-relaxed min-h-[40px]">
                   Attracts elements smoothly to the user&apos;s cursor on hover. Built with spring physics for natural, responsive movement.
-                </p>
-                <div className="mt-6 flex h-40 items-center justify-center rounded-lg border border-dashed border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30">
-                  <MagneticButton>Hover Magnet</MagneticButton>
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="mt-2">
+                <div className="flex h-40 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 dark:bg-muted/15 relative overflow-hidden group">
+                  <div className="absolute inset-0 pointer-events-none opacity-30 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,var(--color-primary),transparent)]" />
+                  <MagneticButton className="relative z-10 shadow-sm">Hover Magnet</MagneticButton>
                 </div>
-              </div>
-              <div className="mt-6 flex justify-end">
+              </CardContent>
+              <CardFooter className="mt-4 flex justify-end pb-4">
                 <Button
                   variant="link"
                   size="sm"
-                  className="gap-1.5 px-0 text-zinc-950 dark:text-zinc-50"
+                  className="gap-1.5 px-0 text-foreground cursor-pointer"
                   render={<Link href="/docs/components/buttons/magnetic-button" />}
                 >
                   View Installation <ArrowUpRightIcon className="size-3.5" />
                 </Button>
-              </div>
+              </CardFooter>
             </Card>
 
             {/* Card 2: Shimmer Border */}
-            <Card className="flex flex-col justify-between border border-zinc-200 bg-white p-5 shadow-xs transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/40">
-              <div>
-                <h3 className="text-base font-semibold text-zinc-900 dark:text-white">Shimmer Border</h3>
-                <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed min-h-[40px]">
+            <Card className="flex flex-col justify-between border border-border bg-card shadow-xs hover:shadow-md transition-all duration-300 dark:bg-card/40 hover:-translate-y-0.5">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base font-semibold text-foreground">Shimmer Border</CardTitle>
+                <CardDescription className="text-xs text-muted-foreground leading-relaxed min-h-[40px]">
                   An elegant border lighting outline that cycles continuously. Leverages GPU-accelerated CSS conic-gradients for optimal performance.
-                </p>
-                <div className="mt-6 flex h-40 items-center justify-center rounded-lg border border-dashed border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30 p-4">
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="mt-2">
+                <div className="flex h-40 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 dark:bg-muted/15 relative overflow-hidden">
                   <ShimmerBorder borderRadius={8}>
-                    <div className="px-5 py-3 text-xs font-semibold bg-white dark:bg-zinc-950 text-zinc-700 dark:text-zinc-300">
+                    <div className="px-5 py-3 text-xs font-semibold bg-card text-foreground rounded-[6px] shadow-xs">
                       Shimmer Border
                     </div>
                   </ShimmerBorder>
                 </div>
-              </div>
-              <div className="mt-6 flex justify-end">
+              </CardContent>
+              <CardFooter className="mt-4 flex justify-end pb-4">
                 <Button
                   variant="link"
                   size="sm"
-                  className="gap-1.5 px-0 text-zinc-950 dark:text-zinc-50"
+                  className="gap-1.5 px-0 text-foreground cursor-pointer"
                   render={<Link href="/docs/components/effects/shimmer-border" />}
                 >
                   View Installation <ArrowUpRightIcon className="size-3.5" />
                 </Button>
-              </div>
+              </CardFooter>
             </Card>
 
             {/* Card 3: Text Reveal */}
-            <Card className="flex flex-col justify-between border border-zinc-200 bg-white p-5 shadow-xs transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/40">
-              <div>
-                <h3 className="text-base font-semibold text-zinc-900 dark:text-white">Text Reveal</h3>
-                <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed min-h-[40px]">
+            <Card className="flex flex-col justify-between border border-border bg-card shadow-xs hover:shadow-md transition-all duration-300 dark:bg-card/40 hover:-translate-y-0.5">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base font-semibold text-foreground">Text Reveal</CardTitle>
+                <CardDescription className="text-xs text-muted-foreground leading-relaxed min-h-[40px]">
                   Fades in text character-by-character as it scrolls into viewport. Uses staggering and subtle blur overrides for readability.
-                </p>
-                <div className="mt-6 flex h-40 items-center justify-center rounded-lg border border-dashed border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30 p-6">
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="mt-2">
+                <div className="flex h-40 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 dark:bg-muted/15 p-6 text-center">
                   <TextReveal
                     text="Zen focus. Pure clarity. Kanso UI."
-                    className="text-xs font-medium text-zinc-700 dark:text-zinc-300 text-center leading-relaxed"
+                    className="text-xs font-semibold text-foreground tracking-tight text-center leading-relaxed"
                   />
                 </div>
-              </div>
-              <div className="mt-6 flex justify-end">
+              </CardContent>
+              <CardFooter className="mt-4 flex justify-end pb-4">
                 <Button
                   variant="link"
                   size="sm"
-                  className="gap-1.5 px-0 text-zinc-950 dark:text-zinc-50"
+                  className="gap-1.5 px-0 text-foreground cursor-pointer"
                   render={<Link href="/docs/components/typography/text-reveal" />}
                 >
                   View Installation <ArrowUpRightIcon className="size-3.5" />
                 </Button>
-              </div>
+              </CardFooter>
             </Card>
 
             {/* Card 4: Halftone Image */}
-            <Card className="flex flex-col justify-between border border-zinc-200 bg-white p-5 shadow-xs transition-all hover:shadow-md dark:border-zinc-800 dark:bg-zinc-900/40">
-              <div>
-                <h3 className="text-base font-semibold text-zinc-900 dark:text-white">Halftone Image</h3>
-                <p className="mt-2 text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed min-h-[40px]">
-                  Converts images into custom halftone illustrations. Includes real-time mouse hover dither warp distortions.
-                </p>
-                <div className="mt-6 flex h-40 items-center justify-center rounded-lg border border-dashed border-zinc-200 bg-zinc-50/50 dark:border-zinc-800 dark:bg-zinc-900/30 p-4">
-                  <div className="size-24 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex items-center justify-center">
+            <Card className="flex flex-col justify-between border border-border bg-card shadow-xs hover:shadow-md transition-all duration-300 dark:bg-card/40 hover:-translate-y-0.5">
+              <CardHeader className="pb-2">
+                <CardTitle className="text-base font-semibold text-foreground">Halftone Image</CardTitle>
+                <CardDescription className="text-xs text-muted-foreground leading-relaxed min-h-[40px]">
+                  Converts images into custom halftone illustrations. Includes real-time mouse dither warp distortions.
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="mt-2">
+                <div className="flex h-40 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 dark:bg-muted/15">
+                  <div className="size-24 rounded-2xl overflow-hidden border border-border bg-card flex items-center justify-center shadow-xs">
                     <HalftoneImage
                       src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200&h=200"
                       dotSpacing={5}
@@ -875,17 +957,17 @@ export default function LandingPageClient({
                     />
                   </div>
                 </div>
-              </div>
-              <div className="mt-6 flex justify-end">
+              </CardContent>
+              <CardFooter className="mt-4 flex justify-end pb-4">
                 <Button
                   variant="link"
                   size="sm"
-                  className="gap-1.5 px-0 text-zinc-950 dark:text-zinc-50"
+                  className="gap-1.5 px-0 text-foreground cursor-pointer"
                   render={<Link href="/docs/components/effects/halftone-image" />}
                 >
                   View Installation <ArrowUpRightIcon className="size-3.5" />
                 </Button>
-              </div>
+              </CardFooter>
             </Card>
           </div>
         </div>
@@ -904,233 +986,95 @@ export default function LandingPageClient({
           </div>
 
           <div className="mt-16 grid items-start gap-8 lg:grid-cols-12 w-full min-w-0">
-            {/* Left selector menu */}
-            <div className="flex gap-2 overflow-x-auto pb-4 lg:col-span-3 lg:flex-col lg:overflow-visible lg:pb-0 w-full">
-              {([
-                { id: "buttons", label: "Buttons" },
-                { id: "cards", label: "Cards" },
-                { id: "halftone", label: "Halftone Screen" },
-                { id: "magic-rings", label: "Magic Rings" },
-                { id: "antigravity", label: "Antigravity" },
-                { id: "dialogs", label: "Dialogs" },
-                { id: "inputs", label: "Inputs" },
-                { id: "command", label: "Command Menu" },
-                { id: "pricing", label: "Pricing Cards" }
-              ] as const).map((item) => (
-                <Button
-                  key={item.id}
-                  variant={selectedShowcase === item.id ? "default" : "ghost"}
-                  onClick={() => setSelectedShowcase(item.id)}
-                  className={cn(
-                    "justify-start px-4 py-2.5 text-sm font-medium transition-all shrink-0",
-                    selectedShowcase !== item.id && "text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
-                  )}
-                >
-                  {item.label}
-                </Button>
-              ))}
+            {/* Left selector menu styled as IDE workspace */}
+            <div className="lg:col-span-3 w-full flex flex-col gap-4">
+              <div className="flex flex-col border border-border bg-card dark:bg-card/45 rounded-2xl overflow-hidden shadow-xs">
+                <div className="flex items-center justify-between border-b border-border bg-muted/40 dark:bg-muted/15 px-4 py-3 font-mono text-[10px] font-bold text-muted-foreground uppercase tracking-wider select-none">
+                  <span>workspace</span>
+                  <span className="text-[9px] text-zinc-400 font-medium">9 files</span>
+                </div>
+                <div className="flex flex-col gap-1 p-2">
+                  <div className="flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest select-none">
+                    <span>components</span>
+                  </div>
+                  {([
+                    { id: "buttons", label: "Buttons.tsx" },
+                    { id: "cards", label: "Cards.tsx" },
+                    { id: "halftone", label: "Halftone.tsx" },
+                    { id: "magic-rings", label: "MagicRings.tsx" },
+                    { id: "antigravity", label: "Antigravity.tsx" },
+                    { id: "dialogs", label: "Dialogs.tsx" },
+                    { id: "inputs", label: "Inputs.tsx" },
+                    { id: "command", label: "CommandMenu.tsx" },
+                    { id: "pricing", label: "PricingCards.tsx" }
+                  ] as const).map((item) => (
+                    <button
+                      key={item.id}
+                      onClick={() => {
+                        setSelectedShowcase(item.id)
+                        setActiveSandboxTab("preview")
+                      }}
+                      className={cn(
+                        "flex items-center gap-2 justify-start px-3 py-2 text-xs rounded-md font-mono transition-all shrink-0 cursor-pointer select-none border-l-2 text-left",
+                        selectedShowcase === item.id
+                          ? "bg-muted text-foreground border-primary font-semibold"
+                          : "border-transparent text-muted-foreground hover:bg-muted/40 hover:text-foreground"
+                      )}
+                    >
+                      <span className={cn(
+                        "size-1.5 rounded-full shrink-0",
+                        selectedShowcase === item.id ? "bg-violet-500" : "bg-zinc-400/60 dark:bg-zinc-600"
+                      )} />
+                      <span>{item.label}</span>
+                    </button>
+                  ))}
+                </div>
+              </div>
             </div>
 
-            {/* Right side: Live preview and Code snippet */}
-            <div className="grid gap-6 lg:col-span-9 w-full min-w-0">
-              {/* Preview Box */}
-              <div className="flex min-h-[320px] items-center justify-center rounded-xl border border-zinc-200/80 bg-zinc-50/50 p-6 sm:p-12 dark:border-zinc-800 dark:bg-zinc-900/10 w-full overflow-hidden">
-                {selectedShowcase === "buttons" && (
-                  <div className="flex flex-wrap items-center justify-center gap-6">
-                    <RealismButton variantColor="cyan">Cyan Glow</RealismButton>
-                    <KeyboardButton variantColor="dark">cmd</KeyboardButton>
-                    <GlowLineButton glowColor="rose">Rose Glow</GlowLineButton>
+            {/* Right side: Modern Unified Editor & Preview Sandbox window */}
+            <div className="lg:col-span-9 w-full min-w-0 border border-border bg-card dark:bg-card/45 rounded-2xl overflow-hidden shadow-md flex flex-col">
+              
+              {/* Window Header */}
+              <div className="flex items-center justify-between border-b border-border bg-muted/40 dark:bg-muted/15 px-4 py-2 flex-wrap gap-2">
+                <div className="flex items-center gap-3">
+                  {/* Mac dots */}
+                  <div className="flex items-center gap-1.5 select-none shrink-0">
+                    <span className="size-2.5 rounded-full bg-red-400/80" />
+                    <span className="size-2.5 rounded-full bg-yellow-400/80" />
+                    <span className="size-2.5 rounded-full bg-green-400/80" />
                   </div>
-                )}
-
-                {selectedShowcase === "cards" && (
-                  <div className="w-full max-w-[360px]">
-                    <LiquidMetalCard
-                      title="Liquid Metal"
-                      subtitle="Interactive"
-                      description="WebGL shader reflections on a copy-paste React container card."
-                      className="w-full"
-                    />
+                  {/* Tab Selectors */}
+                  <div className="flex items-center gap-1 border-l border-border pl-4 shrink-0">
+                    <button
+                      onClick={() => setActiveSandboxTab("preview")}
+                      className={cn(
+                        "flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium cursor-pointer transition-all select-none",
+                        activeSandboxTab === "preview"
+                          ? "bg-background text-foreground shadow-xs border border-border"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/45"
+                      )}
+                    >
+                      <SparklesIcon className="size-3 text-violet-500" />
+                      <span>Preview</span>
+                    </button>
+                    <button
+                      onClick={() => setActiveSandboxTab("code")}
+                      className={cn(
+                        "flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium cursor-pointer transition-all select-none",
+                        activeSandboxTab === "code"
+                          ? "bg-background text-foreground shadow-xs border border-border"
+                          : "text-muted-foreground hover:text-foreground hover:bg-muted/45"
+                      )}
+                    >
+                      <Code2Icon className="size-3 text-blue-500" />
+                      <span>Code</span>
+                    </button>
                   </div>
-                )}
-
-                {selectedShowcase === "dialogs" && (
-                  <Dialog>
-                    <DialogTrigger render={<Button variant="outline">Open Confirm Dialog</Button>} />
-                    <DialogContent className="border border-zinc-200 dark:border-zinc-800">
-                      <DialogHeader>
-                        <DialogTitle>Reset API Key</DialogTitle>
-                        <DialogDescription>
-                          This will immediately revoke access for your current key. This operation is permanent and irreversible.
-                        </DialogDescription>
-                      </DialogHeader>
-                      <DialogFooter className="mt-6">
-                        <DialogClose render={<Button variant="ghost">Cancel</Button>} />
-                        <DialogClose render={<Button variant="default">Confirm Reset</Button>} />
-                      </DialogFooter>
-                    </DialogContent>
-                  </Dialog>
-                )}
-
-                {selectedShowcase === "inputs" && (
-                  <div className="flex w-full max-w-[360px] flex-col gap-4">
-                    <div className="flex flex-col gap-1.5">
-                      <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
-                        Create Secret Key
-                      </Label>
-                      <div className="flex gap-2">
-                        <Input type="text" placeholder="sk_live_..." className="font-mono" />
-                        <Button variant="default">Generate</Button>
-                      </div>
-                      <p className="text-xs text-zinc-500">Provide an identifier for this API key.</p>
-                    </div>
-                  </div>
-                )}
-
-                {selectedShowcase === "command" && (
-                  <div className="w-full max-w-[420px] rounded-xl border border-zinc-200 bg-white p-2 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/60">
-                    <Command className="bg-transparent">
-                      <CommandInput placeholder="Type a search command..." />
-                      <CommandList className="max-h-[200px] mt-2">
-                        <CommandEmpty>No results found.</CommandEmpty>
-                        <CommandGroup heading="Suggestions">
-                          <CommandItem>
-                            <SearchIcon className="size-4 mr-2 opacity-50" />
-                            Search Documentation
-                          </CommandItem>
-                          <CommandItem>
-                            <SettingsIcon className="size-4 mr-2 opacity-50" />
-                            System Preferences
-                            <CommandShortcut>⌘,</CommandShortcut>
-                          </CommandItem>
-                        </CommandGroup>
-                        <CommandSeparator className="my-2" />
-                        <CommandGroup heading="Developer Settings">
-                          <CommandItem>
-                            <UserIcon className="size-4 mr-2 opacity-50" />
-                            Manage API Accounts
-                          </CommandItem>
-                        </CommandGroup>
-                      </CommandList>
-                    </Command>
-                  </div>
-                )}
-
-                {selectedShowcase === "pricing" && (
-                  <div className="flex flex-wrap items-stretch justify-center gap-6 w-full">
-                    {/* Hobby tier */}
-                    <Card className="flex flex-col justify-between w-full max-w-[280px] border border-zinc-200 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/30">
-                      <div>
-                        <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Hobby</div>
-                        <h3 className="text-2xl font-bold tracking-tight text-zinc-950 mt-1 dark:text-white">
-                          $0 <span className="text-sm font-normal text-zinc-500">/ mo</span>
-                        </h3>
-                        <p className="text-xs text-zinc-500 mt-2">Essential components to build small, personal apps.</p>
-                        <div className="space-y-2 mt-6 text-sm text-zinc-500 dark:text-zinc-400">
-                          <div className="flex items-center gap-2">
-                            <CheckIcon className="size-4 text-zinc-800 dark:text-zinc-300" />
-                            <span>Basic Components</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckIcon className="size-4 text-zinc-800 dark:text-zinc-300" />
-                            <span>Community Support</span>
-                          </div>
-                        </div>
-                      </div>
-                      <Button variant="outline" className="w-full mt-8">
-                        Get Started
-                      </Button>
-                    </Card>
-
-                    {/* Pro tier */}
-                    <Card className="flex flex-col justify-between w-full max-w-[280px] border border-zinc-900 bg-zinc-950 p-6 shadow-lg dark:border-zinc-800">
-                      <div>
-                        <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Professional</div>
-                        <h3 className="text-2xl font-bold tracking-tight text-white mt-1">
-                          $19 <span className="text-sm font-normal text-zinc-500">/ mo</span>
-                        </h3>
-                        <p className="text-xs text-zinc-400 mt-2">Advanced layouts and premium layout abstractions.</p>
-                        <div className="space-y-2 mt-6 text-sm text-zinc-400">
-                          <div className="flex items-center gap-2">
-                            <CheckIcon className="size-4 text-zinc-100" />
-                            <span>All 50+ Components</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckIcon className="size-4 text-zinc-100" />
-                            <span>Figma Design Files</span>
-                          </div>
-                          <div className="flex items-center gap-2">
-                            <CheckIcon className="size-4 text-zinc-100" />
-                            <span>Priority Slack Channel</span>
-                          </div>
-                        </div>
-                      </div>
-                      <Button className="w-full mt-8 bg-white text-zinc-950 hover:bg-zinc-200">
-                        Upgrade
-                      </Button>
-                    </Card>
-                  </div>
-                )}
-
-                {selectedShowcase === "halftone" && (
-                  <div className="relative w-full h-[280px] flex items-center justify-center overflow-hidden">
-                    <HalftoneGrid
-                      dotRadius={1.5}
-                      dotSpacing={14}
-                      gradientFrom="rgba(168, 85, 247, 0.35)"
-                      gradientTo="rgba(180, 151, 207, 0.25)"
-                      glowColor="#120F17"
-                      className="absolute inset-0"
-                    />
-                    <div className="relative size-44 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex items-center justify-center shadow-md">
-                      <HalftoneImage
-                        src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300&h=300"
-                        dotSpacing={6}
-                        contrast={1.3}
-                        inkColor="currentColor"
-                        paperColor="transparent"
-                        className="size-full"
-                        alt="Halftone showcase preview"
-                      />
-                    </div>
-                  </div>
-                )}
-
-                {selectedShowcase === "magic-rings" && (
-                  <div className="relative w-full h-[320px] rounded-xl overflow-hidden bg-zinc-950 flex items-center justify-center p-6 border border-zinc-800">
-                    <MagicRings
-                      color="#fc42ff"
-                      colorTwo="#42fcff"
-                      speed={1}
-                      ringCount={6}
-                      followMouse={true}
-                      clickBurst={true}
-                    />
-                    <span className="relative z-10 text-white font-mono text-xs select-none bg-black/40 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-white/10">
-                      Hover & Click to Burst
-                    </span>
-                  </div>
-                )}
-
-                {selectedShowcase === "antigravity" && (
-                  <div className="relative w-full h-[320px] rounded-xl overflow-hidden bg-zinc-950 border border-zinc-800">
-                    <Antigravity
-                      count={200}
-                      color="#FF9FFC"
-                      particleShape="capsule"
-                      magnetRadius={10}
-                      autoAnimate={true}
-                    />
-                  </div>
-                )}
-              </div>
-
-              {/* Code Snippet Box */}
-              <CodeBlock
-                html={showcaseHtmls[selectedShowcase]}
-                rawCode={showcaseRaws[selectedShowcase]}
-                filename={
-                  selectedShowcase === "buttons"
+                </div>
+                {/* Active filename */}
+                <span className="font-mono text-[10px] text-zinc-400 bg-background/50 dark:bg-zinc-900/50 px-2 py-0.5 rounded border border-border/40 select-all shrink-0">
+                  {selectedShowcase === "buttons"
                     ? "ButtonDemo.tsx"
                     : selectedShowcase === "cards"
                     ? "CardDemo.tsx"
@@ -1146,49 +1090,272 @@ export default function LandingPageClient({
                     ? "InputDemo.tsx"
                     : selectedShowcase === "command"
                     ? "CommandDemo.tsx"
-                    : "PriceCard.tsx"
-                }
-                showLineNumbers={true}
-                collapsible={false}
-              />
+                    : "PriceCard.tsx"}
+                </span>
+              </div>
+
+              {/* Window Content */}
+              <div className="w-full bg-background dark:bg-zinc-950/45 min-h-[380px] flex flex-col justify-center relative overflow-hidden">
+                {activeSandboxTab === "preview" ? (
+                  <div className="flex w-full h-full items-center justify-center p-6 sm:p-12 overflow-hidden">
+                    {/* Live Preview Elements */}
+                    {selectedShowcase === "buttons" && (
+                      <div className="flex flex-wrap items-center justify-center gap-6">
+                        <RealismButton variantColor="cyan">Cyan Glow</RealismButton>
+                        <KeyboardButton variantColor="dark">cmd</KeyboardButton>
+                        <GlowLineButton glowColor="rose">Rose Glow</GlowLineButton>
+                      </div>
+                    )}
+
+                    {selectedShowcase === "cards" && (
+                      <div className="w-full max-w-[360px]">
+                        <LiquidMetalCard
+                          title="Liquid Metal"
+                          subtitle="Interactive"
+                          description="WebGL shader reflections on a copy-paste React container card."
+                          className="w-full"
+                        />
+                      </div>
+                    )}
+
+                    {selectedShowcase === "dialogs" && (
+                      <Dialog>
+                        <DialogTrigger render={<Button variant="outline">Open Confirm Dialog</Button>} />
+                        <DialogContent className="border border-zinc-200 dark:border-zinc-800">
+                          <DialogHeader>
+                            <DialogTitle>Reset API Key</DialogTitle>
+                            <DialogDescription>
+                              This will immediately revoke access for your current key. This operation is permanent and irreversible.
+                            </DialogDescription>
+                          </DialogHeader>
+                          <DialogFooter className="mt-6">
+                            <DialogClose render={<Button variant="ghost">Cancel</Button>} />
+                            <DialogClose render={<Button variant="default">Confirm Reset</Button>} />
+                          </DialogFooter>
+                        </DialogContent>
+                      </Dialog>
+                    )}
+
+                    {selectedShowcase === "inputs" && (
+                      <div className="flex w-full max-w-[360px] flex-col gap-4">
+                        <div className="flex flex-col gap-1.5">
+                          <Label className="text-xs font-semibold text-zinc-500 uppercase tracking-wide">
+                            Create Secret Key
+                          </Label>
+                          <div className="flex gap-2">
+                            <Input type="text" placeholder="sk_live_..." className="font-mono" />
+                            <Button variant="default">Generate</Button>
+                          </div>
+                          <p className="text-xs text-zinc-500">Provide an identifier for this API key.</p>
+                        </div>
+                      </div>
+                    )}
+
+                    {selectedShowcase === "command" && (
+                      <div className="w-full max-w-[420px] rounded-xl border border-zinc-200 bg-white p-2 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/60">
+                        <Command className="bg-transparent">
+                          <CommandInput placeholder="Type a search command..." />
+                          <CommandList className="max-h-[200px] mt-2">
+                            <CommandEmpty>No results found.</CommandEmpty>
+                            <CommandGroup heading="Suggestions">
+                              <CommandItem>
+                                <SearchIcon className="size-4 mr-2 opacity-50" />
+                                Search Documentation
+                              </CommandItem>
+                              <CommandItem>
+                                <SettingsIcon className="size-4 mr-2 opacity-50" />
+                                System Preferences
+                                <CommandShortcut>⌘,</CommandShortcut>
+                              </CommandItem>
+                            </CommandGroup>
+                            <CommandSeparator className="my-2" />
+                            <CommandGroup heading="Developer Settings">
+                              <CommandItem>
+                                <UserIcon className="size-4 mr-2 opacity-50" />
+                                Manage API Accounts
+                              </CommandItem>
+                            </CommandGroup>
+                          </CommandList>
+                        </Command>
+                      </div>
+                    )}
+
+                    {selectedShowcase === "pricing" && (
+                      <div className="flex flex-wrap items-stretch justify-center gap-6 w-full">
+                        {/* Hobby tier */}
+                        <Card className="flex flex-col justify-between w-full max-w-[280px] border border-zinc-200 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/30">
+                          <div>
+                            <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Hobby</div>
+                            <h3 className="text-2xl font-bold tracking-tight text-zinc-950 mt-1 dark:text-white">
+                              $0 <span className="text-sm font-normal text-zinc-500">/ mo</span>
+                            </h3>
+                            <p className="text-xs text-zinc-500 mt-2">Essential components to build small, personal apps.</p>
+                            <div className="space-y-2 mt-6 text-sm text-zinc-500 dark:text-zinc-400">
+                              <div className="flex items-center gap-2">
+                                <CheckIcon className="size-4 text-zinc-800 dark:text-zinc-300" />
+                                <span>Basic Components</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <CheckIcon className="size-4 text-zinc-800 dark:text-zinc-300" />
+                                <span>Community Support</span>
+                              </div>
+                            </div>
+                          </div>
+                          <Button variant="outline" className="w-full mt-8">
+                            Get Started
+                          </Button>
+                        </Card>
+
+                        {/* Pro tier */}
+                        <Card className="flex flex-col justify-between w-full max-w-[280px] border border-zinc-900 bg-zinc-950 p-6 shadow-lg dark:border-zinc-800">
+                          <div>
+                            <div className="text-xs font-semibold text-zinc-500 uppercase tracking-wider">Professional</div>
+                            <h3 className="text-2xl font-bold tracking-tight text-white mt-1">
+                              $19 <span className="text-sm font-normal text-zinc-500">/ mo</span>
+                            </h3>
+                            <p className="text-xs text-zinc-400 mt-2">Advanced layouts and premium layout abstractions.</p>
+                            <div className="space-y-2 mt-6 text-sm text-zinc-400">
+                              <div className="flex items-center gap-2">
+                                <CheckIcon className="size-4 text-zinc-100" />
+                                <span>All 50+ Components</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <CheckIcon className="size-4 text-zinc-100" />
+                                <span>Figma Design Files</span>
+                              </div>
+                              <div className="flex items-center gap-2">
+                                <CheckIcon className="size-4 text-zinc-100" />
+                                <span>Priority Slack Channel</span>
+                              </div>
+                            </div>
+                          </div>
+                          <Button className="w-full mt-8 bg-white text-zinc-950 hover:bg-zinc-200 border-none">
+                            Upgrade
+                          </Button>
+                        </Card>
+                      </div>
+                    )}
+
+                    {selectedShowcase === "halftone" && (
+                      <div className="relative w-full h-[280px] flex items-center justify-center overflow-hidden">
+                        <HalftoneGrid
+                          dotRadius={1.5}
+                          dotSpacing={14}
+                          gradientFrom="rgba(168, 85, 247, 0.35)"
+                          gradientTo="rgba(180, 151, 207, 0.25)"
+                          glowColor="#120F17"
+                          className="absolute inset-0"
+                        />
+                        <div className="relative size-44 rounded-2xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 flex items-center justify-center shadow-md">
+                          <HalftoneImage
+                            src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=300&h=300"
+                            dotSpacing={6}
+                            contrast={1.3}
+                            inkColor="currentColor"
+                            paperColor="transparent"
+                            className="size-full"
+                            alt="Halftone showcase preview"
+                          />
+                        </div>
+                      </div>
+                    )}
+
+                    {selectedShowcase === "magic-rings" && (
+                      <div className="relative w-full h-[320px] rounded-xl overflow-hidden bg-zinc-950 flex items-center justify-center p-6 border border-zinc-800">
+                        <MagicRings
+                          color="#fc42ff"
+                          colorTwo="#42fcff"
+                          speed={1}
+                          ringCount={6}
+                          followMouse={true}
+                          clickBurst={true}
+                        />
+                        <span className="relative z-10 text-white font-mono text-xs select-none bg-black/40 backdrop-blur-xs px-3.5 py-1.5 rounded-full border border-white/10">
+                          Hover & Click to Burst
+                        </span>
+                      </div>
+                    )}
+
+                    {selectedShowcase === "antigravity" && (
+                      <div className="relative w-full h-[320px] rounded-xl overflow-hidden bg-zinc-950 border border-zinc-800">
+                        <Antigravity
+                          count={200}
+                          color="#FF9FFC"
+                          particleShape="capsule"
+                          magnetRadius={10}
+                          autoAnimate={true}
+                        />
+                      </div>
+                    )}
+                  </div>
+                ) : (
+                  <div className="w-full h-full p-4 overflow-auto max-h-[420px] bg-zinc-950 text-zinc-100 font-mono text-xs text-left">
+                    <CodeBlock
+                      html={showcaseHtmls[selectedShowcase === "magic-rings" ? "magicRings" : selectedShowcase]}
+                      rawCode={showcaseRaws[selectedShowcase === "magic-rings" ? "magicRings" : selectedShowcase]}
+                      filename={
+                        selectedShowcase === "buttons"
+                          ? "ButtonDemo.tsx"
+                          : selectedShowcase === "cards"
+                          ? "CardDemo.tsx"
+                          : selectedShowcase === "halftone"
+                          ? "HalftoneDemo.tsx"
+                          : selectedShowcase === "magic-rings"
+                          ? "MagicRingsDemo.tsx"
+                          : selectedShowcase === "antigravity"
+                          ? "AntigravityDemo.tsx"
+                          : selectedShowcase === "dialogs"
+                          ? "DialogDemo.tsx"
+                          : selectedShowcase === "inputs"
+                          ? "InputDemo.tsx"
+                          : selectedShowcase === "command"
+                          ? "CommandDemo.tsx"
+                          : "PriceCard.tsx"
+                      }
+                      showLineNumbers={true}
+                      collapsible={false}
+                    />
+                  </div>
+                )}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       {/* Developer Experience (Dx) Section */}
-      <section id="developer" className="border-t border-zinc-200/60 py-28 dark:border-zinc-900 dark:bg-zinc-950/20">
+      <section id="developer" className="border-t border-border py-28 bg-muted/20 dark:bg-muted/10">
         <div className="mx-auto max-w-6xl px-6 md:px-8">
           <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 w-full min-w-0">
             {/* Dx Left Text */}
             <div className="flex flex-col justify-center">
-              <h2 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-white">
+              <h2 className="text-3xl font-semibold tracking-tight text-foreground">
                 Developer Experience Built First
               </h2>
-              <p className="mt-6 text-base leading-relaxed text-zinc-500 dark:text-zinc-400">
+              <p className="mt-6 text-base leading-relaxed text-muted-foreground">
                 Start with a single copy-paste operation. Kanso UI elements slot right into standard tailwind structures.
               </p>
 
               <div className="mt-10 space-y-6">
                 <div className="flex items-start gap-4">
-                  <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-[11px] font-bold text-white dark:bg-zinc-100 dark:text-zinc-900">
+                  <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-foreground text-[11px] font-bold text-background">
                     1
                   </div>
                   <div>
-                    <h4 className="text-sm font-semibold">Install Helper Modules</h4>
-                    <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                    <h4 className="text-sm font-semibold text-foreground">Install Helper Modules</h4>
+                    <p className="mt-1 text-sm text-muted-foreground">
                       Configure your Tailwind classes with our minimalist configurations and helper package.
                     </p>
                   </div>
                 </div>
 
                 <div className="flex items-start gap-4">
-                  <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-[11px] font-bold text-white dark:bg-zinc-100 dark:text-zinc-900">
+                  <div className="flex size-6 shrink-0 items-center justify-center rounded-full bg-foreground text-[11px] font-bold text-background">
                     2
                   </div>
                   <div>
-                    <h4 className="text-sm font-semibold">Copy and Customise</h4>
-                    <p className="mt-1 text-sm text-zinc-500 dark:text-zinc-400">
+                    <h4 className="text-sm font-semibold text-foreground">Copy and Customise</h4>
+                    <p className="mt-1 text-sm text-muted-foreground">
                       Grab exact TSX structures and paste them directly into your `/components/ui/` route.
                     </p>
                   </div>
@@ -1213,41 +1380,41 @@ export default function LandingPageClient({
       </section>
 
       {/* Statistics Section */}
-      <section className="border-t border-zinc-200/60 bg-zinc-50/20 py-24 dark:border-zinc-900 dark:bg-zinc-950">
+      <section className="border-t border-border bg-muted/20 py-24 dark:bg-muted/10">
         <div className="mx-auto max-w-6xl px-6 md:px-8">
           <div className="grid gap-12 text-center sm:grid-cols-2 lg:grid-cols-4">
             <div className="flex flex-col items-center">
-              <span className="text-4xl font-bold tracking-tight text-zinc-950 dark:text-white">
+              <span className="text-4xl font-bold tracking-tight text-foreground">
                 <AnimatedCounter value="50" suffix="+" />
               </span>
-              <span className="mt-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+              <span className="mt-2 text-sm font-medium text-muted-foreground">
                 Components
               </span>
             </div>
 
             <div className="flex flex-col items-center">
-              <span className="text-4xl font-bold tracking-tight text-zinc-950 dark:text-white">
+              <span className="text-4xl font-bold tracking-tight text-foreground">
                 <AnimatedCounter value="100" suffix="%" />
               </span>
-              <span className="mt-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+              <span className="mt-2 text-sm font-medium text-muted-foreground">
                 TypeScript Coverage
               </span>
             </div>
 
             <div className="flex flex-col items-center">
-              <span className="text-4xl font-bold tracking-tight text-zinc-950 dark:text-white">
+              <span className="text-4xl font-bold tracking-tight text-foreground">
                 WCAG
               </span>
-              <span className="mt-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+              <span className="mt-2 text-sm font-medium text-muted-foreground">
                 Accessible by Default
               </span>
             </div>
 
             <div className="flex flex-col items-center">
-              <span className="text-4xl font-bold tracking-tight text-zinc-950 dark:text-white">
+              <span className="text-4xl font-bold tracking-tight text-foreground">
                 MIT
               </span>
-              <span className="mt-2 text-sm font-medium text-zinc-500 dark:text-zinc-400">
+              <span className="mt-2 text-sm font-medium text-muted-foreground">
                 Open Source
               </span>
             </div>
@@ -1269,69 +1436,75 @@ export default function LandingPageClient({
 
           <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {/* Testimonial 1 */}
-            <SpotlightCard className="border border-zinc-200/80 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40 rounded-2xl">
-              <p className="text-sm leading-relaxed text-zinc-655 dark:text-zinc-300">
-                {"\"The layout rules and visual patterns in Kanso UI match exactly what we need for modern enterprise platforms. Simplicity is indeed engineered directly in.\""}
-              </p>
-              <div className="mt-6 flex items-center gap-3">
-                <div className="size-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center font-bold text-xs">
-                  AB
+            <Card className="border border-border bg-card dark:bg-card/40 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 p-6 shadow-xs hover:shadow-sm hover:-translate-y-0.5">
+              <CardContent className="p-0">
+                <p className="text-sm leading-relaxed text-foreground">
+                  {"\"The layout rules and visual patterns in Kanso UI match exactly what we need for modern enterprise platforms. Simplicity is indeed engineered directly in.\""}
+                </p>
+                <div className="mt-6 flex items-center gap-3">
+                  <div className="size-8 rounded-full bg-muted border border-border flex items-center justify-center font-bold text-xs text-muted-foreground">
+                    AB
+                  </div>
+                  <div>
+                    <h5 className="text-xs font-semibold text-foreground">Alexander Boyd</h5>
+                    <p className="text-[11px] text-muted-foreground">Design Engineer, Linear</p>
+                  </div>
                 </div>
-                <div>
-                  <h5 className="text-xs font-semibold">Alexander Boyd</h5>
-                  <p className="text-[11px] text-zinc-550">Design Engineer, Linear</p>
-                </div>
-              </div>
-            </SpotlightCard>
+              </CardContent>
+            </Card>
 
             {/* Testimonial 2 */}
-            <SpotlightCard className="border border-zinc-200/80 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40 rounded-2xl">
-              <p className="text-sm leading-relaxed text-zinc-655 dark:text-zinc-300">
-                {"\"Having WCAG accessibility compliant outlines right out of the box saved us weeks of audit fixing. The styling is perfectly minimal.\""}
-              </p>
-              <div className="mt-6 flex items-center gap-3">
-                <div className="size-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center font-bold text-xs">
-                  MK
+            <Card className="border border-border bg-card dark:bg-card/40 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 p-6 shadow-xs hover:shadow-sm hover:-translate-y-0.5">
+              <CardContent className="p-0">
+                <p className="text-sm leading-relaxed text-foreground">
+                  {"\"Having WCAG accessibility compliant outlines right out of the box saved us weeks of audit fixing. The styling is perfectly minimal.\""}
+                </p>
+                <div className="mt-6 flex items-center gap-3">
+                  <div className="size-8 rounded-full bg-muted border border-border flex items-center justify-center font-bold text-xs text-muted-foreground">
+                    MK
+                  </div>
+                  <div>
+                    <h5 className="text-xs font-semibold text-foreground">Mia Koyama</h5>
+                    <p className="text-[11px] text-muted-foreground">Lead Frontend, Stripe</p>
+                  </div>
                 </div>
-                <div>
-                  <h5 className="text-xs font-semibold">Mia Koyama</h5>
-                  <p className="text-[11px] text-zinc-555">Lead Frontend, Stripe</p>
-                </div>
-              </div>
-            </SpotlightCard>
+              </CardContent>
+            </Card>
 
             {/* Testimonial 3 */}
-            <SpotlightCard className="border border-zinc-200/80 bg-white p-6 shadow-xs dark:border-zinc-800 dark:bg-zinc-900/40 rounded-2xl">
-              <p className="text-sm leading-relaxed text-zinc-655 dark:text-zinc-300">
-                {"\"Copy-paste setup means I don't need to add another complex library bundle. I copy precisely the components I need, modify the props, and build.\""}
-              </p>
-              <div className="mt-6 flex items-center gap-3">
-                <div className="size-8 rounded-full bg-zinc-200 dark:bg-zinc-800 flex items-center justify-center font-bold text-xs">
-                  DR
+            <Card className="border border-border bg-card dark:bg-card/40 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 p-6 shadow-xs hover:shadow-sm hover:-translate-y-0.5">
+              <CardContent className="p-0">
+                <p className="text-sm leading-relaxed text-foreground">
+                  {"\"Copy-paste setup means I don't need to add another complex library bundle. I copy precisely the components I need, modify the props, and build.\""}
+                </p>
+                <div className="mt-6 flex items-center gap-3">
+                  <div className="size-8 rounded-full bg-muted border border-border flex items-center justify-center font-bold text-xs text-muted-foreground">
+                    DR
+                  </div>
+                  <div>
+                    <h5 className="text-xs font-semibold text-foreground">David Ross</h5>
+                    <p className="text-[11px] text-muted-foreground">CTO, Vercel Templates</p>
+                  </div>
                 </div>
-                <div>
-                  <h5 className="text-xs font-semibold">David Ross</h5>
-                  <p className="text-[11px] text-zinc-555">CTO, Vercel Templates</p>
-                </div>
-              </div>
-            </SpotlightCard>
+              </CardContent>
+            </Card>
           </div>
         </div>
       </section>
 
       {/* Final CTA Section */}
-      <section className="border-t border-zinc-200/60 py-32 text-center dark:border-zinc-900 dark:bg-zinc-950">
+      <section className="border-t border-border py-32 text-center bg-background">
         <div className="mx-auto max-w-4xl px-6 md:px-8">
-          <h2 className="text-4xl font-semibold tracking-tight text-zinc-950 sm:text-5xl dark:text-white">
+          <h2 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
             Build Faster. Design Less.
           </h2>
-          <p className="mt-6 max-w-md mx-auto text-base text-zinc-500 dark:text-zinc-400">
+          <p className="mt-6 max-w-md mx-auto text-base text-muted-foreground">
             Kanso UI gives you the building blocks for beautiful, high-performance web applications.
           </p>
           <div className="mt-10 flex flex-wrap justify-center gap-4 items-center">
             <Button
               size="lg"
-              className="px-8 h-12"
+              className="px-8 h-12 shadow-sm cursor-pointer rounded-full"
               render={<Link href="/docs" />}
             >
               Start Building
@@ -1340,7 +1513,7 @@ export default function LandingPageClient({
               variantDesign="glow"
               href={GITHUB_URL}
               glowColor="linear-gradient(135deg, oklch(0.65 0.24 300), oklch(0.6 0.22 340))"
-              className="h-12 "
+              className="h-12 rounded-full font-semibold"
             >
               Star Kanso UI
             </GithubButton>
@@ -1349,7 +1522,7 @@ export default function LandingPageClient({
       </section>
 
       {/* Footer */}
-      <footer className="border-t border-zinc-200 bg-white py-16 dark:border-zinc-900 dark:bg-zinc-950">
+      <footer className="border-t border-border bg-background py-16">
         <div className="mx-auto max-w-6xl px-6 md:px-8">
           <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:grid-cols-6">
             <div className="col-span-2 flex flex-col gap-4">
@@ -1362,23 +1535,23 @@ export default function LandingPageClient({
                   className="dark:invert object-contain"
                 />
               </div>
-              <p className="text-xs text-zinc-500 dark:text-zinc-400 leading-relaxed max-w-[200px]">
+              <p className="text-xs text-muted-foreground leading-relaxed max-w-[200px]">
                 A design system built with React 19, Next.js 16, and Tailwind CSS v4.
               </p>
             </div>
 
             <div>
-              <h6 className="text-xs font-semibold text-zinc-900 dark:text-zinc-50 uppercase tracking-wider">
+              <h6 className="text-xs font-semibold text-foreground uppercase tracking-wider">
                 Library
               </h6>
               <ul className="mt-4 space-y-2 text-xs">
                 <li>
-                  <a href="#showcase" className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50">
+                  <a href="#showcase" className="text-muted-foreground hover:text-foreground transition-colors">
                     Components
                   </a>
                 </li>
                 <li>
-                  <a href="#showcase" className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50">
+                  <a href="#showcase" className="text-muted-foreground hover:text-foreground transition-colors">
                     Registry
                   </a>
                 </li>
@@ -1386,17 +1559,17 @@ export default function LandingPageClient({
             </div>
 
             <div>
-              <h6 className="text-xs font-semibold text-zinc-900 dark:text-zinc-50 uppercase tracking-wider">
+              <h6 className="text-xs font-semibold text-foreground uppercase tracking-wider">
                 Resources
               </h6>
               <ul className="mt-4 space-y-2 text-xs">
                 <li>
-                  <Link href="/docs" className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50">
+                  <Link href="/docs" className="text-muted-foreground hover:text-foreground transition-colors">
                     Documentation
                   </Link>
                 </li>
                 <li>
-                  <a href="https://nextjs.org" className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50">
+                  <a href="https://nextjs.org" className="text-muted-foreground hover:text-foreground transition-colors">
                     Next.js Docs
                   </a>
                 </li>
@@ -1404,17 +1577,17 @@ export default function LandingPageClient({
             </div>
 
             <div>
-              <h6 className="text-xs font-semibold text-zinc-900 dark:text-zinc-50 uppercase tracking-wider">
+              <h6 className="text-xs font-semibold text-foreground uppercase tracking-wider">
                 Community
               </h6>
               <ul className="mt-4 space-y-2 text-xs">
                 <li>
-                  <a href={GITHUB_URL} className="flex items-center gap-1 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50">
+                  <a href={GITHUB_URL} className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors">
                     GitHub <GithubIcon className="size-3" />
                   </a>
                 </li>
                 <li>
-                  <a href="https://discord.com" className="flex items-center gap-1 text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50">
+                  <a href="https://discord.com" className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors">
                     Discord <DiscordIcon className="size-3" />
                   </a>
                 </li>
@@ -1422,11 +1595,11 @@ export default function LandingPageClient({
             </div>
           </div>
 
-          <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-zinc-150 pt-8 sm:flex-row dark:border-zinc-900">
-            <span className="text-[11px] text-zinc-500">
+          <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row">
+            <span className="text-[11px] text-muted-foreground">
               &copy; {new Date().getFullYear()} Kanso UI. Open Source under MIT License.
             </span>
-            <span className="text-[11px] text-zinc-500">
+            <span className="text-[11px] text-muted-foreground">
               Designed and engineered with simplicity.
             </span>
           </div>
