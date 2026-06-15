@@ -371,12 +371,12 @@ export default function GithubButtonDemo() {
     name: "three-d-masonry-orbit",
     title: "3D Masonry Orbit",
     description:
-      "An interactive 3D cylindrical gallery that orbits images in a masonry layout. Responds to mouse drags, scrolls, and raycasted hover-scaling.",
+      "An interactive 3D cylindrical gallery that orbits images in a masonry layout. Supports both a high-performance Three.js cylinder grid and a custom DOM-based GSAP Curved Ring Archive variation.",
     category: "data-display",
-    dependencies: ["three", "@types/three"],
+    dependencies: ["three", "@types/three", "gsap"],
     internalDeps: ["lib/utils"],
     filePath: "components/kanso/three-d-masonry-orbit.tsx",
-    tags: ["3d", "gallery", "orbit", "masonry", "threejs", "hover", "interactive"],
+    tags: ["3d", "gallery", "orbit", "masonry", "threejs", "gsap", "hover", "interactive"],
     usage: `import { ThreeDMasonryOrbit } from "@/components/kanso/three-d-masonry-orbit"
 
 export default function ThreeDMasonryOrbitDemo() {

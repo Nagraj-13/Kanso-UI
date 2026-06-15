@@ -446,7 +446,7 @@ export default function LandingPageClient({
       </header>
 
       {/* Redesigned Hero Section (Next.js & Evervault Inspired) */}
-      <section className="relative w-full pt-20 pb-6 overflow-hidden bg-background text-foreground">
+      <section className="relative w-full pt-10 pb-6 overflow-hidden bg-background text-foreground">
         <div className="relative m-4 md:m-6 py-12 md:py-20 rounded-3xl overflow-hidden bg-[linear-gradient(to_bottom,_var(--background)_30%,_#6d18ff_75%,_#9569fe_100%)]">
           <div className="absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[95%] bg-[var(--background)] blur-3xl rounded-full z-0"></div>
           
@@ -487,7 +487,7 @@ export default function LandingPageClient({
           />
 
           {/* Hero Content Container - Split Layout */}
-          <div className="mx-auto max-w-7xl px-6 md:px-8 relative z-10 w-full grid gap-12 lg:grid-cols-12 items-center pt-8">
+          <div className="mx-auto max-w-7xl px-6 md:px-8 relative z-20 w-full grid gap-12 lg:grid-cols-12 items-center">
           
           {/* Left Column: Text Content */}
           <div className="lg:col-span-7 flex flex-col items-start text-left">
