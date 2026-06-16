@@ -1,13 +1,16 @@
-import * as React from "react"
-import { CodeBlock, TerminalBlock } from "@/components/docs/code-block"
-import { SectionDivider } from "@/components/landing/editorial-grid"
+import * as React from 'react';
+import { CodeBlock, TerminalBlock } from '@/components/docs/code-block';
+import { SectionDivider } from '@/components/landing/editorial-grid';
 
 interface DeveloperExperienceProps {
-  dxHtml: string
-  dxRaw: string
+  dxHtml: string;
+  dxRaw: string;
 }
 
-export function DeveloperExperience({ dxHtml, dxRaw }: DeveloperExperienceProps) {
+export function DeveloperExperience({
+  dxHtml,
+  dxRaw,
+}: DeveloperExperienceProps) {
   return (
     <section id="developer" className="py-28 bg-background relative">
       <SectionDivider />
@@ -19,7 +22,8 @@ export function DeveloperExperience({ dxHtml, dxRaw }: DeveloperExperienceProps)
               Developer Experience Built First
             </h2>
             <p className="mt-6 text-base leading-relaxed text-muted-foreground">
-              Start with a single copy-paste operation. Kanso UI elements slot right into standard tailwind structures.
+              Start with a single copy-paste operation. Kanso UI elements slot
+              right into standard tailwind structures.
             </p>
 
             <div className="mt-10 space-y-6">
@@ -28,9 +32,12 @@ export function DeveloperExperience({ dxHtml, dxRaw }: DeveloperExperienceProps)
                   1
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground">Install Helper Modules</h4>
+                  <h4 className="text-sm font-semibold text-foreground">
+                    Install Helper Modules
+                  </h4>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Configure your Tailwind classes with our minimalist configurations and helper package.
+                    Configure your Tailwind classes with our minimalist
+                    configurations and helper package.
                   </p>
                 </div>
               </div>
@@ -40,9 +47,12 @@ export function DeveloperExperience({ dxHtml, dxRaw }: DeveloperExperienceProps)
                   2
                 </div>
                 <div>
-                  <h4 className="text-sm font-semibold text-foreground">Copy and Customise</h4>
+                  <h4 className="text-sm font-semibold text-foreground">
+                    Copy and Customise
+                  </h4>
                   <p className="mt-1 text-sm text-muted-foreground">
-                    Grab exact TSX structures and paste them directly into your `/components/ui/` route.
+                    Grab exact TSX structures and paste them directly into your
+                    `/components/ui/` route.
                   </p>
                 </div>
               </div>
@@ -64,5 +74,5 @@ export function DeveloperExperience({ dxHtml, dxRaw }: DeveloperExperienceProps)
         </div>
       </div>
     </section>
-  )
+  );
 }

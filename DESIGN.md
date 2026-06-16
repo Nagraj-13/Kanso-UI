@@ -3,90 +3,90 @@ version: alpha
 name: Kanso UI
 description: Minimal, premium design system for a React component library inspired by Kanso (simplicity, clarity, essentialism).
 colors:
-  background: "#FFFFFF"
-  foreground: "#0F1115"
-  surface: "#F6F7F9"
-  surface-2: "#ECEFF3"
-  border: "#D7DCE3"
-  muted: "#6B7280"
-  muted-strong: "#3B4252"
-  accent: "#111827"
-  accent-soft: "#E5E7EB"
-  ring: "#A1A1AA"
+  background: '#FFFFFF'
+  foreground: '#0F1115'
+  surface: '#F6F7F9'
+  surface-2: '#ECEFF3'
+  border: '#D7DCE3'
+  muted: '#6B7280'
+  muted-strong: '#3B4252'
+  accent: '#111827'
+  accent-soft: '#E5E7EB'
+  ring: '#A1A1AA'
 typography:
   display:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "3.5rem"
+    fontFamily: 'Inter, system-ui, sans-serif'
+    fontSize: '3.5rem'
     fontWeight: 700
     lineHeight: 1.05
-    letterSpacing: "-0.04em"
+    letterSpacing: '-0.04em'
   h1:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "2.75rem"
+    fontFamily: 'Inter, system-ui, sans-serif'
+    fontSize: '2.75rem'
     fontWeight: 700
     lineHeight: 1.1
-    letterSpacing: "-0.03em"
+    letterSpacing: '-0.03em'
   h2:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "2rem"
+    fontFamily: 'Inter, system-ui, sans-serif'
+    fontSize: '2rem'
     fontWeight: 650
     lineHeight: 1.15
-    letterSpacing: "-0.02em"
+    letterSpacing: '-0.02em'
   body:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "1rem"
+    fontFamily: 'Inter, system-ui, sans-serif'
+    fontSize: '1rem'
     fontWeight: 400
     lineHeight: 1.65
-    letterSpacing: "0"
+    letterSpacing: '0'
   body-sm:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "0.875rem"
+    fontFamily: 'Inter, system-ui, sans-serif'
+    fontSize: '0.875rem'
     fontWeight: 400
     lineHeight: 1.55
-    letterSpacing: "0"
+    letterSpacing: '0'
   label:
-    fontFamily: "Inter, system-ui, sans-serif"
-    fontSize: "0.75rem"
+    fontFamily: 'Inter, system-ui, sans-serif'
+    fontSize: '0.75rem'
     fontWeight: 600
     lineHeight: 1
-    letterSpacing: "0.08em"
+    letterSpacing: '0.08em'
 rounded:
-  sm: "8px"
-  md: "12px"
-  lg: "16px"
-  xl: "24px"
+  sm: '8px'
+  md: '12px'
+  lg: '16px'
+  xl: '24px'
 spacing:
-  xs: "4px"
-  sm: "8px"
-  md: "16px"
-  lg: "24px"
-  xl: "32px"
-  2xl: "48px"
+  xs: '4px'
+  sm: '8px'
+  md: '16px'
+  lg: '24px'
+  xl: '32px'
+  2xl: '48px'
 components:
   button:
-    radius: "{rounded.md}"
-    height: "44px"
-    paddingX: "18px"
+    radius: '{rounded.md}'
+    height: '44px'
+    paddingX: '18px'
     fontWeight: 600
-    primaryBackground: "{colors.foreground}"
-    primaryForeground: "{colors.background}"
-    secondaryBackground: "{colors.surface}"
-    secondaryForeground: "{colors.foreground}"
+    primaryBackground: '{colors.foreground}'
+    primaryForeground: '{colors.background}'
+    secondaryBackground: '{colors.surface}'
+    secondaryForeground: '{colors.foreground}'
   card:
-    radius: "{rounded.lg}"
-    background: "{colors.surface}"
-    border: "{colors.border}"
-    shadow: "0 1px 2px rgba(15, 17, 21, 0.04)"
+    radius: '{rounded.lg}'
+    background: '{colors.surface}'
+    border: '{colors.border}'
+    shadow: '0 1px 2px rgba(15, 17, 21, 0.04)'
   input:
-    radius: "{rounded.md}"
-    height: "44px"
-    background: "{colors.background}"
-    border: "{colors.border}"
-    focusRing: "{colors.ring}"
+    radius: '{rounded.md}'
+    height: '44px'
+    background: '{colors.background}'
+    border: '{colors.border}'
+    focusRing: '{colors.ring}'
   badge:
-    radius: "999px"
-    background: "{colors.surface-2}"
-    foreground: "{colors.muted-strong}"
+    radius: '999px'
+    background: '{colors.surface-2}'
+    foreground: '{colors.muted-strong}'
 ---
 
 # Kanso UI Design.md

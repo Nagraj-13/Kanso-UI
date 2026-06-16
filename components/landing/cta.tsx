@@ -1,9 +1,9 @@
-import * as React from "react"
-import Link from "next/link"
-import { Button } from "@/components/ui/button"
-import { GithubButton } from "@/components/kanso/github-button"
-import { GITHUB_URL } from "@/lib/constants"
-import { SectionDivider } from "@/components/landing/editorial-grid"
+import * as React from 'react';
+import Link from 'next/link';
+import { Button } from '@/components/ui/button';
+import { GithubButton } from '@/components/kanso/github-button';
+import { GITHUB_URL } from '@/lib/constants';
+import { SectionDivider } from '@/components/landing/editorial-grid';
 
 export function CTA() {
   return (
@@ -14,7 +14,8 @@ export function CTA() {
           Build Faster. Design Less.
         </h2>
         <p className="mt-6 max-w-md mx-auto text-base text-muted-foreground">
-          Kanso UI gives you the building blocks for beautiful, high-performance web applications.
+          Kanso UI gives you the building blocks for beautiful, high-performance
+          web applications.
         </p>
         <div className="mt-10 flex flex-wrap justify-center gap-4 items-center">
           <Button
@@ -35,5 +36,5 @@ export function CTA() {
         </div>
       </div>
     </section>
-  )
+  );
 }

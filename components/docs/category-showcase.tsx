@@ -1,17 +1,17 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import Link from "next/link"
-import { ArrowRightIcon } from "lucide-react"
-import { RegistryComponent } from "@/lib/registry"
-import { ComponentDemo } from "@/components/docs/component-demos"
-import { Button } from "@/components/ui/button"
-import { Card } from "@/components/ui/card"
+import * as React from 'react';
+import Link from 'next/link';
+import { ArrowRightIcon } from 'lucide-react';
+import { RegistryComponent } from '@/lib/registry';
+import { ComponentDemo } from '@/components/docs/component-demos';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
 
 interface CategoryShowcaseProps {
-  categoryLabel: string
-  categoryDescription: string
-  components: RegistryComponent[]
+  categoryLabel: string;
+  categoryDescription: string;
+  components: RegistryComponent[];
 }
 
 /**
@@ -65,7 +65,11 @@ export function CategoryShowcase({
                 variant="link"
                 size="sm"
                 className="gap-1.5 px-0 text-zinc-950 dark:text-zinc-50 hover:underline"
-                render={<Link href={`/docs/components/${component.category}/${component.name}`} />}
+                render={
+                  <Link
+                    href={`/docs/components/${component.category}/${component.name}`}
+                  />
+                }
               >
                 View Documentation <ArrowRightIcon className="size-3.5" />
               </Button>
@@ -74,5 +78,5 @@ export function CategoryShowcase({
         ))}
       </div>
     </div>
-  )
+  );
 }

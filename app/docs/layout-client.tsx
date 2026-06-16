@@ -1,21 +1,17 @@
 //app/docs/layout-client.tsx
-"use client"
+'use client';
 
-import * as React from "react"
-import Link from "next/link"
-import Image from "next/image"
-import { usePathname, useRouter } from "next/navigation"
-import {
-  MoonIcon,
-  SunIcon,
-  SearchIcon,
-} from "lucide-react"
-import { useTheme } from "next-themes"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { cn } from "@/lib/utils"
-import { registry } from "@/lib/registry"
-import { GithubButton } from "@/components/kanso/github-button"
+import * as React from 'react';
+import Link from 'next/link';
+import Image from 'next/image';
+import { usePathname, useRouter } from 'next/navigation';
+import { MoonIcon, SunIcon, SearchIcon } from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { Button } from '@/components/ui/button';
+import { Input } from '@/components/ui/input';
+import { cn } from '@/lib/utils';
+import { registry } from '@/lib/registry';
+import { GithubButton } from '@/components/kanso/github-button';
 import {
   Sidebar,
   SidebarContent,
@@ -28,8 +24,8 @@ import {
   SidebarProvider,
   SidebarTrigger,
   SidebarFooter,
-} from "@/components/ui/sidebar"
-import { Avatar, AvatarImage, AvatarFallback } from "@/components/ui/avatar"
+} from '@/components/ui/sidebar';
+import { Avatar, AvatarImage, AvatarFallback } from '@/components/ui/avatar';
 import {
   Command,
   CommandDialog,
@@ -38,18 +34,24 @@ import {
   CommandEmpty,
   CommandGroup,
   CommandItem,
-} from "@/components/ui/command"
+} from '@/components/ui/command';
 
 interface SidebarGroupData {
-  category: string
-  label: string
-  icon: string
-  items: { name: string; title: string; href: string; isExternal?: boolean; badge?: string }[]
+  category: string;
+  label: string;
+  icon: string;
+  items: {
+    name: string;
+    title: string;
+    href: string;
+    isExternal?: boolean;
+    badge?: string;
+  }[];
 }
 
 interface DocsLayoutClientProps {
-  sidebarGroups: SidebarGroupData[]
-  children: React.ReactNode
+  sidebarGroups: SidebarGroupData[];
+  children: React.ReactNode;
 }
 
 // GithubIcon removed in favor of kanso GithubButton
@@ -63,34 +65,34 @@ export function DocsLayoutClient({
   sidebarGroups,
   children,
 }: DocsLayoutClientProps) {
-  const pathname = usePathname()
-  const router = useRouter()
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = React.useState(false)
-  const [search, setSearch] = React.useState("")
-  const [openSearchDialog, setOpenSearchDialog] = React.useState(false)
+  const pathname = usePathname();
+  const router = useRouter();
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+  const [search, setSearch] = React.useState('');
+  const [openSearchDialog, setOpenSearchDialog] = React.useState(false);
 
   React.useEffect(() => {
-    const handle = requestAnimationFrame(() => setMounted(true))
-    return () => cancelAnimationFrame(handle)
-  }, [])
+    const handle = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(handle);
+  }, []);
 
   // Listen to CMD+K or CTRL+K
   React.useEffect(() => {
     const down = (e: KeyboardEvent) => {
-      if (e.key === "k" && (e.metaKey || e.ctrlKey)) {
-        e.preventDefault()
-        setOpenSearchDialog((open) => !open)
+      if (e.key === 'k' && (e.metaKey || e.ctrlKey)) {
+        e.preventDefault();
+        setOpenSearchDialog((open) => !open);
       }
-    }
-    document.addEventListener("keydown", down)
-    return () => document.removeEventListener("keydown", down)
-  }, [])
+    };
+    document.addEventListener('keydown', down);
+    return () => document.removeEventListener('keydown', down);
+  }, []);
 
   // Filter items by search query
   const filteredGroups = React.useMemo(() => {
-    if (!search.trim()) return sidebarGroups
-    const q = search.toLowerCase()
+    if (!search.trim()) return sidebarGroups;
+    const q = search.toLowerCase();
     return sidebarGroups
       .map((group) => ({
         ...group,
@@ -100,27 +102,32 @@ export function DocsLayoutClient({
             item.name.toLowerCase().includes(q)
         ),
       }))
-      .filter((group) => group.items.length > 0)
-  }, [sidebarGroups, search])
+      .filter((group) => group.items.length > 0);
+  }, [sidebarGroups, search]);
 
   // Total component count
-  const totalCount = registry.length
+  const totalCount = registry.length;
 
   return (
     <SidebarProvider
       defaultOpen={true}
       className="flex bg-white dark:bg-zinc-950 min-h-screen overflow-x-clip"
-      style={{
-        "--sidebar": "var(--background)",
-        "--sidebar-border": "var(--border)",
-      } as React.CSSProperties}
+      style={
+        {
+          '--sidebar': 'var(--background)',
+          '--sidebar-border': 'var(--border)',
+        } as React.CSSProperties
+      }
     >
       {/* ── Main Workspace: Sidebar & Viewport Content ───────────────── */}
       <div className="flex-1 flex w-full relative">
         <Sidebar className="border-r border-zinc-200/60 bg-white dark:border-zinc-800/40 dark:bg-zinc-950">
           {/* Logo Section */}
           <div className="h-14 flex items-center px-6 border-b border-zinc-200/60 dark:border-zinc-800/60 gap-2.5 shrink-0">
-            <Link href="/" className="group flex items-center gap-2.5 select-none">
+            <Link
+              href="/"
+              className="group flex items-center gap-2.5 select-none"
+            >
               <div className="relative flex items-center justify-center">
                 <Image
                   src="/Kansologo.png"
@@ -180,22 +187,30 @@ export function DocsLayoutClient({
                 <SidebarGroupContent>
                   <SidebarMenu className="px-2">
                     {group.items.map((item) => {
-                      const isActive = pathname === item.href || pathname.startsWith(item.href + "/")
+                      const isActive =
+                        pathname === item.href ||
+                        pathname.startsWith(item.href + '/');
                       return (
                         <SidebarMenuItem key={item.name}>
                           <SidebarMenuButton
                             isActive={isActive}
                             className={cn(
-                              "relative w-full rounded-md px-3 py-1.5 text-sm font-medium transition-all duration-200 flex items-center justify-between border-l-2 pl-2.5 group/menu-button",
+                              'relative w-full rounded-md px-3 py-1.5 text-sm font-medium transition-all duration-200 flex items-center justify-between border-l-2 pl-2.5 group/menu-button',
                               isActive
-                                ? "bg-zinc-50/80 text-zinc-950 border-zinc-900 font-semibold dark:bg-zinc-900/40 dark:text-zinc-50 dark:border-zinc-100"
-                                : "text-zinc-500 border-transparent hover:bg-zinc-50/30 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900/20 dark:hover:text-zinc-200 hover:translate-x-0.5"
+                                ? 'bg-zinc-50/80 text-zinc-950 border-zinc-900 font-semibold dark:bg-zinc-900/40 dark:text-zinc-50 dark:border-zinc-100'
+                                : 'text-zinc-500 border-transparent hover:bg-zinc-50/30 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900/20 dark:hover:text-zinc-200 hover:translate-x-0.5'
                             )}
-                            render={item.isExternal ? (
-                              <a href={item.href} target="_blank" rel="noreferrer" />
-                            ) : (
-                              <Link href={item.href} />
-                            )}
+                            render={
+                              item.isExternal ? (
+                                <a
+                                  href={item.href}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                />
+                              ) : (
+                                <Link href={item.href} />
+                              )
+                            }
                           >
                             <span>{item.title}</span>
                             {item.badge ? (
@@ -211,7 +226,7 @@ export function DocsLayoutClient({
                             )}
                           </SidebarMenuButton>
                         </SidebarMenuItem>
-                      )
+                      );
                     })}
                   </SidebarMenu>
                 </SidebarGroupContent>
@@ -235,8 +250,13 @@ export function DocsLayoutClient({
               className="flex items-center gap-3 p-2 rounded-lg hover:bg-zinc-50 dark:hover:bg-zinc-900/50 cursor-pointer transition-all duration-200 group"
             >
               <Avatar className="h-8 w-8 border border-zinc-200/60 dark:border-zinc-800/60">
-                <AvatarImage src="https://github.com/Nagraj-13.png" alt="Nagraj" />
-                <AvatarFallback className="font-semibold text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">N</AvatarFallback>
+                <AvatarImage
+                  src="https://github.com/Nagraj-13.png"
+                  alt="Nagraj"
+                />
+                <AvatarFallback className="font-semibold text-xs bg-zinc-100 dark:bg-zinc-800 text-zinc-600 dark:text-zinc-400">
+                  N
+                </AvatarFallback>
               </Avatar>
               <div className="text-sm leading-tight overflow-hidden">
                 <p className="font-semibold text-zinc-900 dark:text-zinc-100 truncate">
@@ -261,8 +281,13 @@ export function DocsLayoutClient({
               {/* Left: Sidebar Trigger & Logo */}
               <div className="flex items-center gap-4">
                 <SidebarTrigger className="text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 cursor-pointer" />
-                <span className="hidden sm:inline text-zinc-300 dark:text-zinc-800 header-logo-container">|</span>
-                <Link href="/" className="flex items-center gap-2.5 header-logo-container">
+                <span className="hidden sm:inline text-zinc-300 dark:text-zinc-800 header-logo-container">
+                  |
+                </span>
+                <Link
+                  href="/"
+                  className="flex items-center gap-2.5 header-logo-container"
+                >
                   <Image
                     src="/Kansologo.png"
                     alt="Kanso UI Logo"
@@ -308,7 +333,7 @@ export function DocsLayoutClient({
                     Docs
                   </Link>
                 </nav>
-                
+
                 {/* GitHub Stars Badge (Real component) */}
                 <GithubButton
                   variantDesign="rainbow"
@@ -320,13 +345,13 @@ export function DocsLayoutClient({
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                   aria-label="Toggle theme"
                   className="text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50 cursor-pointer"
                 >
                   {!mounted ? (
                     <div className="size-4 rounded-full bg-zinc-200 animate-pulse dark:bg-zinc-800" />
-                  ) : theme === "dark" ? (
+                  ) : theme === 'dark' ? (
                     <SunIcon className="size-4" />
                   ) : (
                     <MoonIcon className="size-4" />
@@ -343,10 +368,10 @@ export function DocsLayoutClient({
             </Link>
             <span className="text-xs text-zinc-350">/</span>
             <span className="text-xs font-semibold text-zinc-900 dark:text-zinc-150 capitalize">
-              {pathname.split("/").pop()?.replace("-", " ")}
+              {pathname.split('/').pop()?.replace('-', ' ')}
             </span>
           </div>
-          
+
           <main className="px-4 py-8 sm:px-6 lg:px-12 lg:py-10 flex-1 min-w-0 overflow-x-clip max-w-7xl w-full mx-auto">
             {children}
           </main>
@@ -364,8 +389,10 @@ export function DocsLayoutClient({
                 <CommandItem
                   key={item.name}
                   onSelect={() => {
-                    setOpenSearchDialog(false)
-                    router.push(`/docs/components/${item.category}/${item.name}`)
+                    setOpenSearchDialog(false);
+                    router.push(
+                      `/docs/components/${item.category}/${item.name}`
+                    );
                   }}
                   className="cursor-pointer"
                 >
@@ -379,8 +406,8 @@ export function DocsLayoutClient({
             <CommandGroup heading="Installation Guides">
               <CommandItem
                 onSelect={() => {
-                  setOpenSearchDialog(false)
-                  router.push("/docs/installation/nextjs")
+                  setOpenSearchDialog(false);
+                  router.push('/docs/installation/nextjs');
                 }}
                 className="cursor-pointer"
               >
@@ -388,8 +415,8 @@ export function DocsLayoutClient({
               </CommandItem>
               <CommandItem
                 onSelect={() => {
-                  setOpenSearchDialog(false)
-                  router.push("/docs/installation/tailwindcss")
+                  setOpenSearchDialog(false);
+                  router.push('/docs/installation/tailwindcss');
                 }}
                 className="cursor-pointer"
               >
@@ -397,8 +424,8 @@ export function DocsLayoutClient({
               </CommandItem>
               <CommandItem
                 onSelect={() => {
-                  setOpenSearchDialog(false)
-                  router.push("/docs/installation/utilities")
+                  setOpenSearchDialog(false);
+                  router.push('/docs/installation/utilities');
                 }}
                 className="cursor-pointer"
               >
@@ -406,8 +433,8 @@ export function DocsLayoutClient({
               </CommandItem>
               <CommandItem
                 onSelect={() => {
-                  setOpenSearchDialog(false)
-                  router.push("/docs/installation/cli")
+                  setOpenSearchDialog(false);
+                  router.push('/docs/installation/cli');
                 }}
                 className="cursor-pointer"
               >
@@ -418,5 +445,5 @@ export function DocsLayoutClient({
         </Command>
       </CommandDialog>
     </SidebarProvider>
-  )
+  );
 }

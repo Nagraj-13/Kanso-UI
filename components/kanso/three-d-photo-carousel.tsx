@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 import {
   AnimatePresence,
   motion,
@@ -8,72 +8,81 @@ import {
   useMotionValue,
   useTransform,
   MotionValue,
-} from "framer-motion"
-import { cn } from "@/lib/utils"
+} from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 // Isomorphic Layout Effect
 const useIsomorphicLayoutEffect =
-  typeof window !== "undefined" ? React.useLayoutEffect : React.useEffect
+  typeof window !== 'undefined' ? React.useLayoutEffect : React.useEffect;
 
 // Media Query Hook for responsive design
 function useMediaQuery(query: string, defaultValue = false): boolean {
-  const [matches, setMatches] = React.useState(defaultValue)
+  const [matches, setMatches] = React.useState(defaultValue);
 
   useIsomorphicLayoutEffect(() => {
-    const media = window.matchMedia(query)
-    setMatches(media.matches)
+    const media = window.matchMedia(query);
+    setMatches(media.matches);
 
-    const listener = () => setMatches(media.matches)
-    media.addEventListener("change", listener)
-    return () => media.removeEventListener("change", listener)
-  }, [query])
+    const listener = () => setMatches(media.matches);
+    media.addEventListener('change', listener);
+    return () => media.removeEventListener('change', listener);
+  }, [query]);
 
-  return matches
+  return matches;
 }
 
-export interface ThreeDPhotoCarouselProps extends Omit<React.HTMLAttributes<HTMLDivElement>, "onDrag" | "onDragStart" | "onDragEnd" | "onAnimationStart" | "onAnimationEnd" | "onAnimationIteration" | "onTransitionEnd"> {
+export interface ThreeDPhotoCarouselProps extends Omit<
+  React.HTMLAttributes<HTMLDivElement>,
+  | 'onDrag'
+  | 'onDragStart'
+  | 'onDragEnd'
+  | 'onAnimationStart'
+  | 'onAnimationEnd'
+  | 'onAnimationIteration'
+  | 'onTransitionEnd'
+> {
   /** Array of image URLs. If omitted, uses curated aesthetic anime/cyberpunk images. */
-  images?: string[]
+  images?: string[];
   /** Cylinder width multiplier scale factor (default: 1.0). Controls column distance from center. */
-  spacing?: number
+  spacing?: number;
   /** Border radius of the cards (default: "12px"). Supports any CSS unit (px, rem, %). */
-  borderRadius?: string
+  borderRadius?: string;
   /** Cylinder width at full desktop viewport (default: 1800) */
-  cylinderWidth?: number
+  cylinderWidth?: number;
   /** Height of the carousel viewport (default: "500px") */
-  height?: string | number
+  height?: string | number;
   /** Auto rotation speed (degrees per frame, e.g. 0.05). Use 0 to disable (default: 0). */
-  autoRotationSpeed?: number
+  autoRotationSpeed?: number;
   /** Hide the overlay caption UI in the enlarged modal (default: false) */
-  hideOverlayUI?: boolean
+  hideOverlayUI?: boolean;
 }
 
 const DEFAULT_AESTHETIC_IMAGES = [
-  "https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&q=80&w=600&h=800", // Cinematic anime cyberpunk
-  "https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&q=80&w=600&h=800", // Cozy art room scene
-  "https://images.unsplash.com/photo-1541562232579-512a21360020?auto=format&fit=crop&q=80&w=600&h=800", // Japan street shrine vibes
-  "https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&q=80&w=600&h=800", // Tokyo neon cityscape
-  "https://images.unsplash.com/photo-1528164344705-47542687000d?auto=format&fit=crop&q=80&w=600&h=800", // Japan Torii gate night
-  "https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=600&h=800", // Misty castle fantasy landscape
-  "https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&q=80&w=600&h=800", // Retro vaporwave game room
-  "https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=600&h=800", // Vaporwave art illustration
-  "https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&q=80&w=600&h=800", // Cozy anime library layout
-  "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=600&h=800", // Cyberpunk neon alleyway
-  "https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=600&h=800", // Starry galaxy space sky
-  "https://images.unsplash.com/photo-1580477667995-2b94f01c9516?auto=format&fit=crop&q=80&w=600&h=800", // Cherry blossom illustration
-]
+  'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?auto=format&fit=crop&q=80&w=600&h=800', // Cinematic anime cyberpunk
+  'https://images.unsplash.com/photo-1578632767115-351597cf2477?auto=format&fit=crop&q=80&w=600&h=800', // Cozy art room scene
+  'https://images.unsplash.com/photo-1541562232579-512a21360020?auto=format&fit=crop&q=80&w=600&h=800', // Japan street shrine vibes
+  'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&q=80&w=600&h=800', // Tokyo neon cityscape
+  'https://images.unsplash.com/photo-1528164344705-47542687000d?auto=format&fit=crop&q=80&w=600&h=800', // Japan Torii gate night
+  'https://images.unsplash.com/photo-1518709268805-4e9042af9f23?auto=format&fit=crop&q=80&w=600&h=800', // Misty castle fantasy landscape
+  'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?auto=format&fit=crop&q=80&w=600&h=800', // Retro vaporwave game room
+  'https://images.unsplash.com/photo-1579783902614-a3fb3927b6a5?auto=format&fit=crop&q=80&w=600&h=800', // Vaporwave art illustration
+  'https://images.unsplash.com/photo-1516979187457-637abb4f9353?auto=format&fit=crop&q=80&w=600&h=800', // Cozy anime library layout
+  'https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&q=80&w=600&h=800', // Cyberpunk neon alleyway
+  'https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=600&h=800', // Starry galaxy space sky
+  'https://images.unsplash.com/photo-1580477667995-2b94f01c9516?auto=format&fit=crop&q=80&w=600&h=800', // Cherry blossom illustration
+];
 
 const transition = {
   duration: 0.15,
   ease: [0.32, 0.72, 0, 1] as const,
-}
+};
 
 const transitionOverlay = {
   duration: 0.5,
   ease: [0.32, 0.72, 0, 1] as const,
-}
+};
 
-type CarouselControls = ReturnType<typeof useAnimation>
+type CarouselControls = ReturnType<typeof useAnimation>;
 
 const Carousel = React.memo(
   ({
@@ -87,90 +96,92 @@ const Carousel = React.memo(
     autoRotationSpeed,
     rotation,
   }: {
-    handleClick: (imgUrl: string, index: number) => void
-    controls: CarouselControls
-    cards: string[]
-    isCarouselActive: boolean
-    spacing: number
-    borderRadius: string
-    cylinderWidthDesktop: number
-    autoRotationSpeed: number
-    rotation: MotionValue<number>
+    handleClick: (imgUrl: string, index: number) => void;
+    controls: CarouselControls;
+    cards: string[];
+    isCarouselActive: boolean;
+    spacing: number;
+    borderRadius: string;
+    cylinderWidthDesktop: number;
+    autoRotationSpeed: number;
+    rotation: MotionValue<number>;
   }) => {
-    const isScreenSizeSm = useMediaQuery("(max-width: 640px)")
-    const cylinderWidth = (isScreenSizeSm ? cylinderWidthDesktop * 0.6 : cylinderWidthDesktop)
-    const faceCount = cards.length
-    const faceWidth = cylinderWidth / faceCount
-    const radius = (cylinderWidth / (2 * Math.PI)) * spacing
-    
-    const isDragging = React.useRef(false)
+    const isScreenSizeSm = useMediaQuery('(max-width: 640px)');
+    const cylinderWidth = isScreenSizeSm
+      ? cylinderWidthDesktop * 0.6
+      : cylinderWidthDesktop;
+    const faceCount = cards.length;
+    const faceWidth = cylinderWidth / faceCount;
+    const radius = (cylinderWidth / (2 * Math.PI)) * spacing;
+
+    const isDragging = React.useRef(false);
 
     const transform = useTransform(
       rotation,
       (value: number) => `rotate3d(0, 1, 0, ${value}deg)`
-    )
+    );
 
     // Auto-rotation engine
     React.useEffect(() => {
-      if (autoRotationSpeed === 0 || !isCarouselActive) return
+      if (autoRotationSpeed === 0 || !isCarouselActive) return;
 
-      let lastTime = performance.now()
-      let frameId: number
+      let lastTime = performance.now();
+      let frameId: number;
 
       const tick = (time: number) => {
-        const delta = time - lastTime
-        lastTime = time
+        const delta = time - lastTime;
+        lastTime = time;
 
         if (!isDragging.current) {
           // Normalize rotation based on delta time to keep it smooth across devices
-          rotation.set(rotation.get() - autoRotationSpeed * (delta * 0.06))
+          rotation.set(rotation.get() - autoRotationSpeed * (delta * 0.06));
         }
 
-        frameId = requestAnimationFrame(tick)
-      }
+        frameId = requestAnimationFrame(tick);
+      };
 
-      frameId = requestAnimationFrame(tick)
-      return () => cancelAnimationFrame(frameId)
-    }, [autoRotationSpeed, isCarouselActive, rotation])
+      frameId = requestAnimationFrame(tick);
+      return () => cancelAnimationFrame(frameId);
+    }, [autoRotationSpeed, isCarouselActive, rotation]);
 
     return (
       <div
         className="flex h-full items-center justify-center bg-transparent"
         style={{
-          perspective: "1000px",
-          transformStyle: "preserve-3d",
-          willChange: "transform",
+          perspective: '1000px',
+          transformStyle: 'preserve-3d',
+          willChange: 'transform',
         }}
       >
         <motion.div
-          drag={isCarouselActive ? "x" : false}
+          drag={isCarouselActive ? 'x' : false}
           className="relative flex h-full origin-center cursor-grab justify-center active:cursor-grabbing shrink-0"
           style={{
             transform,
             rotateY: rotation,
             width: cylinderWidth,
-            transformStyle: "preserve-3d",
+            transformStyle: 'preserve-3d',
           }}
           onDragStart={() => {
-            isDragging.current = true
+            isDragging.current = true;
           }}
           onDrag={(_, info) => {
             if (isCarouselActive) {
-              rotation.set(rotation.get() + info.offset.x * 0.05)
+              rotation.set(rotation.get() + info.offset.x * 0.05);
             }
           }}
           onDragEnd={(_, info) => {
-            isDragging.current = false
+            isDragging.current = false;
             if (isCarouselActive) {
               controls.start({
                 rotateY: rotation.get() + info.velocity.x * 0.05,
                 transition: {
-                  type: "spring" as const,
+                  type: 'spring' as const,
                   stiffness: 100,
                   damping: 30,
                   mass: 0.1,
                 },
-              })
+              });
             }
           }}
           animate={controls}
@@ -194,76 +205,78 @@ const Carousel = React.memo(
                 layoutId={`img-${imgUrl}`}
                 className="pointer-events-none w-full object-cover aspect-square shadow-lg select-none"
                 style={{ borderRadius }}
-                initial={{ filter: "blur(4px)" }}
+                initial={{ filter: 'blur(4px)' }}
                 layout="position"
-                animate={{ filter: "blur(0px)" }}
+                animate={{ filter: 'blur(0px)' }}
                 transition={transition}
               />
             </motion.div>
           ))}
         </motion.div>
       </div>
-    )
+    );
   }
-)
+);
 
-Carousel.displayName = "Carousel"
+Carousel.displayName = 'Carousel';
 
 export function ThreeDPhotoCarousel({
   images = DEFAULT_AESTHETIC_IMAGES,
   spacing = 1.0,
-  borderRadius = "12px",
+  borderRadius = '12px',
   cylinderWidth = 1800,
-  height = "500px",
+  height = '500px',
   autoRotationSpeed = 0,
   hideOverlayUI = false,
   className,
   ...props
 }: ThreeDPhotoCarouselProps) {
-  const [activeImg, setActiveImg] = React.useState<string | null>(null)
-  const [isCarouselActive, setIsCarouselActive] = React.useState(true)
-  const controls = useAnimation()
-  const rotation = useMotionValue(0)
+  const [activeImg, setActiveImg] = React.useState<string | null>(null);
+  const [isCarouselActive, setIsCarouselActive] = React.useState(true);
+  const controls = useAnimation();
+  const rotation = useMotionValue(0);
 
-  const containerRef = React.useRef<HTMLDivElement>(null)
+  const containerRef = React.useRef<HTMLDivElement>(null);
 
   const handleClick = (imgUrl: string) => {
-    setActiveImg(imgUrl)
-    setIsCarouselActive(false)
-    controls.stop()
-  }
+    setActiveImg(imgUrl);
+    setIsCarouselActive(false);
+    controls.stop();
+  };
 
   const handleClose = React.useCallback(() => {
-    setActiveImg(null)
-    setIsCarouselActive(true)
-  }, [])
+    setActiveImg(null);
+    setIsCarouselActive(true);
+  }, []);
 
   // Keyboard navigation support
   React.useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (activeImg) {
-        if (e.key === "Escape") {
-          handleClose()
+        if (e.key === 'Escape') {
+          handleClose();
         }
       } else {
-        const container = containerRef.current
-        const isActive = document.activeElement === container || container?.contains(document.activeElement)
-        
+        const container = containerRef.current;
+        const isActive =
+          document.activeElement === container ||
+          container?.contains(document.activeElement);
+
         if (isActive) {
-          if (e.key === "ArrowLeft") {
-            e.preventDefault()
-            rotation.set(rotation.get() + 15)
-          } else if (e.key === "ArrowRight") {
-            e.preventDefault()
-            rotation.set(rotation.get() - 15)
+          if (e.key === 'ArrowLeft') {
+            e.preventDefault();
+            rotation.set(rotation.get() + 15);
+          } else if (e.key === 'ArrowRight') {
+            e.preventDefault();
+            rotation.set(rotation.get() - 15);
           }
         }
       }
-    }
+    };
 
-    window.addEventListener("keydown", handleKeyDown)
-    return () => window.removeEventListener("keydown", handleKeyDown)
-  }, [activeImg, handleClose, rotation])
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [activeImg, handleClose, rotation]);
 
   return (
     <motion.div
@@ -271,7 +284,7 @@ export function ThreeDPhotoCarousel({
       tabIndex={0}
       layout
       className={cn(
-        "relative focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-400 dark:focus-visible:ring-zinc-700 rounded-2xl select-none bg-zinc-950/5 dark:bg-zinc-950/40",
+        'relative focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-zinc-400 dark:focus-visible:ring-zinc-700 rounded-2xl select-none bg-zinc-950/5 dark:bg-zinc-950/40',
         className
       )}
       style={{ height, ...props.style }}
@@ -287,7 +300,7 @@ export function ThreeDPhotoCarousel({
             layout="position"
             onClick={handleClose}
             className="fixed inset-0 bg-black/60 backdrop-blur-xs flex flex-col items-center justify-center z-50 p-4 md:p-16 lg:p-24"
-            style={{ willChange: "opacity" }}
+            style={{ willChange: 'opacity' }}
             transition={transitionOverlay}
           >
             <div className="relative max-w-full max-h-full flex items-center justify-center p-2">
@@ -303,7 +316,7 @@ export function ThreeDPhotoCarousel({
                   ease: [0.25, 0.1, 0.25, 1],
                 }}
                 style={{
-                  willChange: "transform",
+                  willChange: 'transform',
                 }}
               />
               {!hideOverlayUI && (
@@ -316,9 +329,7 @@ export function ThreeDPhotoCarousel({
         )}
       </AnimatePresence>
 
-      <div
-        className="relative w-full h-full overflow-hidden"
-      >
+      <div className="relative w-full h-full overflow-hidden">
         <Carousel
           handleClick={handleClick}
           controls={controls}
@@ -335,5 +346,5 @@ export function ThreeDPhotoCarousel({
         <div className="absolute bottom-0 left-0 right-0 h-16 pointer-events-none bg-gradient-to-t from-zinc-100/10 via-zinc-100/5 to-transparent dark:from-zinc-950/20 dark:via-zinc-950/5" />
       </div>
     </motion.div>
-  )
+  );
 }

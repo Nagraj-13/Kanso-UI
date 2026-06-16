@@ -49,11 +49,11 @@ Open [http://localhost:3000/docs](http://localhost:3000/docs) to browse componen
 
 ### Kanso Components (`components/kanso/`)
 
-| Component | Category | Description |
-|-----------|----------|-------------|
-| **Magnetic Button** | Buttons | Button that magnetically follows cursor on hover |
-| **Shimmer Border** | Effects | Container with animated shimmer border effect |
-| **Text Reveal** | Typography | Text that reveals character-by-character on scroll |
+| Component           | Category   | Description                                        |
+| ------------------- | ---------- | -------------------------------------------------- |
+| **Magnetic Button** | Buttons    | Button that magnetically follows cursor on hover   |
+| **Shimmer Border**  | Effects    | Container with animated shimmer border effect      |
+| **Text Reveal**     | Typography | Text that reveals character-by-character on scroll |
 
 ### Primitive Components (`components/ui/`)
 
@@ -97,13 +97,13 @@ kanso-ui/
 
 ## 🛠 Development
 
-| Command | Description |
-|---------|-------------|
-| `pnpm install` | Install dependencies |
-| `pnpm dev` | Start dev server |
-| `pnpm build` | Production build |
-| `pnpm lint` | Run ESLint |
-| `pnpm tsc --noEmit` | Type check |
+| Command             | Description          |
+| ------------------- | -------------------- |
+| `pnpm install`      | Install dependencies |
+| `pnpm dev`          | Start dev server     |
+| `pnpm build`        | Production build     |
+| `pnpm lint`         | Run ESLint           |
+| `pnpm tsc --noEmit` | Type check           |
 
 ---
 

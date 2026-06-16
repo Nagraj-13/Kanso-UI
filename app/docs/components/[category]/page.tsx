@@ -1,94 +1,119 @@
 //app/docs/components/[category]/page.tsx
-import * as React from "react"
-import { notFound } from "next/navigation"
-import Link from "next/link"
-import { getComponentsByCategory, getCategories, type RegistryComponent } from "@/lib/registry"
-import { CategoryShowcase } from "@/components/docs/category-showcase"
+import * as React from 'react';
+import { notFound } from 'next/navigation';
+import Link from 'next/link';
+import {
+  getComponentsByCategory,
+  getCategories,
+  type RegistryComponent,
+} from '@/lib/registry';
+import { CategoryShowcase } from '@/components/docs/category-showcase';
 
 interface PageProps {
-  params: Promise<{ category: string }>
+  params: Promise<{ category: string }>;
 }
 
 /** Map categories to labels and descriptions */
 const categoryMeta: Record<string, { label: string; description: string }> = {
   buttons: {
-    label: "Buttons",
-    description: "Attract and engage users with minimalist, interactive button animations.",
+    label: 'Buttons',
+    description:
+      'Attract and engage users with minimalist, interactive button animations.',
   },
   effects: {
-    label: "Effects",
-    description: "Visual enhancements and GPU-accelerated motion decorations to emphasize elements.",
+    label: 'Effects',
+    description:
+      'Visual enhancements and GPU-accelerated motion decorations to emphasize elements.',
   },
   cards: {
-    label: "Cards",
-    description: "Minimalist and interactive cards featuring 3D tilt, spotlight, and border glow effects.",
+    label: 'Cards',
+    description:
+      'Minimalist and interactive cards featuring 3D tilt, spotlight, and border glow effects.',
   },
   typography: {
-    label: "Typography",
-    description: "Type layouts and scroll-driven typography reveals designed for reading focus.",
+    label: 'Typography',
+    description:
+      'Type layouts and scroll-driven typography reveals designed for reading focus.',
   },
   layout: {
-    label: "Layout",
-    description: "Clean, responsive grid alignments and page layout primitives.",
+    label: 'Layout',
+    description:
+      'Clean, responsive grid alignments and page layout primitives.',
   },
   feedback: {
-    label: "Feedback",
-    description: "Subtle indicators and dialog templates to report status actions.",
+    label: 'Feedback',
+    description:
+      'Subtle indicators and dialog templates to report status actions.',
   },
-  "data-display": {
-    label: "Data Display",
-    description: "Minimalist tables, lists, and visual card alignments.",
+  'data-display': {
+    label: 'Data Display',
+    description: 'Minimalist tables, lists, and visual card alignments.',
   },
-}
+};
 
 /**
  * Generate static params for categories in the registry.
  */
 export async function generateStaticParams() {
-  const categories = getCategories()
-  return categories.map((cat) => ({ category: cat }))
+  const categories = getCategories();
+  return categories.map((cat) => ({ category: cat }));
 }
 
 /**
  * Generate metadata dynamically.
  */
 export async function generateMetadata({ params }: PageProps) {
-  const { category } = await params
+  const { category } = await params;
   const meta = categoryMeta[category] ?? {
-    label: category.charAt(0).toUpperCase() + category.slice(1).replace("-", " "),
+    label:
+      category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' '),
     description: `Browse ${category} components.`,
-  }
+  };
   return {
     title: `${meta.label} — Kanso UI`,
     description: meta.description,
-  }
+  };
 }
 
 export default async function CategoryPage({ params }: PageProps) {
-  const { category } = await params
-  const components = getComponentsByCategory(category as RegistryComponent["category"])
+  const { category } = await params;
+  const components = getComponentsByCategory(
+    category as RegistryComponent['category']
+  );
 
   if (components.length === 0) {
-    notFound()
+    notFound();
   }
 
   const meta = categoryMeta[category] ?? {
-    label: category.charAt(0).toUpperCase() + category.slice(1).replace("-", " "),
+    label:
+      category.charAt(0).toUpperCase() + category.slice(1).replace('-', ' '),
     description: `Browse ${category} components.`,
-  }
+  };
 
-  const categories = getCategories()
-  const currentIndex = categories.indexOf(category as RegistryComponent["category"])
-  const prevCategory = currentIndex > 0 ? categories[currentIndex - 1] : null
-  const nextCategory = currentIndex < categories.length - 1 ? categories[currentIndex + 1] : null
+  const categories = getCategories();
+  const currentIndex = categories.indexOf(
+    category as RegistryComponent['category']
+  );
+  const prevCategory = currentIndex > 0 ? categories[currentIndex - 1] : null;
+  const nextCategory =
+    currentIndex < categories.length - 1 ? categories[currentIndex + 1] : null;
 
-  const prevMeta = prevCategory ? (categoryMeta[prevCategory] ?? {
-    label: prevCategory.charAt(0).toUpperCase() + prevCategory.slice(1).replace("-", " "),
-  }) : null
+  const prevMeta = prevCategory
+    ? (categoryMeta[prevCategory] ?? {
+        label:
+          prevCategory.charAt(0).toUpperCase() +
+          prevCategory.slice(1).replace('-', ' '),
+      })
+    : null;
 
-  const nextMeta = nextCategory ? (categoryMeta[nextCategory] ?? {
-    label: nextCategory.charAt(0).toUpperCase() + nextCategory.slice(1).replace("-", " "),
-  }) : null
+  const nextMeta = nextCategory
+    ? (categoryMeta[nextCategory] ?? {
+        label:
+          nextCategory.charAt(0).toUpperCase() +
+          nextCategory.slice(1).replace('-', ' '),
+      })
+    : null;
 
   return (
     <div className="w-full">
@@ -140,14 +165,5 @@ export default async function CategoryPage({ params }: PageProps) {
         )}
       </div>
     </div>
-  )
+  );
 }
-
-
-
-
-
-
-
-
-

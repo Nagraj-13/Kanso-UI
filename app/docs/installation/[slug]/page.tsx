@@ -1,48 +1,52 @@
-import * as React from "react"
-import { notFound } from "next/navigation"
-import { CodeBlock, TerminalBlock } from "@/components/docs/code-block"
+import * as React from 'react';
+import { notFound } from 'next/navigation';
+import { CodeBlock, TerminalBlock } from '@/components/docs/code-block';
 
 interface InstallationPageProps {
-  params: Promise<{ slug: string }>
+  params: Promise<{ slug: string }>;
 }
 
 const INSTALLATION_GUIDES: Record<
   string,
   {
-    title: string
-    description: string
-    category: string
+    title: string;
+    description: string;
+    category: string;
     steps: {
-      number: number
-      title: string
-      description: React.ReactNode
+      number: number;
+      title: string;
+      description: React.ReactNode;
       code?: {
-        content: string
-        lang: string
-        filename: string
-      }
-      command?: string
-    }[]
+        content: string;
+        lang: string;
+        filename: string;
+      };
+      command?: string;
+    }[];
   }
 > = {
   nextjs: {
-    title: "Install Next.js",
-    description: "Create a new Next.js project using the official create-next-app starter.",
-    category: "Installation",
+    title: 'Install Next.js',
+    description:
+      'Create a new Next.js project using the official create-next-app starter.',
+    category: 'Installation',
     steps: [
       {
         number: 1,
-        title: "Create a new Next.js project",
-        description: "Run create-next-app to scaffold a fresh project with TypeScript and Tailwind CSS.",
-        command: "npx create-next-app@latest my-app --typescript --tailwind --app",
+        title: 'Create a new Next.js project',
+        description:
+          'Run create-next-app to scaffold a fresh project with TypeScript and Tailwind CSS.',
+        command:
+          'npx create-next-app@latest my-app --typescript --tailwind --app',
       },
       {
         number: 2,
-        title: "Configure TypeScript options",
-        description: "Verify that your tsconfig.json has paths mapped correctly so you can use the @/ prefix.",
+        title: 'Configure TypeScript options',
+        description:
+          'Verify that your tsconfig.json has paths mapped correctly so you can use the @/ prefix.',
         code: {
-          filename: "tsconfig.json",
-          lang: "json",
+          filename: 'tsconfig.json',
+          lang: 'json',
           content: `{
   "compilerOptions": {
     "paths": {
@@ -54,29 +58,33 @@ const INSTALLATION_GUIDES: Record<
       },
       {
         number: 3,
-        title: "Verify structural organization",
-        description: "Ensure your project has components/ and lib/ directories configured inside the root or src/ directory.",
+        title: 'Verify structural organization',
+        description:
+          'Ensure your project has components/ and lib/ directories configured inside the root or src/ directory.',
       },
     ],
   },
   tailwindcss: {
-    title: "Install Tailwind CSS",
-    description: "Install and configure Tailwind CSS v4 for utility-first styling in Next.js.",
-    category: "Installation",
+    title: 'Install Tailwind CSS',
+    description:
+      'Install and configure Tailwind CSS v4 for utility-first styling in Next.js.',
+    category: 'Installation',
     steps: [
       {
         number: 1,
-        title: "Install Tailwind CSS v4",
-        description: "Install tailwindcss and the official PostCSS plugin for compilation.",
-        command: "pnpm add tailwindcss @tailwindcss/postcss postcss",
+        title: 'Install Tailwind CSS v4',
+        description:
+          'Install tailwindcss and the official PostCSS plugin for compilation.',
+        command: 'pnpm add tailwindcss @tailwindcss/postcss postcss',
       },
       {
         number: 2,
-        title: "Configure PostCSS",
-        description: "Create a postcss.config.js file in your project root to enable Tailwind compilation.",
+        title: 'Configure PostCSS',
+        description:
+          'Create a postcss.config.js file in your project root to enable Tailwind compilation.',
         code: {
-          filename: "postcss.config.js",
-          lang: "javascript",
+          filename: 'postcss.config.js',
+          lang: 'javascript',
           content: `module.exports = {
   plugins: {
     '@tailwindcss/postcss': {},
@@ -86,34 +94,38 @@ const INSTALLATION_GUIDES: Record<
       },
       {
         number: 3,
-        title: "Import Tailwind in globals.css",
-        description: "Add the @import directive at the very top of your global CSS file to import Tailwind utilities and directives.",
+        title: 'Import Tailwind in globals.css',
+        description:
+          'Add the @import directive at the very top of your global CSS file to import Tailwind utilities and directives.',
         code: {
-          filename: "app/globals.css",
-          lang: "css",
+          filename: 'app/globals.css',
+          lang: 'css',
           content: `@import "tailwindcss";`,
         },
       },
     ],
   },
   utilities: {
-    title: "Add utilities",
-    description: "Set up the standard class merging helper (cn) using clsx and tailwind-merge.",
-    category: "Installation",
+    title: 'Add utilities',
+    description:
+      'Set up the standard class merging helper (cn) using clsx and tailwind-merge.',
+    category: 'Installation',
     steps: [
       {
         number: 1,
-        title: "Install class merging dependencies",
-        description: "Add clsx for conditional class resolution and tailwind-merge to clean up conflicting utility overrides.",
-        command: "pnpm add clsx tailwind-merge",
+        title: 'Install class merging dependencies',
+        description:
+          'Add clsx for conditional class resolution and tailwind-merge to clean up conflicting utility overrides.',
+        command: 'pnpm add clsx tailwind-merge',
       },
       {
         number: 2,
-        title: "Create utils helper",
-        description: "Create a lib/utils.ts file and paste the helper function code below.",
+        title: 'Create utils helper',
+        description:
+          'Create a lib/utils.ts file and paste the helper function code below.',
         code: {
-          filename: "lib/utils.ts",
-          lang: "typescript",
+          filename: 'lib/utils.ts',
+          lang: 'typescript',
           content: `import { clsx, type ClassValue } from "clsx"
 import { twMerge } from "tailwind-merge"
 
@@ -125,50 +137,55 @@ export function cn(...inputs: ClassValue[]) {
     ],
   },
   cli: {
-    title: "CLI",
-    description: "Add Kanso UI components directly into your codebase using our interactive copy-paste CLI.",
-    category: "Installation",
+    title: 'CLI',
+    description:
+      'Add Kanso UI components directly into your codebase using our interactive copy-paste CLI.',
+    category: 'Installation',
     steps: [
       {
         number: 1,
-        title: "Add a component using the CLI",
-        description: "Run the CLI command to fetch a component source code and automatically install dependencies.",
-        command: "npx kanso-ui add magnetic-button",
+        title: 'Add a component using the CLI',
+        description:
+          'Run the CLI command to fetch a component source code and automatically install dependencies.',
+        command: 'npx kanso-ui add magnetic-button',
       },
       {
         number: 2,
-        title: "Verify component placement",
-        description: "Confirm that components/kanso/magnetic-button.tsx has been created with all the TypeScript source code.",
+        title: 'Verify component placement',
+        description:
+          'Confirm that components/kanso/magnetic-button.tsx has been created with all the TypeScript source code.',
       },
     ],
   },
-}
+};
 
 export async function generateStaticParams() {
   return [
-    { slug: "nextjs" },
-    { slug: "tailwindcss" },
-    { slug: "utilities" },
-    { slug: "cli" },
-  ]
+    { slug: 'nextjs' },
+    { slug: 'tailwindcss' },
+    { slug: 'utilities' },
+    { slug: 'cli' },
+  ];
 }
 
 export async function generateMetadata({ params }: InstallationPageProps) {
-  const { slug } = await params
-  const guide = INSTALLATION_GUIDES[slug]
-  if (!guide) return {}
+  const { slug } = await params;
+  const guide = INSTALLATION_GUIDES[slug];
+  if (!guide) return {};
   return {
     title: `${guide.title} — Kanso UI`,
     description: guide.description,
-  }
+  };
 }
 
-export default async function InstallationPage({ params }: InstallationPageProps) {
-  const { slug } = await params
-  const guide = INSTALLATION_GUIDES[slug]
+export default async function InstallationPage({
+  params,
+}: InstallationPageProps) {
+  const { slug } = await params;
+  const guide = INSTALLATION_GUIDES[slug];
 
   if (!guide) {
-    notFound()
+    notFound();
   }
 
   return (
@@ -218,9 +235,9 @@ export default async function InstallationPage({ params }: InstallationPageProps
                   rawCode={step.code.content}
                   filename={step.code.filename}
                   html={`<pre class="shiki shiki-themes github-light github-dark" style="background-color:#fff;color:#24292e" tabindex="0"><code>${step.code.content
-                    .replace(/&/g, "&amp;")
-                    .replace(/</g, "&lt;")
-                    .replace(/>/g, "&gt;")}</code></pre>`}
+                    .replace(/&/g, '&amp;')
+                    .replace(/</g, '&lt;')
+                    .replace(/>/g, '&gt;')}</code></pre>`}
                 />
               </div>
             )}
@@ -228,5 +245,5 @@ export default async function InstallationPage({ params }: InstallationPageProps
         ))}
       </div>
     </div>
-  )
+  );
 }

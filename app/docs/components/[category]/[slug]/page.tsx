@@ -1,14 +1,14 @@
-import * as React from "react"
-import { notFound } from "next/navigation"
-import * as fs from "fs/promises"
-import * as path from "path"
-import { createHighlighter } from "shiki"
-import { registry, getComponent } from "@/lib/registry"
-import { ComponentDemo } from "@/components/docs/component-demos"
-import { CodeBlock, TerminalBlock } from "@/components/docs/code-block"
-import { TableOfContents } from "@/components/docs/table-of-contents"
-import Link from "next/link"
-import { ArrowLeftIcon } from "lucide-react"
+import * as React from 'react';
+import { notFound } from 'next/navigation';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import { createHighlighter } from 'shiki';
+import { registry, getComponent } from '@/lib/registry';
+import { ComponentDemo } from '@/components/docs/component-demos';
+import { CodeBlock, TerminalBlock } from '@/components/docs/code-block';
+import { TableOfContents } from '@/components/docs/table-of-contents';
+import Link from 'next/link';
+import { ArrowLeftIcon } from 'lucide-react';
 import {
   Table,
   TableHeader,
@@ -16,11 +16,11 @@ import {
   TableRow,
   TableHead,
   TableCell,
-} from "@/components/ui/table"
-import { ScrollArea } from "@/components/ui/scroll-area"
+} from '@/components/ui/table';
+import { ScrollArea } from '@/components/ui/scroll-area';
 
 interface PageProps {
-  params: Promise<{ category: string; slug: string }>
+  params: Promise<{ category: string; slug: string }>;
 }
 
 /**
@@ -31,20 +31,20 @@ export async function generateStaticParams() {
   return registry.map((c) => ({
     category: c.category,
     slug: c.name,
-  }))
+  }));
 }
 
 /**
  * Generate metadata per component page.
  */
 export async function generateMetadata({ params }: PageProps) {
-  const { slug } = await params
-  const component = getComponent(slug)
-  if (!component) return {}
+  const { slug } = await params;
+  const component = getComponent(slug);
+  if (!component) return {};
   return {
     title: `${component.title} — Kanso UI`,
     description: component.description,
-  }
+  };
 }
 
 /**
@@ -58,67 +58,67 @@ export async function generateMetadata({ params }: PageProps) {
  * - Props table
  */
 export default async function ComponentPage({ params }: PageProps) {
-  const { category, slug } = await params
-  const component = getComponent(slug)
+  const { category, slug } = await params;
+  const component = getComponent(slug);
 
   // Validate the component exists and its category matches the route path
   if (!component || component.category !== category) {
-    notFound()
+    notFound();
   }
 
-  const currentIndex = registry.findIndex((c) => c.name === slug)
-  const prevComponent = currentIndex > 0 ? registry[currentIndex - 1] : null
-  const nextComponent = currentIndex < registry.length - 1 ? registry[currentIndex + 1] : null
+  const currentIndex = registry.findIndex((c) => c.name === slug);
+  const prevComponent = currentIndex > 0 ? registry[currentIndex - 1] : null;
+  const nextComponent =
+    currentIndex < registry.length - 1 ? registry[currentIndex + 1] : null;
 
   // Read the raw source code
-  const filePath = path.join(process.cwd(), component.filePath)
-  let rawSource = ""
+  const filePath = path.join(process.cwd(), component.filePath);
+  let rawSource = '';
   try {
-    rawSource = await fs.readFile(filePath, "utf-8")
+    rawSource = await fs.readFile(filePath, 'utf-8');
   } catch {
-    rawSource = "// Source file not found"
+    rawSource = '// Source file not found';
   }
 
   // Highlight all code segments with Shiki in one go
   const highlighter = await createHighlighter({
-    themes: ["github-light", "github-dark"],
-    langs: ["tsx", "css"],
-  })
+    themes: ['github-light', 'github-dark'],
+    langs: ['tsx', 'css'],
+  });
 
   const highlightedHtml = highlighter.codeToHtml(rawSource, {
-    lang: "tsx",
+    lang: 'tsx',
     themes: {
-      light: "github-light",
-      dark: "github-dark",
+      light: 'github-light',
+      dark: 'github-dark',
     },
-  })
+  });
 
   const highlightedUsageHtml = component.usage
     ? highlighter.codeToHtml(component.usage, {
-        lang: "tsx",
+        lang: 'tsx',
         themes: {
-          light: "github-light",
-          dark: "github-dark",
+          light: 'github-light',
+          dark: 'github-dark',
         },
       })
-    : ""
+    : '';
 
   const highlightedCssHtml = component.cssCode
     ? highlighter.codeToHtml(component.cssCode, {
-        lang: "css",
+        lang: 'css',
         themes: {
-          light: "github-light",
-          dark: "github-dark",
+          light: 'github-light',
+          dark: 'github-dark',
         },
       })
-    : ""
+    : '';
 
-  highlighter.dispose()
+  highlighter.dispose();
 
   // Build install command
-  const depList = component.dependencies.length > 0
-    ? component.dependencies.join(" ")
-    : null
+  const depList =
+    component.dependencies.length > 0 ? component.dependencies.join(' ') : null;
 
   return (
     <div className="flex flex-col-reverse xl:flex-row gap-10 xl:gap-16 w-full items-start">
@@ -131,7 +131,9 @@ export default async function ComponentPage({ params }: PageProps) {
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100 transition-colors"
           >
             <ArrowLeftIcon className="size-3.5" />
-            Back to {category.charAt(0).toUpperCase() + category.slice(1).replace("-", " ")}
+            Back to{' '}
+            {category.charAt(0).toUpperCase() +
+              category.slice(1).replace('-', ' ')}
           </Link>
         </div>
 
@@ -176,7 +178,7 @@ export default async function ComponentPage({ params }: PageProps) {
               className="absolute inset-0 opacity-[0.03] dark:opacity-[0.05]"
               style={{
                 backgroundImage: `radial-gradient(circle, currentColor 1px, transparent 1px)`,
-                backgroundSize: "24px 24px",
+                backgroundSize: '24px 24px',
               }}
             />
             <div className="relative z-10 w-full flex justify-center">
@@ -197,7 +199,7 @@ export default async function ComponentPage({ params }: PageProps) {
             <CodeBlock
               html={highlightedUsageHtml}
               language="tsx"
-              rawCode={component.usage || ""}
+              rawCode={component.usage || ''}
               filename="example-usage.tsx"
             />
           </section>
@@ -224,7 +226,24 @@ export default async function ComponentPage({ params }: PageProps) {
                 </h3>
               </div>
               <p className="text-sm text-zinc-500 dark:text-zinc-400 ml-7 leading-relaxed">
-                Create a folder named <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">kanso</code> inside your project&apos;s <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">components</code> directory (i.e. <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">components/kanso/</code>). Copy the source code shown in the next section, and paste it into a file named <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">{component.filePath.split("/").pop()}</code> inside it.
+                Create a folder named{' '}
+                <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">
+                  kanso
+                </code>{' '}
+                inside your project&apos;s{' '}
+                <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">
+                  components
+                </code>{' '}
+                directory (i.e.{' '}
+                <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">
+                  components/kanso/
+                </code>
+                ). Copy the source code shown in the next section, and paste it
+                into a file named{' '}
+                <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">
+                  {component.filePath.split('/').pop()}
+                </code>{' '}
+                inside it.
               </p>
             </div>
 
@@ -250,14 +269,19 @@ export default async function ComponentPage({ params }: PageProps) {
               <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900/30">
                 <div className="flex items-center gap-2 mb-3">
                   <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-[10px] font-bold text-white dark:bg-zinc-200 dark:text-zinc-900">
-                    {depList ? "3" : "2"}
+                    {depList ? '3' : '2'}
                   </span>
                   <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                     Add global styling
                   </h3>
                 </div>
                 <p className="text-sm text-zinc-500 dark:text-zinc-400 ml-7 mb-3 leading-relaxed">
-                  Add the custom keyframe animations and styles to your global stylesheet (e.g. <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">app/globals.css</code>):
+                  Add the custom keyframe animations and styles to your global
+                  stylesheet (e.g.{' '}
+                  <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">
+                    app/globals.css
+                  </code>
+                  ):
                 </p>
                 <div className="ml-7">
                   <CodeBlock
@@ -278,7 +302,13 @@ export default async function ComponentPage({ params }: PageProps) {
               <div className="rounded-xl border border-zinc-200 bg-white p-5 dark:border-zinc-800 dark:bg-zinc-900/30">
                 <div className="flex items-center gap-2 mb-2.5">
                   <span className="flex size-5 shrink-0 items-center justify-center rounded-full bg-zinc-900 text-[10px] font-bold text-white dark:bg-zinc-200 dark:text-zinc-900">
-                    {component.cssCode ? (depList ? "4" : "3") : (depList ? "3" : "2")}
+                    {component.cssCode
+                      ? depList
+                        ? '4'
+                        : '3'
+                      : depList
+                        ? '3'
+                        : '2'}
                   </span>
                   <h3 className="text-sm font-medium text-zinc-900 dark:text-zinc-100">
                     Required helper files
@@ -289,8 +319,13 @@ export default async function ComponentPage({ params }: PageProps) {
                 </p>
                 <ul className="space-y-1.5 ml-7">
                   {component.internalDeps.map((dep) => (
-                    <li key={dep} className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400">
-                      <span className="text-zinc-300 dark:text-zinc-700">→</span>
+                    <li
+                      key={dep}
+                      className="flex items-center gap-2 text-sm text-zinc-500 dark:text-zinc-400"
+                    >
+                      <span className="text-zinc-300 dark:text-zinc-700">
+                        →
+                      </span>
                       <code className="rounded bg-zinc-100 px-1.5 py-0.5 text-xs font-mono dark:bg-zinc-800">
                         {dep}
                       </code>
@@ -306,7 +341,7 @@ export default async function ComponentPage({ params }: PageProps) {
         <section id="source-code" className="mb-12 scroll-mt-20">
           <h2 className="mb-4 flex items-center gap-2 text-sm font-semibold text-zinc-900 dark:text-zinc-100">
             <span className="flex size-5 items-center justify-center rounded bg-zinc-100 text-[10px] dark:bg-zinc-800">
-              {"<>"}
+              {'<>'}
             </span>
             Source Code
           </h2>
@@ -314,7 +349,7 @@ export default async function ComponentPage({ params }: PageProps) {
             html={highlightedHtml}
             language="tsx"
             rawCode={rawSource}
-            filename={component.filePath.split("/").pop()}
+            filename={component.filePath.split('/').pop()}
           />
         </section>
 
@@ -362,7 +397,9 @@ export default async function ComponentPage({ params }: PageProps) {
                               {prop.default}
                             </code>
                           ) : (
-                            <span className="text-zinc-300 dark:text-zinc-700">—</span>
+                            <span className="text-zinc-300 dark:text-zinc-700">
+                              —
+                            </span>
                           )}
                         </TableCell>
                         <TableCell className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
@@ -419,11 +456,11 @@ export default async function ComponentPage({ params }: PageProps) {
           )}
         </div>
       </div>
-      
+
       {/* Table of Contents (Right Sidebar) */}
       <aside className="hidden xl:block w-60 shrink-0 sticky top-20 self-start">
         <TableOfContents hasProps={component.props.length > 0} />
       </aside>
     </div>
-  )
+  );
 }

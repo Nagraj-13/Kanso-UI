@@ -1,15 +1,15 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import { cn } from "@/lib/utils"
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
 interface SpotlightCardProps extends React.HTMLAttributes<HTMLDivElement> {
   /** The spotlight hover color (e.g. "rgba(99, 102, 241, 0.15)"). Falls back to zinc theme default if omitted. */
-  spotlightColor?: string
+  spotlightColor?: string;
   /** The radius size of the spotlight gradient circle in pixels (default: 300) */
-  spotlightSize?: number
+  spotlightSize?: number;
   /** Content to render inside the card */
-  children: React.ReactNode
+  children: React.ReactNode;
 }
 
 /**
@@ -45,26 +45,32 @@ function SpotlightCard({
 }: SpotlightCardProps) {
   const handleMouseMove = React.useCallback(
     (e: React.MouseEvent<HTMLDivElement>) => {
-      const rect = e.currentTarget.getBoundingClientRect()
-      e.currentTarget.style.setProperty("--mouse-x", `${e.clientX - rect.left}px`)
-      e.currentTarget.style.setProperty("--mouse-y", `${e.clientY - rect.top}px`)
-      if (onMouseMove) onMouseMove(e)
+      const rect = e.currentTarget.getBoundingClientRect();
+      e.currentTarget.style.setProperty(
+        '--mouse-x',
+        `${e.clientX - rect.left}px`
+      );
+      e.currentTarget.style.setProperty(
+        '--mouse-y',
+        `${e.clientY - rect.top}px`
+      );
+      if (onMouseMove) onMouseMove(e);
     },
     [onMouseMove]
-  )
+  );
 
   return (
     <div
       onMouseMove={handleMouseMove}
       className={cn(
-        "group relative rounded-3xl border border-zinc-200/80 bg-white p-8 dark:border-zinc-800 dark:bg-zinc-950 overflow-hidden transition-all duration-300 focus-within:ring-2 focus-within:ring-zinc-400 dark:focus-within:ring-zinc-850",
+        'group relative rounded-3xl border border-zinc-200/80 bg-white p-8 dark:border-zinc-800 dark:bg-zinc-950 overflow-hidden transition-all duration-300 focus-within:ring-2 focus-within:ring-zinc-400 dark:focus-within:ring-zinc-850',
         className
       )}
       style={
         {
           ...style,
-          "--spotlight-size": `${spotlightSize}px`,
-          ...(spotlightColor ? { "--spotlight-color": spotlightColor } : {}),
+          '--spotlight-size': `${spotlightSize}px`,
+          ...(spotlightColor ? { '--spotlight-color': spotlightColor } : {}),
         } as React.CSSProperties
       }
       {...props}
@@ -80,8 +86,8 @@ function SpotlightCard({
       {/* Content */}
       <div className="relative z-10">{children}</div>
     </div>
-  )
+  );
 }
 
-export { SpotlightCard }
-export type { SpotlightCardProps }
+export { SpotlightCard };
+export type { SpotlightCardProps };
