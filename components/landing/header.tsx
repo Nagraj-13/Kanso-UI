@@ -1,23 +1,29 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { motion, AnimatePresence } from "framer-motion"
-import { SunIcon, MoonIcon, MenuIcon, XIcon, ArrowUpRightIcon } from "lucide-react"
-import { useTheme } from "next-themes"
-import { Button } from "@/components/ui/button"
-import { GITHUB_URL } from "@/lib/constants"
+import * as React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { motion, AnimatePresence } from 'framer-motion';
+import {
+  SunIcon,
+  MoonIcon,
+  MenuIcon,
+  XIcon,
+  ArrowUpRightIcon,
+} from 'lucide-react';
+import { useTheme } from 'next-themes';
+import { Button } from '@/components/ui/button';
+import { GITHUB_URL } from '@/lib/constants';
 
 export function Header() {
-  const { theme, setTheme } = useTheme()
-  const [mounted, setMounted] = React.useState(false)
-  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false)
+  const { theme, setTheme } = useTheme();
+  const [mounted, setMounted] = React.useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = React.useState(false);
 
   React.useEffect(() => {
-    const handle = requestAnimationFrame(() => setMounted(true))
-    return () => cancelAnimationFrame(handle)
-  }, [])
+    const handle = requestAnimationFrame(() => setMounted(true));
+    return () => cancelAnimationFrame(handle);
+  }, []);
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-zinc-200/60 bg-white/70 backdrop-blur-md dark:border-zinc-800/60 dark:bg-zinc-950/70">
@@ -30,7 +36,9 @@ export function Header() {
             height={24}
             className="dark:invert"
           />
-          <span className="font-sans text-base font-semibold tracking-tight">Kanso UI</span>
+          <span className="font-sans text-base font-semibold tracking-tight">
+            Kanso UI
+          </span>
         </div>
 
         {/* Desktop Nav */}
@@ -67,13 +75,13 @@ export function Header() {
           <Button
             variant="ghost"
             size="icon-sm"
-            onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+            onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             aria-label="Toggle theme"
             className="text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
           >
             {!mounted ? (
               <div className="size-4 rounded-full bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
-            ) : theme === "dark" ? (
+            ) : theme === 'dark' ? (
               <SunIcon className="size-4" />
             ) : (
               <MoonIcon className="size-4" />
@@ -91,7 +99,11 @@ export function Header() {
           className="flex items-center justify-center p-2 text-zinc-500 hover:text-zinc-900 md:hidden dark:text-zinc-400 dark:hover:text-zinc-50"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
-          {mobileMenuOpen ? <XIcon className="size-5" /> : <MenuIcon className="size-5" />}
+          {mobileMenuOpen ? (
+            <XIcon className="size-5" />
+          ) : (
+            <MenuIcon className="size-5" />
+          )}
         </Button>
       </div>
 
@@ -138,17 +150,19 @@ export function Header() {
               </a>
               <hr className="border-zinc-150 dark:border-zinc-800" />
               <div className="flex items-center justify-between py-1 px-1">
-                <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">Theme</span>
+                <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                  Theme
+                </span>
                 <Button
                   variant="ghost"
                   size="icon-sm"
-                  onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
+                  onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                   aria-label="Toggle theme"
                   className="text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
                 >
                   {!mounted ? (
                     <div className="size-4 rounded-full bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
-                  ) : theme === "dark" ? (
+                  ) : theme === 'dark' ? (
                     <SunIcon className="size-4" />
                   ) : (
                     <MoonIcon className="size-4" />
@@ -157,7 +171,11 @@ export function Header() {
               </div>
               <hr className="border-zinc-150 dark:border-zinc-800" />
               <div className="flex flex-col gap-3">
-                <Button className="w-full" render={<Link href="/docs" />} onClick={() => setMobileMenuOpen(false)}>
+                <Button
+                  className="w-full"
+                  render={<Link href="/docs" />}
+                  onClick={() => setMobileMenuOpen(false)}
+                >
                   Get Started
                 </Button>
               </div>
@@ -166,5 +184,5 @@ export function Header() {
         )}
       </AnimatePresence>
     </header>
-  )
+  );
 }

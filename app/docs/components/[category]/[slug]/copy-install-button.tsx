@@ -1,19 +1,19 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import { CopyIcon, CheckIcon } from "lucide-react"
+import * as React from 'react';
+import { CopyIcon, CheckIcon } from 'lucide-react';
 
 /**
  * Client component for the install command copy button.
  */
 export function CopyInstallButton({ command }: { command: string }) {
-  const [copied, setCopied] = React.useState(false)
+  const [copied, setCopied] = React.useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(command)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    navigator.clipboard.writeText(command);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div className="flex items-center gap-2">
@@ -32,5 +32,5 @@ export function CopyInstallButton({ command }: { command: string }) {
         )}
       </button>
     </div>
-  )
+  );
 }

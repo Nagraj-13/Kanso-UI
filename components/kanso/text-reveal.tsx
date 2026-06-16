@@ -1,16 +1,16 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import { motion, useInView } from "framer-motion"
-import { cn } from "@/lib/utils"
+import * as React from 'react';
+import { motion, useInView } from 'framer-motion';
+import { cn } from '@/lib/utils';
 
 interface TextRevealProps extends React.HTMLAttributes<HTMLDivElement> {
   /** The text string to reveal */
-  text: string
+  text: string;
   /** Delay before animation starts in seconds (default: 0) */
-  delay?: number
+  delay?: number;
   /** Delay between each character in seconds (default: 0.03) */
-  staggerDelay?: number
+  staggerDelay?: number;
 }
 
 /**
@@ -40,31 +40,30 @@ function TextReveal({
   staggerDelay = 0.03,
   ...props
 }: TextRevealProps) {
-  const ref = React.useRef<HTMLDivElement>(null)
-  const isInView = useInView(ref, { once: true, margin: "-10% 0px" })
+  const ref = React.useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: '-10% 0px' });
 
-  const words = text.split(" ")
+  const words = text.split(' ');
 
   return (
-    <div ref={ref} className={cn("flex flex-wrap", className)} {...props}>
+    <div ref={ref} className={cn('flex flex-wrap', className)} {...props}>
       {words.map((word, wordIndex) => (
         <span key={wordIndex} className="inline-block mr-[0.25em]">
-          {word.split("").map((char, charIndex) => {
+          {word.split('').map((char, charIndex) => {
             // Calculate global index for stagger
             const globalIndex =
-              words
-                .slice(0, wordIndex)
-                .reduce((acc, w) => acc + w.length, 0) + charIndex
+              words.slice(0, wordIndex).reduce((acc, w) => acc + w.length, 0) +
+              charIndex;
 
             return (
               <motion.span
                 key={`${wordIndex}-${charIndex}`}
                 className="inline-block"
-                initial={{ opacity: 0, y: 8, filter: "blur(4px)" }}
+                initial={{ opacity: 0, y: 8, filter: 'blur(4px)' }}
                 animate={
                   isInView
-                    ? { opacity: 1, y: 0, filter: "blur(0px)" }
-                    : { opacity: 0, y: 8, filter: "blur(4px)" }
+                    ? { opacity: 1, y: 0, filter: 'blur(0px)' }
+                    : { opacity: 0, y: 8, filter: 'blur(4px)' }
                 }
                 transition={{
                   duration: 0.3,
@@ -74,13 +73,13 @@ function TextReveal({
               >
                 {char}
               </motion.span>
-            )
+            );
           })}
         </span>
       ))}
     </div>
-  )
+  );
 }
 
-export { TextReveal }
-export type { TextRevealProps }
+export { TextReveal };
+export type { TextRevealProps };

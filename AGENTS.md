@@ -1,8 +1,8 @@
 <!-- BEGIN:nextjs-agent-rules -->
+
 # This is NOT the Next.js you know
 
 This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` before writing any code. Heed deprecation notices.
-
 
 # AGENTS.md — Kanso UI Agent Rulebook
 
@@ -23,18 +23,18 @@ This version has breaking changes — APIs, conventions, and file structure may 
 
 ## 2. Tech Stack
 
-| Layer | Technology |
-|-------|-----------|
-| Framework | Next.js 16 (App Router, RSC) |
-| Language | TypeScript (strict mode) |
-| Styling | Tailwind CSS v4 |
-| Primitives | Base UI (`@base-ui/react`) |
-| Animation | Framer Motion |
-| Icons | Lucide React |
-| Theming | next-themes |
-| Code Highlighting | Shiki |
-| Class Merging | `cn()` — clsx + tailwind-merge |
-| Package Manager | pnpm |
+| Layer             | Technology                     |
+| ----------------- | ------------------------------ |
+| Framework         | Next.js 16 (App Router, RSC)   |
+| Language          | TypeScript (strict mode)       |
+| Styling           | Tailwind CSS v4                |
+| Primitives        | Base UI (`@base-ui/react`)     |
+| Animation         | Framer Motion                  |
+| Icons             | Lucide React                   |
+| Theming           | next-themes                    |
+| Code Highlighting | Shiki                          |
+| Class Merging     | `cn()` — clsx + tailwind-merge |
+| Package Manager   | pnpm                           |
 
 ---
 
@@ -77,12 +77,12 @@ kanso-ui/
 
 ### Key Directories
 
-| Directory | Purpose | Type |
-|-----------|---------|------|
-| `components/ui/` | shadcn primitives (Button, Card, Dialog, etc.) | Foundation layer — rarely modified |
+| Directory           | Purpose                                                            | Type                                     |
+| ------------------- | ------------------------------------------------------------------ | ---------------------------------------- |
+| `components/ui/`    | shadcn primitives (Button, Card, Dialog, etc.)                     | Foundation layer — rarely modified       |
 | `components/kanso/` | **Kanso-branded components** (MagneticButton, ShimmerBorder, etc.) | **Primary work area** for new components |
-| `components/docs/` | Documentation infrastructure (CodeBlock, ComponentDemo) | Docs tooling |
-| `lib/registry.ts` | Component metadata, props, dependencies | **Must update** when adding components |
+| `components/docs/`  | Documentation infrastructure (CodeBlock, ComponentDemo)            | Docs tooling                             |
+| `lib/registry.ts`   | Component metadata, props, dependencies                            | **Must update** when adding components   |
 
 ---
 
@@ -107,27 +107,32 @@ This is the most common task. Follow these steps **in order**:
 Create `components/kanso/<component-name>.tsx`:
 
 ```tsx
-"use client" // Only if the component uses hooks, events, or browser APIs
+'use client'; // Only if the component uses hooks, events, or browser APIs
 
-import * as React from "react"
-import { cn } from "@/lib/utils"
+import * as React from 'react';
+import { cn } from '@/lib/utils';
 
 interface MyComponentProps extends React.HTMLAttributes<HTMLDivElement> {
   /** Prop description */
-  myProp?: string
-  children: React.ReactNode
+  myProp?: string;
+  children: React.ReactNode;
 }
 
-function MyComponent({ myProp, children, className, ...props }: MyComponentProps) {
+function MyComponent({
+  myProp,
+  children,
+  className,
+  ...props
+}: MyComponentProps) {
   return (
-    <div className={cn("base-classes", className)} {...props}>
+    <div className={cn('base-classes', className)} {...props}>
       {children}
     </div>
-  )
+  );
 }
 
-export { MyComponent }
-export type { MyComponentProps }
+export { MyComponent };
+export type { MyComponentProps };
 ```
 
 ### Step 2: Register in `lib/registry.ts`
@@ -187,8 +192,12 @@ If your component uses CSS animations, add `@keyframes` to `app/globals.css` at 
 ```css
 /* Kanso MyComponent animation */
 @keyframes my-animation {
-  0% { transform: scale(1); }
-  100% { transform: scale(1.1); }
+  0% {
+    transform: scale(1);
+  }
+  100% {
+    transform: scale(1.1);
+  }
 }
 ```
 
@@ -197,12 +206,14 @@ If your component uses CSS animations, add `@keyframes` to `app/globals.css` at 
 ## 6. Coding Standards
 
 ### TypeScript
+
 - Use strict mode — no `any`
 - Prefer `unknown` over `any`
 - Export both the component and its props type
 - Use `React.ComponentProps<"element">` or `React.HTMLAttributes<HTMLElement>` for base props
 
 ### React
+
 - Functional components only
 - Named exports (never `export default` for components)
 - Server Components by default
@@ -210,6 +221,7 @@ If your component uses CSS animations, add `@keyframes` to `app/globals.css` at 
 - Use composition patterns (children, render props) over prop sprawl
 
 ### Styling
+
 - **Tailwind CSS only** — no inline styles, no CSS modules
 - Use `cn()` helper for conditional classes
 - Follow existing design tokens from `globals.css`
@@ -217,6 +229,7 @@ If your component uses CSS animations, add `@keyframes` to `app/globals.css` at 
 - No arbitrary values when a design token exists
 
 ### Naming
+
 - Component files: `kebab-case.tsx` (e.g. `magnetic-button.tsx`)
 - Component names: `PascalCase` (e.g. `MagneticButton`)
 - Props interfaces: `PascalCase` + `Props` suffix (e.g. `MagneticButtonProps`)
@@ -251,15 +264,15 @@ Accessibility is **not optional**.
 
 ## 9. Brand & Visual Guidelines
 
-| Aspect | Guideline |
-|--------|-----------|
-| Colors | Black, white, zinc grays — neutral palette |
-| Typography | Inter / Geist Sans — clean, geometric |
-| Spacing | Generous whitespace |
-| Borders | Subtle, `border-zinc-200` / `dark:border-zinc-800` |
-| Shadows | Minimal — `shadow-xs` or `shadow-sm` only |
-| Radius | `rounded-md` to `rounded-xl` |
-| Animations | Subtle, fast, purposeful |
+| Aspect     | Guideline                                          |
+| ---------- | -------------------------------------------------- |
+| Colors     | Black, white, zinc grays — neutral palette         |
+| Typography | Inter / Geist Sans — clean, geometric              |
+| Spacing    | Generous whitespace                                |
+| Borders    | Subtle, `border-zinc-200` / `dark:border-zinc-800` |
+| Shadows    | Minimal — `shadow-xs` or `shadow-sm` only          |
+| Radius     | `rounded-md` to `rounded-xl`                       |
+| Animations | Subtle, fast, purposeful                           |
 
 **Avoid**: Excessive gradients, neon effects, heavy glassmorphism, decorative animations.
 
@@ -270,6 +283,7 @@ Accessibility is **not optional**.
 ## 10. Modification Rules
 
 **Do not**:
+
 - Introduce large dependencies without clear justification
 - Create duplicate components (check existing `components/ui/` and `components/kanso/` first)
 - Break existing component APIs
@@ -277,6 +291,7 @@ Accessibility is **not optional**.
 - Modify `components/ui/` primitives unless fixing a bug
 
 **Do**:
+
 - Prefer incremental improvements
 - Reuse existing patterns from the codebase
 - Keep component APIs minimal
