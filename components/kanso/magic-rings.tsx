@@ -1,8 +1,8 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import * as THREE from "three"
-import { cn } from "@/lib/utils"
+import * as React from 'react';
+import * as THREE from 'three';
+import { cn } from '@/lib/utils';
 
 const vertexShader = `
 void main() {
@@ -65,70 +65,70 @@ void main() {
 `;
 
 export interface MagicRingsProps extends React.HTMLAttributes<HTMLDivElement> {
-  color?: string
-  colorTwo?: string
-  speed?: number
-  ringCount?: number
-  attenuation?: number
-  lineThickness?: number
-  baseRadius?: number
-  radiusStep?: number
-  scaleRate?: number
-  opacity?: number
-  blur?: number
-  noiseAmount?: number
-  rotation?: number
-  ringGap?: number
-  fadeIn?: number
-  fadeOut?: number
-  followMouse?: boolean
+  color?: string;
+  colorTwo?: string;
+  speed?: number;
+  ringCount?: number;
+  attenuation?: number;
+  lineThickness?: number;
+  baseRadius?: number;
+  radiusStep?: number;
+  scaleRate?: number;
+  opacity?: number;
+  blur?: number;
+  noiseAmount?: number;
+  rotation?: number;
+  ringGap?: number;
+  fadeIn?: number;
+  fadeOut?: number;
+  followMouse?: boolean;
   mouseInfluence?: number;
-  hoverScale?: number
-  parallax?: number
-  clickBurst?: boolean
+  hoverScale?: number;
+  parallax?: number;
+  clickBurst?: boolean;
 }
 
 function mergeRefs<T>(...refs: (React.Ref<T> | undefined)[]) {
   return (value: T | null) => {
     refs.forEach((ref) => {
-      if (typeof ref === "function") {
-        ref(value)
+      if (typeof ref === 'function') {
+        ref(value);
       } else if (ref != null) {
-        (ref as React.MutableRefObject<T | null>).current = value
+        (ref as React.MutableRefObject<T | null>).current = value;
       }
-    })
-  }
+    });
+  };
 }
 
 interface MagicRingsSettings {
-  color: string
-  colorTwo: string
-  speed: number
-  ringCount: number
-  attenuation: number
-  lineThickness: number
-  baseRadius: number
-  radiusStep: number
-  scaleRate: number
-  opacity: number
-  blur: number
-  noiseAmount: number
-  rotation: number
-  ringGap: number
-  fadeIn: number
-  fadeOut: number
-  followMouse: boolean
-  mouseInfluence: number
-  hoverScale: number
-  parallax: number
-  clickBurst: boolean
+  color: string;
+  colorTwo: string;
+  speed: number;
+  ringCount: number;
+  attenuation: number;
+  lineThickness: number;
+  baseRadius: number;
+  radiusStep: number;
+  scaleRate: number;
+  opacity: number;
+  blur: number;
+  noiseAmount: number;
+  rotation: number;
+  ringGap: number;
+  fadeIn: number;
+  fadeOut: number;
+  followMouse: boolean;
+  mouseInfluence: number;
+  hoverScale: number;
+  parallax: number;
+  clickBurst: boolean;
 }
 
 const MagicRings = React.forwardRef<HTMLDivElement, MagicRingsProps>(
   (
     {
-      color = "#fc42ff",
-      colorTwo = "#42fcff",
+      color = '#fc42ff',
+      colorTwo = '#42fcff',
       speed = 1,
       ringCount = 6,
       attenuation = 10,
@@ -154,13 +154,13 @@ const MagicRings = React.forwardRef<HTMLDivElement, MagicRingsProps>(
     },
     ref
   ) => {
-    const mountRef = React.useRef<HTMLDivElement | null>(null)
-    const propsRef = React.useRef<MagicRingsSettings | null>(null)
-    const mouseRef = React.useRef([0, 0])
-    const smoothMouseRef = React.useRef([0, 0])
-    const hoverAmountRef = React.useRef(0)
-    const isHoveredRef = React.useRef(false)
-    const burstRef = React.useRef(0)
+    const mountRef = React.useRef<HTMLDivElement | null>(null);
+    const propsRef = React.useRef<MagicRingsSettings | null>(null);
+    const mouseRef = React.useRef([0, 0]);
+    const smoothMouseRef = React.useRef([0, 0]);
+    const hoverAmountRef = React.useRef(0);
+    const isHoveredRef = React.useRef(false);
+    const burstRef = React.useRef(0);
 
     propsRef.current = {
       color,
@@ -184,30 +184,37 @@ const MagicRings = React.forwardRef<HTMLDivElement, MagicRingsProps>(
       hoverScale,
       parallax,
       clickBurst,
-    }
+    };
 
     React.useEffect(() => {
-      const mount = mountRef.current
-      if (!mount) return
+      const mount = mountRef.current;
+      if (!mount) return;
 
-      let renderer: THREE.WebGLRenderer
+      let renderer: THREE.WebGLRenderer;
       try {
-        renderer = new THREE.WebGLRenderer({ alpha: true })
+        renderer = new THREE.WebGLRenderer({ alpha: true });
       } catch {
-        return
+        return;
       }
 
       if (!renderer.capabilities.isWebGL2) {
-        renderer.dispose()
-        return
+        renderer.dispose();
+        return;
       }
 
-      renderer.setClearColor(0x000000, 0)
-      mount.appendChild(renderer.domElement)
+      renderer.setClearColor(0x000000, 0);
+      mount.appendChild(renderer.domElement);
 
-      const scene = new THREE.Scene()
-      const camera = new THREE.OrthographicCamera(-0.5, 0.5, 0.5, -0.5, 0.1, 10)
-      camera.position.z = 1
+      const scene = new THREE.Scene();
+      const camera = new THREE.OrthographicCamera(
+        -0.5,
+        0.5,
+        0.5,
+        -0.5,
+        0.1,
+        10
+      );
+      camera.position.z = 1;
 
       const uniforms = {
         uTime: { value: 0 },
@@ -232,116 +239,127 @@ const MagicRings = React.forwardRef<HTMLDivElement, MagicRingsProps>(
         uHoverScale: { value: 1 },
         uParallax: { value: 0 },
         uBurst: { value: 0 },
-      }
+      };
 
-      const material = new THREE.ShaderMaterial({ vertexShader, fragmentShader, uniforms, transparent: true })
-      const quad = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), material)
-      scene.add(quad)
+      const material = new THREE.ShaderMaterial({
+        vertexShader,
+        fragmentShader,
+        uniforms,
+        transparent: true,
+      });
+      const quad = new THREE.Mesh(new THREE.PlaneGeometry(1, 1), material);
+      scene.add(quad);
 
       const resize = () => {
-        const w = mount.clientWidth
-        const h = mount.clientHeight
-        const dpr = Math.min(window.devicePixelRatio, 2)
-        renderer.setSize(w, h)
-        renderer.setPixelRatio(dpr)
-        uniforms.uResolution.value.set(w * dpr, h * dpr)
-      }
-      resize()
-      window.addEventListener("resize", resize)
+        const w = mount.clientWidth;
+        const h = mount.clientHeight;
+        const dpr = Math.min(window.devicePixelRatio, 2);
+        renderer.setSize(w, h);
+        renderer.setPixelRatio(dpr);
+        uniforms.uResolution.value.set(w * dpr, h * dpr);
+      };
+      resize();
+      window.addEventListener('resize', resize);
 
-      const ro = new ResizeObserver(resize)
-      ro.observe(mount)
+      const ro = new ResizeObserver(resize);
+      ro.observe(mount);
 
       const onMouseMove = (e: MouseEvent) => {
-        const rect = mount.getBoundingClientRect()
-        mouseRef.current[0] = (e.clientX - rect.left) / rect.width - 0.5
-        mouseRef.current[1] = -((e.clientY - rect.top) / rect.height - 0.5)
-      }
+        const rect = mount.getBoundingClientRect();
+        mouseRef.current[0] = (e.clientX - rect.left) / rect.width - 0.5;
+        mouseRef.current[1] = -((e.clientY - rect.top) / rect.height - 0.5);
+      };
       const onMouseEnter = () => {
-        isHoveredRef.current = true
-      }
+        isHoveredRef.current = true;
+      };
       const onMouseLeave = () => {
-        isHoveredRef.current = false
-        mouseRef.current[0] = 0
-        mouseRef.current[1] = 0
-      }
+        isHoveredRef.current = false;
+        mouseRef.current[0] = 0;
+        mouseRef.current[1] = 0;
+      };
       const onClick = () => {
-        burstRef.current = 1
-      }
+        burstRef.current = 1;
+      };
 
-      mount.addEventListener("mousemove", onMouseMove)
-      mount.addEventListener("mouseenter", onMouseEnter)
-      mount.addEventListener("mouseleave", onMouseLeave)
-      mount.addEventListener("click", onClick)
+      mount.addEventListener('mousemove', onMouseMove);
+      mount.addEventListener('mouseenter', onMouseEnter);
+      mount.addEventListener('mouseleave', onMouseLeave);
+      mount.addEventListener('click', onClick);
 
-      let frameId: number
+      let frameId: number;
       const animate = (t: number) => {
-        frameId = requestAnimationFrame(animate)
-        const p = propsRef.current
-        if (!p) return
+        frameId = requestAnimationFrame(animate);
+        const p = propsRef.current;
+        if (!p) return;
 
-        smoothMouseRef.current[0] += (mouseRef.current[0] - smoothMouseRef.current[0]) * 0.08
-        smoothMouseRef.current[1] += (mouseRef.current[1] - smoothMouseRef.current[1]) * 0.08
-        hoverAmountRef.current += ((isHoveredRef.current ? 1 : 0) - hoverAmountRef.current) * 0.08
-        burstRef.current *= 0.95
-        if (burstRef.current < 0.001) burstRef.current = 0
+        smoothMouseRef.current[0] +=
+          (mouseRef.current[0] - smoothMouseRef.current[0]) * 0.08;
+        smoothMouseRef.current[1] +=
+          (mouseRef.current[1] - smoothMouseRef.current[1]) * 0.08;
+        hoverAmountRef.current +=
+          ((isHoveredRef.current ? 1 : 0) - hoverAmountRef.current) * 0.08;
+        burstRef.current *= 0.95;
+        if (burstRef.current < 0.001) burstRef.current = 0;
 
-        uniforms.uTime.value = t * 0.001 * p.speed
-        uniforms.uAttenuation.value = p.attenuation
-        uniforms.uColor.value.set(p.color)
-        uniforms.uColorTwo.value.set(p.colorTwo)
-        uniforms.uLineThickness.value = p.lineThickness
-        uniforms.uBaseRadius.value = p.baseRadius
-        uniforms.uRadiusStep.value = p.radiusStep
-        uniforms.uScaleRate.value = p.scaleRate
-        uniforms.uRingCount.value = p.ringCount
-        uniforms.uOpacity.value = p.opacity
-        uniforms.uNoiseAmount.value = p.noiseAmount
-        uniforms.uRotation.value = (p.rotation * Math.PI) / 180
-        uniforms.uRingGap.value = p.ringGap
-        uniforms.uFadeIn.value = p.fadeIn
-        uniforms.uFadeOut.value = p.fadeOut
-        uniforms.uMouse.value.set(smoothMouseRef.current[0], smoothMouseRef.current[1])
-        uniforms.uMouseInfluence.value = p.followMouse ? p.mouseInfluence : 0
-        uniforms.uHoverAmount.value = hoverAmountRef.current
-        uniforms.uHoverScale.value = p.hoverScale
-        uniforms.uParallax.value = p.parallax
-        uniforms.uBurst.value = p.clickBurst ? burstRef.current : 0
+        uniforms.uTime.value = t * 0.001 * p.speed;
+        uniforms.uAttenuation.value = p.attenuation;
+        uniforms.uColor.value.set(p.color);
+        uniforms.uColorTwo.value.set(p.colorTwo);
+        uniforms.uLineThickness.value = p.lineThickness;
+        uniforms.uBaseRadius.value = p.baseRadius;
+        uniforms.uRadiusStep.value = p.radiusStep;
+        uniforms.uScaleRate.value = p.scaleRate;
+        uniforms.uRingCount.value = p.ringCount;
+        uniforms.uOpacity.value = p.opacity;
+        uniforms.uNoiseAmount.value = p.noiseAmount;
+        uniforms.uRotation.value = (p.rotation * Math.PI) / 180;
+        uniforms.uRingGap.value = p.ringGap;
+        uniforms.uFadeIn.value = p.fadeIn;
+        uniforms.uFadeOut.value = p.fadeOut;
+        uniforms.uMouse.value.set(
+          smoothMouseRef.current[0],
+          smoothMouseRef.current[1]
+        );
+        uniforms.uMouseInfluence.value = p.followMouse ? p.mouseInfluence : 0;
+        uniforms.uHoverAmount.value = hoverAmountRef.current;
+        uniforms.uHoverScale.value = p.hoverScale;
+        uniforms.uParallax.value = p.parallax;
+        uniforms.uBurst.value = p.clickBurst ? burstRef.current : 0;
 
-        renderer.render(scene, camera)
-      }
-      frameId = requestAnimationFrame(animate)
+        renderer.render(scene, camera);
+      };
+      frameId = requestAnimationFrame(animate);
 
       return () => {
-        cancelAnimationFrame(frameId)
-        window.removeEventListener("resize", resize)
-        ro.disconnect()
-        mount.removeEventListener("mousemove", onMouseMove)
-        mount.removeEventListener("mouseenter", onMouseEnter)
-        mount.removeEventListener("mouseleave", onMouseLeave)
-        mount.removeEventListener("click", onClick)
+        cancelAnimationFrame(frameId);
+        window.removeEventListener('resize', resize);
+        ro.disconnect();
+        mount.removeEventListener('mousemove', onMouseMove);
+        mount.removeEventListener('mouseenter', onMouseEnter);
+        mount.removeEventListener('mouseleave', onMouseLeave);
+        mount.removeEventListener('click', onClick);
         if (renderer.domElement && mount.contains(renderer.domElement)) {
-          mount.removeChild(renderer.domElement)
+          mount.removeChild(renderer.domElement);
         }
-        renderer.dispose()
-        material.dispose()
-      }
-    }, [])
+        renderer.dispose();
+        material.dispose();
+      };
+    }, []);
 
     return (
       <div
         ref={mergeRefs(ref, mountRef)}
-        className={cn("w-full h-full", className)}
+        className={cn('w-full h-full', className)}
         style={{
           ...(blur > 0 ? { filter: `blur(${blur}px)` } : {}),
           ...style,
         }}
         {...props}
       />
-    )
+    );
   }
-)
+);
 
-MagicRings.displayName = "MagicRings"
+MagicRings.displayName = 'MagicRings';
 
-export { MagicRings }
+export { MagicRings };

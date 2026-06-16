@@ -1,10 +1,10 @@
-import * as React from "react"
-import Image from "next/image"
-import Link from "next/link"
-import { GITHUB_URL } from "@/lib/constants"
-import { SectionDivider } from "@/components/landing/editorial-grid"
+import * as React from 'react';
+import Image from 'next/image';
+import Link from 'next/link';
+import { GITHUB_URL } from '@/lib/constants';
+import { SectionDivider } from '@/components/landing/editorial-grid';
 
-function GithubIcon(props: React.ComponentProps<"svg">) {
+function GithubIcon(props: React.ComponentProps<'svg'>) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -18,10 +18,10 @@ function GithubIcon(props: React.ComponentProps<"svg">) {
       <path d="M15 22v-4a4.8 4.8 0 0 0-1-3.5c3 0 6-2 6-5.5.08-1.25-.27-2.48-1-3.5.28-1.15.28-2.35 0-3.5 0 0-1 0-3 1.5-2.64-.5-5.36-.5-8 0C6 2 5 2 5 2c-.3 1.15-.3 2.35 0 3.5A5.403 5.403 0 0 0 4 9c0 3.5 3 5.5 6 5.5-.39.49-.68 1.05-.85 1.65-.17.6-.22 1.23-.15 1.85v4" />
       <path d="M9 18c-4.51 2-5-2-7-2" />
     </svg>
-  )
+  );
 }
 
-function DiscordIcon(props: React.ComponentProps<"svg">) {
+function DiscordIcon(props: React.ComponentProps<'svg'>) {
   return (
     <svg
       viewBox="0 0 24 24"
@@ -35,7 +35,7 @@ function DiscordIcon(props: React.ComponentProps<"svg">) {
       <path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9" />
       <path d="M13.73 21a2 2 0 0 1-3.46 0" />
     </svg>
-  )
+  );
 }
 
 export function Footer() {
@@ -55,7 +55,8 @@ export function Footer() {
               />
             </div>
             <p className="text-xs text-muted-foreground leading-relaxed max-w-[200px]">
-              A design system built with React 19, Next.js 16, and Tailwind CSS v4.
+              A design system built with React 19, Next.js 16, and Tailwind CSS
+              v4.
             </p>
           </div>
 
@@ -65,12 +66,18 @@ export function Footer() {
             </h6>
             <ul className="mt-4 space-y-2 text-xs">
               <li>
-                <a href="#showcase" className="text-muted-foreground hover:text-foreground transition-colors">
+                <a
+                  href="#showcase"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Components
                 </a>
               </li>
               <li>
-                <a href="#showcase" className="text-muted-foreground hover:text-foreground transition-colors">
+                <a
+                  href="#showcase"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Registry
                 </a>
               </li>
@@ -83,12 +90,18 @@ export function Footer() {
             </h6>
             <ul className="mt-4 space-y-2 text-xs">
               <li>
-                <Link href="/docs" className="text-muted-foreground hover:text-foreground transition-colors">
+                <Link
+                  href="/docs"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Documentation
                 </Link>
               </li>
               <li>
-                <a href="https://nextjs.org" className="text-muted-foreground hover:text-foreground transition-colors">
+                <a
+                  href="https://nextjs.org"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Next.js Docs
                 </a>
               </li>
@@ -101,12 +114,18 @@ export function Footer() {
             </h6>
             <ul className="mt-4 space-y-2 text-xs text-left">
               <li>
-                <a href={GITHUB_URL} className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors">
+                <a
+                  href={GITHUB_URL}
+                  className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+                >
                   GitHub <GithubIcon className="size-3" />
                 </a>
               </li>
               <li>
-                <a href="https://discord.com" className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors">
+                <a
+                  href="https://discord.com"
+                  className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+                >
                   Discord <DiscordIcon className="size-3" />
                 </a>
               </li>
@@ -116,10 +135,11 @@ export function Footer() {
 
         <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row">
           <span className="text-[11px] text-muted-foreground">
-            &copy; {new Date().getFullYear()} Kanso UI. Open Source under MIT License.
+            &copy; {new Date().getFullYear()} Kanso UI. Open Source under MIT
+            License.
           </span>
         </div>
       </div>
     </footer>
-  )
+  );
 }

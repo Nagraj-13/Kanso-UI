@@ -1,5 +1,5 @@
-import { createHighlighter } from "shiki"
-import LandingPageClient from "./LandingPageClient"
+import { createHighlighter } from 'shiki';
+import LandingPageClient from './LandingPageClient';
 
 // --- Static Code Snippets for Shiki to highlight on Server ---
 
@@ -147,8 +147,8 @@ export default function AntigravityDemo() {
       />
     </div>
   )
-}`
-}
+}`,
+};
 
 const dxCode = `import { Button } from "@/components/ui/button"
 
@@ -159,39 +159,66 @@ export default function App() {
       <Button variant="outline">Outline</Button>
     </div>
   )
-}`
+}`;
 
 export default async function Home() {
   // Create Shiki highlighter
   const highlighter = await createHighlighter({
-    themes: ["github-light", "github-dark"],
-    langs: ["tsx"],
-  })
+    themes: ['github-light', 'github-dark'],
+    langs: ['tsx'],
+  });
 
   // Pre-highlight showcase codes
   const showcaseHtmls = {
-    buttons: highlighter.codeToHtml(showcaseCodes.buttons, { lang: "tsx", themes: { light: "github-light", dark: "github-dark" } }),
-    cards: highlighter.codeToHtml(showcaseCodes.cards, { lang: "tsx", themes: { light: "github-light", dark: "github-dark" } }),
-    dialogs: highlighter.codeToHtml(showcaseCodes.dialogs, { lang: "tsx", themes: { light: "github-light", dark: "github-dark" } }),
-    inputs: highlighter.codeToHtml(showcaseCodes.inputs, { lang: "tsx", themes: { light: "github-light", dark: "github-dark" } }),
-    command: highlighter.codeToHtml(showcaseCodes.command, { lang: "tsx", themes: { light: "github-light", dark: "github-dark" } }),
-    pricing: highlighter.codeToHtml(showcaseCodes.pricing, { lang: "tsx", themes: { light: "github-light", dark: "github-dark" } }),
-    halftone: highlighter.codeToHtml(showcaseCodes.halftone, { lang: "tsx", themes: { light: "github-light", dark: "github-dark" } }),
-    magicRings: highlighter.codeToHtml(showcaseCodes.magicRings, { lang: "tsx", themes: { light: "github-light", dark: "github-dark" } }),
-    antigravity: highlighter.codeToHtml(showcaseCodes.antigravity, { lang: "tsx", themes: { light: "github-light", dark: "github-dark" } }),
-  }
+    buttons: highlighter.codeToHtml(showcaseCodes.buttons, {
+      lang: 'tsx',
+      themes: { light: 'github-light', dark: 'github-dark' },
+    }),
+    cards: highlighter.codeToHtml(showcaseCodes.cards, {
+      lang: 'tsx',
+      themes: { light: 'github-light', dark: 'github-dark' },
+    }),
+    dialogs: highlighter.codeToHtml(showcaseCodes.dialogs, {
+      lang: 'tsx',
+      themes: { light: 'github-light', dark: 'github-dark' },
+    }),
+    inputs: highlighter.codeToHtml(showcaseCodes.inputs, {
+      lang: 'tsx',
+      themes: { light: 'github-light', dark: 'github-dark' },
+    }),
+    command: highlighter.codeToHtml(showcaseCodes.command, {
+      lang: 'tsx',
+      themes: { light: 'github-light', dark: 'github-dark' },
+    }),
+    pricing: highlighter.codeToHtml(showcaseCodes.pricing, {
+      lang: 'tsx',
+      themes: { light: 'github-light', dark: 'github-dark' },
+    }),
+    halftone: highlighter.codeToHtml(showcaseCodes.halftone, {
+      lang: 'tsx',
+      themes: { light: 'github-light', dark: 'github-dark' },
+    }),
+    magicRings: highlighter.codeToHtml(showcaseCodes.magicRings, {
+      lang: 'tsx',
+      themes: { light: 'github-light', dark: 'github-dark' },
+    }),
+    antigravity: highlighter.codeToHtml(showcaseCodes.antigravity, {
+      lang: 'tsx',
+      themes: { light: 'github-light', dark: 'github-dark' },
+    }),
+  };
 
   // Pre-highlight dx code
   const dxHtml = highlighter.codeToHtml(dxCode, {
-    lang: "tsx",
+    lang: 'tsx',
     themes: {
-      light: "github-light",
-      dark: "github-dark",
+      light: 'github-light',
+      dark: 'github-dark',
     },
-  })
+  });
 
   // Clean up highlighter resources
-  highlighter.dispose()
+  highlighter.dispose();
 
   return (
     <LandingPageClient
@@ -200,5 +227,5 @@ export default async function Home() {
       dxHtml={dxHtml}
       dxRaw={dxCode}
     />
-  )
+  );
 }

@@ -1,6 +1,6 @@
-"use client"
+'use client';
 
-import * as React from "react"
+import * as React from 'react';
 import {
   CopyIcon,
   CheckIcon,
@@ -8,26 +8,26 @@ import {
   TerminalIcon,
   ChevronDownIcon,
   ChevronUpIcon,
-} from "lucide-react"
-import { cn } from "@/lib/utils"
+} from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface CodeBlockProps {
   /** Pre-highlighted HTML string from Shiki */
-  html: string
+  html: string;
   /** Language label to display (e.g. "tsx", "bash") */
-  language?: string
+  language?: string;
   /** Raw source code string for clipboard */
-  rawCode: string
+  rawCode: string;
   /** Filename to display in the tab header */
-  filename?: string
+  filename?: string;
   /** Whether to show line numbers (default: true) */
-  showLineNumbers?: boolean
+  showLineNumbers?: boolean;
   /** Whether the code block is collapsible (default: false for short, true for >20 lines) */
-  collapsible?: boolean
+  collapsible?: boolean;
   /** Maximum height before collapsing (default: 400) */
-  maxCollapsedHeight?: number
+  maxCollapsedHeight?: number;
   /** Additional class names */
-  className?: string
+  className?: string;
 }
 
 /**
@@ -46,7 +46,7 @@ interface CodeBlockProps {
  */
 function CodeBlock({
   html,
-  language = "tsx",
+  language = 'tsx',
   rawCode,
   filename,
   showLineNumbers = true,
@@ -54,35 +54,36 @@ function CodeBlock({
   maxCollapsedHeight = 400,
   className,
 }: CodeBlockProps) {
-  const [copied, setCopied] = React.useState(false)
-  const [isExpanded, setIsExpanded] = React.useState(false)
-  const codeRef = React.useRef<HTMLDivElement>(null)
-  const [needsCollapse, setNeedsCollapse] = React.useState(false)
+  const [copied, setCopied] = React.useState(false);
+  const [isExpanded, setIsExpanded] = React.useState(false);
+  const codeRef = React.useRef<HTMLDivElement>(null);
+  const [needsCollapse, setNeedsCollapse] = React.useState(false);
 
-  const lineCount = rawCode.split("\n").length
+  const lineCount = rawCode.split('\n').length;
 
   // Auto-detect if collapsible is needed
-  const collapsible = collapsibleProp ?? lineCount > 25
+  const collapsible = collapsibleProp ?? lineCount > 25;
 
   React.useEffect(() => {
-    if (!collapsible || !codeRef.current) return
-    const height = codeRef.current.scrollHeight
-    setNeedsCollapse(height > maxCollapsedHeight)
-  }, [collapsible, maxCollapsedHeight, html])
+    if (!collapsible || !codeRef.current) return;
+    const height = codeRef.current.scrollHeight;
+    setNeedsCollapse(height > maxCollapsedHeight);
+  }, [collapsible, maxCollapsedHeight, html]);
 
   const handleCopy = React.useCallback(() => {
-    navigator.clipboard.writeText(rawCode)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }, [rawCode])
+    navigator.clipboard.writeText(rawCode);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  }, [rawCode]);
 
-  const isTerminal = language === "bash" || language === "sh" || language === "shell"
-  const displayName = filename ?? (isTerminal ? "Terminal" : `${language}`)
+  const isTerminal =
+    language === 'bash' || language === 'sh' || language === 'shell';
+  const displayName = filename ?? (isTerminal ? 'Terminal' : `${language}`);
 
   return (
     <div
       className={cn(
-        "group/codeblock relative w-full rounded-xl border border-zinc-200 bg-zinc-50 overflow-hidden dark:border-zinc-800/80 dark:bg-zinc-950",
+        'group/codeblock relative w-full rounded-xl border border-zinc-200 bg-zinc-50 overflow-hidden dark:border-zinc-800/80 dark:bg-zinc-950',
         className
       )}
     >
@@ -114,17 +115,17 @@ function CodeBlock({
         <button
           onClick={handleCopy}
           className={cn(
-            "inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-all duration-200",
+            'inline-flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-medium transition-all duration-200',
             copied
-              ? "bg-emerald-500/10 text-emerald-600 dark:text-emerald-400"
-              : "text-zinc-500 hover:bg-zinc-200/60 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
+              ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-400'
+              : 'text-zinc-500 hover:bg-zinc-200/60 hover:text-zinc-800 dark:hover:bg-zinc-800 dark:hover:text-zinc-300'
           )}
           aria-label="Copy code"
         >
           <span
             className={cn(
-              "transition-transform duration-200",
-              copied && "scale-110"
+              'transition-transform duration-200',
+              copied && 'scale-110'
             )}
           >
             {copied ? (
@@ -133,7 +134,9 @@ function CodeBlock({
               <CopyIcon className="size-3.5" />
             )}
           </span>
-          <span className="hidden sm:inline">{copied ? "Copied!" : "Copy"}</span>
+          <span className="hidden sm:inline">
+            {copied ? 'Copied!' : 'Copy'}
+          </span>
         </button>
       </div>
 
@@ -141,8 +144,8 @@ function CodeBlock({
       <div
         ref={codeRef}
         className={cn(
-          "relative overflow-hidden transition-[max-height] duration-300 ease-in-out",
-          collapsible && needsCollapse && !isExpanded && "overflow-hidden"
+          'relative overflow-hidden transition-[max-height] duration-300 ease-in-out',
+          collapsible && needsCollapse && !isExpanded && 'overflow-hidden'
         )}
         style={
           collapsible && needsCollapse && !isExpanded
@@ -152,9 +155,9 @@ function CodeBlock({
       >
         <div
           className={cn(
-            "overflow-x-auto p-4 text-[13px] leading-[1.7] font-mono text-zinc-800 dark:text-zinc-100",
-            "[&>pre]:bg-transparent! [&>pre]:p-0! [&>pre]:m-0!",
-            showLineNumbers && "code-block-line-numbers"
+            'overflow-x-auto p-4 text-[13px] leading-[1.7] font-mono text-zinc-800 dark:text-zinc-100',
+            '[&>pre]:bg-transparent! [&>pre]:p-0! [&>pre]:m-0!',
+            showLineNumbers && 'code-block-line-numbers'
           )}
           dangerouslySetInnerHTML={{ __html: html }}
         />
@@ -185,16 +188,16 @@ function CodeBlock({
         </button>
       )}
     </div>
-  )
+  );
 }
 
 /* ── Inline Terminal Block ────────────────────────────── */
 
 interface TerminalBlockProps {
   /** The command to display and copy */
-  command: string
+  command: string;
   /** Additional class names */
-  className?: string
+  className?: string;
 }
 
 /**
@@ -204,18 +207,18 @@ interface TerminalBlockProps {
  * designed to sit inline within installation sections.
  */
 function TerminalBlock({ command, className }: TerminalBlockProps) {
-  const [copied, setCopied] = React.useState(false)
+  const [copied, setCopied] = React.useState(false);
 
   const handleCopy = () => {
-    navigator.clipboard.writeText(command)
-    setCopied(true)
-    setTimeout(() => setCopied(false), 2000)
-  }
+    navigator.clipboard.writeText(command);
+    setCopied(true);
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   return (
     <div
       className={cn(
-        "group/terminal flex items-center justify-between gap-3 rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950",
+        'group/terminal flex items-center justify-between gap-3 rounded-lg border border-zinc-200 bg-zinc-50 px-4 py-3 dark:border-zinc-800 dark:bg-zinc-950',
         className
       )}
     >
@@ -228,10 +231,10 @@ function TerminalBlock({ command, className }: TerminalBlockProps) {
       <button
         onClick={handleCopy}
         className={cn(
-          "shrink-0 rounded-md p-1.5 transition-all duration-200",
+          'shrink-0 rounded-md p-1.5 transition-all duration-200',
           copied
-            ? "text-emerald-600 dark:text-emerald-400"
-            : "text-zinc-400 hover:bg-zinc-200/60 hover:text-zinc-700 dark:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300"
+            ? 'text-emerald-600 dark:text-emerald-400'
+            : 'text-zinc-400 hover:bg-zinc-200/60 hover:text-zinc-700 dark:text-zinc-600 dark:hover:bg-zinc-800 dark:hover:text-zinc-300'
         )}
         aria-label="Copy command"
       >
@@ -242,8 +245,8 @@ function TerminalBlock({ command, className }: TerminalBlockProps) {
         )}
       </button>
     </div>
-  )
+  );
 }
 
-export { CodeBlock, TerminalBlock }
-export type { CodeBlockProps, TerminalBlockProps }
+export { CodeBlock, TerminalBlock };
+export type { CodeBlockProps, TerminalBlockProps };

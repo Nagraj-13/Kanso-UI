@@ -1,14 +1,21 @@
-"use client"
+'use client';
 
-import * as React from "react"
-import Link from "next/link"
-import { ArrowUpRightIcon } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent, CardFooter } from "@/components/ui/card"
-import { MagneticButton } from "@/components/kanso/magnetic-button"
-import { ShimmerBorder } from "@/components/kanso/shimmer-border"
-import { TextReveal } from "@/components/kanso/text-reveal"
-import { HalftoneImage } from "@/components/kanso/halftone-image"
+import * as React from 'react';
+import Link from 'next/link';
+import { ArrowUpRightIcon } from 'lucide-react';
+import { Button } from '@/components/ui/button';
+import {
+  Card,
+  CardHeader,
+  CardTitle,
+  CardDescription,
+  CardContent,
+  CardFooter,
+} from '@/components/ui/card';
+import { MagneticButton } from '@/components/kanso/magnetic-button';
+import { ShimmerBorder } from '@/components/kanso/shimmer-border';
+import { TextReveal } from '@/components/kanso/text-reveal';
+import { HalftoneImage } from '@/components/kanso/halftone-image';
 
 export function PremiumEffects() {
   return (
@@ -22,7 +29,9 @@ export function PremiumEffects() {
             Premium Kanso Effects
           </h2>
           <p className="max-w-xl text-base text-muted-foreground">
-            Add polish to your interface with our copy-paste motion effects. Experience the interactive previews below and click to view installation guides.
+            Add polish to your interface with our copy-paste motion effects.
+            Experience the interactive previews below and click to view
+            installation guides.
           </p>
         </div>
 
@@ -30,15 +39,20 @@ export function PremiumEffects() {
           {/* Card 1: Magnetic Button */}
           <Card className="flex flex-col justify-between border border-border bg-card shadow-xs hover:shadow-md transition-all duration-300 dark:bg-card/40 hover:-translate-y-0.5">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base font-semibold text-foreground">Magnetic Button</CardTitle>
+              <CardTitle className="text-base font-semibold text-foreground">
+                Magnetic Button
+              </CardTitle>
               <CardDescription className="text-xs text-muted-foreground leading-relaxed min-h-[40px]">
-                Attracts elements smoothly to the user&apos;s cursor on hover. Built with spring physics for natural, responsive movement.
+                Attracts elements smoothly to the user&apos;s cursor on hover.
+                Built with spring physics for natural, responsive movement.
               </CardDescription>
             </CardHeader>
             <CardContent className="mt-2">
               <div className="flex h-40 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 dark:bg-muted/15 relative overflow-hidden group">
                 <div className="absolute inset-0 pointer-events-none opacity-30 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,var(--color-primary),transparent)]" />
-                <MagneticButton className="relative z-10 shadow-sm">Hover Magnet</MagneticButton>
+                <MagneticButton className="relative z-10 shadow-sm">
+                  Hover Magnet
+                </MagneticButton>
               </div>
             </CardContent>
             <CardFooter className="mt-4 flex justify-end pb-4">
@@ -46,7 +60,9 @@ export function PremiumEffects() {
                 variant="link"
                 size="sm"
                 className="gap-1.5 px-0 text-foreground cursor-pointer"
-                render={<Link href="/docs/components/buttons/magnetic-button" />}
+                render={
+                  <Link href="/docs/components/buttons/magnetic-button" />
+                }
               >
                 View Installation <ArrowUpRightIcon className="size-3.5" />
               </Button>
@@ -56,9 +72,13 @@ export function PremiumEffects() {
           {/* Card 2: Shimmer Border */}
           <Card className="flex flex-col justify-between border border-border bg-card shadow-xs hover:shadow-md transition-all duration-300 dark:bg-card/40 hover:-translate-y-0.5">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base font-semibold text-foreground">Shimmer Border</CardTitle>
+              <CardTitle className="text-base font-semibold text-foreground">
+                Shimmer Border
+              </CardTitle>
               <CardDescription className="text-xs text-muted-foreground leading-relaxed min-h-[40px]">
-                An elegant border lighting outline that cycles continuously. Leverages GPU-accelerated CSS conic-gradients for optimal performance.
+                An elegant border lighting outline that cycles continuously.
+                Leverages GPU-accelerated CSS conic-gradients for optimal
+                performance.
               </CardDescription>
             </CardHeader>
             <CardContent className="mt-2">
@@ -85,9 +105,13 @@ export function PremiumEffects() {
           {/* Card 3: Text Reveal */}
           <Card className="flex flex-col justify-between border border-border bg-card shadow-xs hover:shadow-md transition-all duration-300 dark:bg-card/40 hover:-translate-y-0.5">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base font-semibold text-foreground">Text Reveal</CardTitle>
+              <CardTitle className="text-base font-semibold text-foreground">
+                Text Reveal
+              </CardTitle>
               <CardDescription className="text-xs text-muted-foreground leading-relaxed min-h-[40px]">
-                Fades in text character-by-character as it scrolls into viewport. Uses staggering and subtle blur overrides for readability.
+                Fades in text character-by-character as it scrolls into
+                viewport. Uses staggering and subtle blur overrides for
+                readability.
               </CardDescription>
             </CardHeader>
             <CardContent className="mt-2">
@@ -113,9 +137,12 @@ export function PremiumEffects() {
           {/* Card 4: Halftone Image */}
           <Card className="flex flex-col justify-between border border-border bg-card shadow-xs hover:shadow-md transition-all duration-300 dark:bg-card/40 hover:-translate-y-0.5">
             <CardHeader className="pb-2">
-              <CardTitle className="text-base font-semibold text-foreground">Halftone Image</CardTitle>
+              <CardTitle className="text-base font-semibold text-foreground">
+                Halftone Image
+              </CardTitle>
               <CardDescription className="text-xs text-muted-foreground leading-relaxed min-h-[40px]">
-                Converts images into custom halftone illustrations. Includes real-time mouse dither warp distortions.
+                Converts images into custom halftone illustrations. Includes
+                real-time mouse dither warp distortions.
               </CardDescription>
             </CardHeader>
             <CardContent className="mt-2">
@@ -146,5 +173,5 @@ export function PremiumEffects() {
         </div>
       </div>
     </section>
-  )
+  );
 }

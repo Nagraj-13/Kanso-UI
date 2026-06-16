@@ -1,10 +1,10 @@
-import { NextResponse } from "next/server"
-import * as fs from "fs/promises"
-import * as path from "path"
-import { getComponent, registry } from "@/lib/registry"
+import { NextResponse } from 'next/server';
+import * as fs from 'fs/promises';
+import * as path from 'path';
+import { getComponent, registry } from '@/lib/registry';
 
 interface RouteParams {
-  params: Promise<{ name: string }>
+  params: Promise<{ name: string }>;
 }
 
 /**
@@ -27,41 +27,41 @@ interface RouteParams {
  * }
  */
 export async function GET(_request: Request, { params }: RouteParams) {
-  const { name } = await params
-  const component = getComponent(name)
+  const { name } = await params;
+  const component = getComponent(name);
 
   if (!component) {
     return NextResponse.json(
       {
-        error: "Component not found",
+        error: 'Component not found',
         available: registry.map((c) => c.name),
       },
       { status: 404 }
-    )
+    );
   }
 
   // Read the source file
-  const filePath = path.join(process.cwd(), component.filePath)
-  let source = ""
+  const filePath = path.join(process.cwd(), component.filePath);
+  let source = '';
   try {
-    source = await fs.readFile(filePath, "utf-8")
+    source = await fs.readFile(filePath, 'utf-8');
   } catch {
     return NextResponse.json(
-      { error: "Source file not found on server" },
+      { error: 'Source file not found on server' },
       { status: 500 }
-    )
+    );
   }
 
   // Read internal dependency files
   const files: { path: string; content: string }[] = [
     { path: component.filePath, content: source },
-  ]
+  ];
 
   for (const dep of component.internalDeps) {
     try {
-      const depPath = path.join(process.cwd(), dep + ".ts")
-      const depContent = await fs.readFile(depPath, "utf-8")
-      files.push({ path: dep + ".ts", content: depContent })
+      const depPath = path.join(process.cwd(), dep + '.ts');
+      const depContent = await fs.readFile(depPath, 'utf-8');
+      files.push({ path: dep + '.ts', content: depContent });
     } catch {
       // Skip missing dependency files
     }
@@ -78,5 +78,5 @@ export async function GET(_request: Request, { params }: RouteParams) {
     tags: component.tags,
     source,
     files,
-  })
+  });
 }
