@@ -12,7 +12,7 @@ export function DeveloperExperience({
   dxRaw,
 }: DeveloperExperienceProps) {
   return (
-    <section id="developer" className="py-28 bg-background relative">
+    <section id="developer" className="py-28  relative">
       <SectionDivider />
       <div className="mx-auto max-w-7xl px-6 md:px-8">
         <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 w-full min-w-0">

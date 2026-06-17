@@ -32,6 +32,7 @@ import {
   CurvedRingArchive,
 } from '@/components/kanso/three-d-masonry-orbit';
 import { ThreeDPhotoCarousel } from '@/components/kanso/three-d-photo-carousel';
+import { GlowCard } from '@/components/kanso/glow-card';
 import {
   ColorPicker,
   ColorPickerSelection,
@@ -2663,6 +2664,130 @@ const demos: Record<string, React.ComponentType> = {
             container & press Left/Right arrow keys to spin.
           </div>
         </div>
+      </div>
+    );
+  },
+  'glow-card': function GlowCardDemo() {
+    return (
+      <div className="flex flex-col items-center gap-6 w-full max-w-xl">
+        <GlowCard className="w-full">
+          {/* Card Title Header */}
+          <div className="flex items-center gap-2 text-zinc-400 text-xs font-semibold uppercase tracking-wider mb-5">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="size-4 text-blue-500"
+            >
+              <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+              <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+              <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+              <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M12 9v-2"></path>
+              <path d="M12 17v-2"></path>
+              <path d="M9 12H7"></path>
+              <path d="M17 12h-2"></path>
+            </svg>
+            Real time location tracking
+          </div>
+
+          <h3 className="text-2xl font-bold text-white tracking-tight leading-snug">
+            Advanced tracking system,
+            <br />
+            instantly locate all your assets.
+          </h3>
+
+          <div className="h-px bg-white/10 my-6 border-dashed border-t" />
+
+          {/* Payments Section */}
+          <div className="flex flex-col gap-1.5 mb-5">
+            <h4 className="text-base font-semibold text-white">Payments</h4>
+            <p className="text-xs text-zinc-450">Track your transactions</p>
+          </div>
+
+          {/* Filter Bar mock */}
+          <div className="flex items-center justify-between bg-white/[0.02] border border-white/5 rounded-lg px-4 py-2.5 mb-6 text-sm">
+            <span className="text-zinc-300">Transaction</span>
+            <span className="flex items-center gap-1.5 text-zinc-400 cursor-pointer hover:text-white transition-colors">
+              Custom
+              <svg
+                className="size-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </span>
+          </div>
+
+          {/* Table List mock */}
+          <div className="flex flex-col text-sm">
+            {/* Table Header */}
+            <div className="grid grid-cols-[30px_1fr_1fr_1fr] pb-3 border-b border-white/5 text-zinc-500 font-medium text-xs">
+              <div className="flex items-center">
+                <span className="size-3.5 rounded-full border border-white/10" />
+              </div>
+              <div>Status</div>
+              <div>Date</div>
+              <div className="text-right">Amount</div>
+            </div>
+
+            {/* Row 1 */}
+            <div className="grid grid-cols-[30px_1fr_1fr_1fr] py-3.5 border-b border-white/[0.03] items-center">
+              <div className="flex items-center">
+                <span className="size-3.5 rounded-full border border-white/10" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="size-2 rounded-full bg-green-500" />
+                <span className="text-zinc-200">Success</span>
+              </div>
+              <div className="text-zinc-400">May 15</div>
+              <div className="text-right text-zinc-100 font-medium">
+                $2,450.00
+              </div>
+            </div>
+
+            {/* Row 2 */}
+            <div className="grid grid-cols-[30px_1fr_1fr_1fr] py-3.5 border-b border-white/[0.03] items-center">
+              <div className="flex items-center">
+                <span className="size-3.5 rounded-full border border-white/10" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="size-2 rounded-full bg-red-500" />
+                <span className="text-zinc-200">Failed</span>
+              </div>
+              <div className="text-zinc-400">May 14</div>
+              <div className="text-right text-zinc-100 font-medium">
+                $950.00
+              </div>
+            </div>
+
+            {/* Row 3 */}
+            <div className="grid grid-cols-[30px_1fr_1fr_1fr] py-3.5 items-center">
+              <div className="flex items-center">
+                <span className="size-3.5 rounded-full border border-blue-500/50 flex items-center justify-center">
+                  <span className="size-1.5 rounded-full bg-blue-500" />
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="size-2 rounded-full bg-blue-500" />
+                <span className="text-zinc-200">Processing</span>
+              </div>
+              <div className="text-zinc-400">orders@acme.com</div>
+              <div className="text-right text-zinc-100 font-medium">
+                $3,250.00
+              </div>
+            </div>
+          </div>
+        </GlowCard>
       </div>
     );
   },

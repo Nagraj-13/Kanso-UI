@@ -1705,6 +1705,56 @@ export default function AntigravityDemo() {
       },
     ],
   },
+  {
+    name: 'glow-card',
+    title: 'Glow Card',
+    description:
+      'A premium, modern card container with a highly-fidelity bottom-up radial gradient glow, corner crop marks, and smooth hover state transitions.',
+    category: 'cards',
+    dependencies: [],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/glow-card.tsx',
+    tags: ['card', 'glow', 'gradient', 'minimal', 'hover', 'crop-marks'],
+    usage: `import { GlowCard } from "@/components/kanso/glow-card"
+
+export default function GlowCardDemo() {
+  return (
+    <GlowCard className="max-w-md">
+      <div className="flex flex-col gap-2">
+        <span className="text-zinc-400 text-xs uppercase tracking-wider font-semibold">Real time location tracking</span>
+        <h3 className="text-xl font-bold text-white leading-tight">Advanced tracking system, locate all assets instantly.</h3>
+      </div>
+    </GlowCard>
+  )
+}`,
+    props: [
+      {
+        name: 'showCropMarks',
+        type: 'boolean',
+        default: 'true',
+        description:
+          'Toggles blueprint-style tiny corner crop marks inside the card.',
+      },
+      {
+        name: 'interactive',
+        type: 'boolean',
+        default: 'true',
+        description:
+          'Enables interactive scaling and bloom gradient shift on hover.',
+      },
+      {
+        name: 'children',
+        type: 'React.ReactNode',
+        description: 'Content to render inside the card.',
+        required: true,
+      },
+      {
+        name: 'className',
+        type: 'string',
+        description: 'Additional class names to apply to the card container.',
+      },
+    ],
+  },
 ];
 
 /**

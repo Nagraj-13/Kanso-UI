@@ -1,11 +1,9 @@
 import * as React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
-import { SectionDivider } from '@/components/landing/editorial-grid';
 
 export function Testimonials() {
   return (
     <section className="border-t border-dashed border-zinc-200/50 py-28 dark:border-zinc-900/40 dark:bg-zinc-950/20 relative">
-      <SectionDivider />
       <div className="mx-auto max-w-7xl px-6 md:px-8">
         <div className="flex flex-col items-center text-center gap-4">
           <h2 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-white">

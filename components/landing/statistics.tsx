@@ -59,7 +59,7 @@ function AnimatedCounter({
 
 export function Statistics() {
   return (
-    <section className="border-t border-b border-dashed border-border bg-background  relative">
+    <section className="border-t border-b border-dashed border-border  relative">
       <SectionDivider />
       <div className="mx-auto max-w-7xl border-r border-l border-dashed border-border px-6 py-24 md:px-8">
         <div className="grid gap-12 text-center sm:grid-cols-2 lg:grid-cols-4">
