@@ -7,7 +7,7 @@ import { SectionDivider } from '@/components/landing/editorial-grid';
 
 export function CTA() {
   return (
-    <section className="border-t border-b border-border border-dashed  text-center bg-background  relative">
+    <section className="border-t border-b border-border border-dashed  text-center  relative">
       <SectionDivider />
       <div className="mx-auto max-w-4xl px-6 md:px-8 border-r border-l border-border border-dashed py-32">
         <h2 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">

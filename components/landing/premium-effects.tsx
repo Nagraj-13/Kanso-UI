@@ -19,7 +19,7 @@ import { HalftoneImage } from '@/components/kanso/halftone-image';
 
 export function PremiumEffects() {
   return (
-    <section id="premium-components" className="py-28 bg-background">
+    <section id="premium-components" className="py-28">
       <div className="mx-auto max-w-7xl px-6 md:px-8">
         <div className="flex flex-col items-start gap-4">
           <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">

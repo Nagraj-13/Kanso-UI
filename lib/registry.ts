@@ -62,6 +62,100 @@ export interface RegistryComponent {
  */
 export const registry: RegistryComponent[] = [
   {
+    name: 'blur-reveal-code',
+    title: 'Blur Reveal Code',
+    description:
+      'An interactive, premium code element that reveals blurred digits sequentially as you glide your cursor over them.',
+    category: 'typography',
+    dependencies: [],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/blur-reveal-code.tsx',
+    tags: ['text', 'blur', 'reveal', 'interactive', 'hover', 'glide'],
+    usage: `import { BlurRevealCode } from "@/components/kanso/blur-reveal-code"
+
+export default function BlurRevealCodeDemo() {
+  return (
+    <BlurRevealCode 
+      code="034872" 
+      label="Glide To Reveal Secret Code" 
+    />
+  )
+}`,
+    props: [
+      {
+        name: 'code',
+        type: 'string',
+        default: '"034872"',
+        description: 'The string of characters to display and reveal.',
+      },
+      {
+        name: 'label',
+        type: 'React.ReactNode',
+        default: '"Glide To Reveal Secret Code"',
+        description: 'The label rendered above the interactive digits.',
+      },
+      {
+        name: 'className',
+        type: 'string',
+        description: 'Additional CSS classes to apply.',
+      },
+    ],
+  },
+  {
+    name: 'feature-grid-card',
+    title: 'Feature Grid Card',
+    description:
+      'A sleek hover card revealing an illuminated grid background with animated tiles and glowing grid lines.',
+    category: 'cards',
+    dependencies: [],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/feature-grid-card.tsx',
+    tags: ['card', 'grid', 'hover', 'animation', 'tiles', 'interactive'],
+    usage: `import { FeatureGridCard } from "@/components/kanso/feature-grid-card"
+import { LayoutGrid } from "lucide-react"
+
+export default function FeatureGridCardDemo() {
+  return (
+    <div className="max-w-xs mx-auto">
+      <FeatureGridCard 
+        icon={<LayoutGrid className="w-full h-full" />}
+        title="Products"
+        description="Standard chunk of Lorem Ipsum used since the 1500s is showed below for those interested."
+      />
+    </div>
+  )
+}`,
+    cssCode: `/* Add to app/globals.css */
+@keyframes kanso-tile {
+  0%, 12.5%, 100% { opacity: 1; }
+  25%, 82.5% { opacity: 0; }
+}`,
+    props: [
+      {
+        name: 'icon',
+        type: 'React.ReactNode',
+        description: 'Icon element rendered at the top of the card.',
+      },
+      {
+        name: 'title',
+        type: 'React.ReactNode',
+        description: 'Main title of the card.',
+        required: true,
+      },
+      {
+        name: 'description',
+        type: 'React.ReactNode',
+        description: 'Description text below the title.',
+        required: true,
+      },
+      {
+        name: 'className',
+        type: 'string',
+        description: 'Additional CSS classes for the card container.',
+      },
+    ],
+  },
+  {
     name: 'button',
     title: 'Button',
     description:
@@ -1702,6 +1796,56 @@ export default function AntigravityDemo() {
         type: 'number',
         default: '10',
         description: 'Orbit path compactness coefficient.',
+      },
+    ],
+  },
+  {
+    name: 'glow-card',
+    title: 'Glow Card',
+    description:
+      'A premium, modern card container with a highly-fidelity bottom-up radial gradient glow, corner crop marks, and smooth hover state transitions.',
+    category: 'cards',
+    dependencies: [],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/glow-card.tsx',
+    tags: ['card', 'glow', 'gradient', 'minimal', 'hover', 'crop-marks'],
+    usage: `import { GlowCard } from "@/components/kanso/glow-card"
+
+export default function GlowCardDemo() {
+  return (
+    <GlowCard className="max-w-md">
+      <div className="flex flex-col gap-2">
+        <span className="text-zinc-400 text-xs uppercase tracking-wider font-semibold">Real time location tracking</span>
+        <h3 className="text-xl font-bold text-white leading-tight">Advanced tracking system, locate all assets instantly.</h3>
+      </div>
+    </GlowCard>
+  )
+}`,
+    props: [
+      {
+        name: 'showCropMarks',
+        type: 'boolean',
+        default: 'true',
+        description:
+          'Toggles blueprint-style tiny corner crop marks inside the card.',
+      },
+      {
+        name: 'interactive',
+        type: 'boolean',
+        default: 'true',
+        description:
+          'Enables interactive scaling and bloom gradient shift on hover.',
+      },
+      {
+        name: 'children',
+        type: 'React.ReactNode',
+        description: 'Content to render inside the card.',
+        required: true,
+      },
+      {
+        name: 'className',
+        type: 'string',
+        description: 'Additional class names to apply to the card container.',
       },
     ],
   },

@@ -325,3 +325,16 @@ html.dark .docs-sidebar-link[data-active='true']::before {
     display: none !important;
   }
 }
+
+/* Kanso Feature Grid Card Tile Animation */
+@keyframes kanso-tile {
+  0%,
+  12.5%,
+  100% {
+    opacity: 1;
+  }
+  25%,
+  82.5% {
+    opacity: 0;
+  }
+}

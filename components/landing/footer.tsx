@@ -40,7 +40,7 @@ function DiscordIcon(props: React.ComponentProps<'svg'>) {
 
 export function Footer() {
   return (
-    <footer className="border-t border-dashed border-zinc-200/50 bg-background py-16 dark:border-zinc-900/40 relative">
+    <footer className="border-t border-dashed border-border py-16  relative">
       <SectionDivider />
       <div className="mx-auto max-w-7xl px-6 md:px-8">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:grid-cols-6">
