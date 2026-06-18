@@ -62,6 +62,100 @@ export interface RegistryComponent {
  */
 export const registry: RegistryComponent[] = [
   {
+    name: 'blur-reveal-code',
+    title: 'Blur Reveal Code',
+    description:
+      'An interactive, premium code element that reveals blurred digits sequentially as you glide your cursor over them.',
+    category: 'typography',
+    dependencies: [],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/blur-reveal-code.tsx',
+    tags: ['text', 'blur', 'reveal', 'interactive', 'hover', 'glide'],
+    usage: `import { BlurRevealCode } from "@/components/kanso/blur-reveal-code"
+
+export default function BlurRevealCodeDemo() {
+  return (
+    <BlurRevealCode 
+      code="034872" 
+      label="Glide To Reveal Secret Code" 
+    />
+  )
+}`,
+    props: [
+      {
+        name: 'code',
+        type: 'string',
+        default: '"034872"',
+        description: 'The string of characters to display and reveal.',
+      },
+      {
+        name: 'label',
+        type: 'React.ReactNode',
+        default: '"Glide To Reveal Secret Code"',
+        description: 'The label rendered above the interactive digits.',
+      },
+      {
+        name: 'className',
+        type: 'string',
+        description: 'Additional CSS classes to apply.',
+      },
+    ],
+  },
+  {
+    name: 'feature-grid-card',
+    title: 'Feature Grid Card',
+    description:
+      'A sleek hover card revealing an illuminated grid background with animated tiles and glowing grid lines.',
+    category: 'cards',
+    dependencies: [],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/feature-grid-card.tsx',
+    tags: ['card', 'grid', 'hover', 'animation', 'tiles', 'interactive'],
+    usage: `import { FeatureGridCard } from "@/components/kanso/feature-grid-card"
+import { LayoutGrid } from "lucide-react"
+
+export default function FeatureGridCardDemo() {
+  return (
+    <div className="max-w-xs mx-auto">
+      <FeatureGridCard 
+        icon={<LayoutGrid className="w-full h-full" />}
+        title="Products"
+        description="Standard chunk of Lorem Ipsum used since the 1500s is showed below for those interested."
+      />
+    </div>
+  )
+}`,
+    cssCode: `/* Add to app/globals.css */
+@keyframes kanso-tile {
+  0%, 12.5%, 100% { opacity: 1; }
+  25%, 82.5% { opacity: 0; }
+}`,
+    props: [
+      {
+        name: 'icon',
+        type: 'React.ReactNode',
+        description: 'Icon element rendered at the top of the card.',
+      },
+      {
+        name: 'title',
+        type: 'React.ReactNode',
+        description: 'Main title of the card.',
+        required: true,
+      },
+      {
+        name: 'description',
+        type: 'React.ReactNode',
+        description: 'Description text below the title.',
+        required: true,
+      },
+      {
+        name: 'className',
+        type: 'string',
+        description: 'Additional CSS classes for the card container.',
+      },
+    ],
+  },
+  {
     name: 'button',
     title: 'Button',
     description:

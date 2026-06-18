@@ -24,43 +24,37 @@ function GlowCard({
   return (
     <div
       className={cn(
-        'group relative overflow-hidden rounded-[32px] border border-white/10 bg-[#05070b] text-white',
-        'shadow-[0_0_0_1px_rgba(255,255,255,0.03)] transition-all duration-300',
-        interactive && 'hover:border-white/15',
+        'group relative overflow-hidden rounded-[32px] border border bg-[#05070b] text-zinc-50',
+        'shadow-[0_8px_32px_rgba(0,0,0,0.4)] ring-1 ring-ring ring-inset transition-all duration-500 ease-out',
+        interactive && 'hover:ring-white/15',
         className
       )}
       {...props}
     >
-      {/* Oversized radial glow anchored at top — glow appears at the bottom */}
-      <div className="pointer-events-none absolute inset-0 [background:radial-gradient(125%_125%_at_50%_0%,transparent_40%,rgba(99,102,241,0.3)_70%,rgba(26,86,255,0.85)_100%)]" />
+      {/* 
+        Premium Base Glow — soft, dispersed blue light anchoring the bottom edges.
+        Lowered opacities prevent harsh color banding and make it look volumetric.
+      */}
+      <div className="pointer-events-none absolute inset-0 z-0 [background:radial-gradient(100%_100%_at_30%_0%,transparent_45%,rgba(48, 51, 252, 1)_75%,rgba(49, 103, 254, 1)_100%)]" />
 
-      {/* Interactive Hover Bloom — intensifies the bottom glow */}
+      {/* 
+        Interactive Hover Bloom — intensifies the glow with a smooth ease.
+      */}
       {interactive && (
-        <div className="pointer-events-none absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 [background:radial-gradient(125%_125%_at_50%_0%,transparent_35%,rgba(99,102,241,0.4)_65%,rgba(26,86,255,1)_100%)]" />
+        <div className="pointer-events-none absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out [background:radial-gradient(100%_100%_at_30%_0%,transparent_35%,rgba(0, 4, 255, 0.97)_65%,rgba(26,86,255,0.9)_100%)]" />
       )}
 
-      {/* Subtle top border highlight (Glassmorphism look) */}
+      {/* Subtle top border highlight (Premium Glassmorphism look) */}
       <div
-        className="pointer-events-none absolute inset-0"
+        className="pointer-events-none absolute inset-0 z-0 rounded-[32px]"
         style={{
+          boxShadow: 'inset 0 1px 1px 0 rgba(255,255,255,0.1)',
           background:
-            'linear-gradient(to bottom, rgba(255, 255, 255, 0.06) 0%, transparent 15%)',
+            'linear-gradient(to bottom, rgba(255,255,255,0.04) 0%, transparent 50%)',
         }}
       />
 
       {/* Blueprint Corner Crop Marks */}
-      {showCropMarks && (
-        <>
-          {/* Top Left */}
-          <span className="absolute left-4 top-4 size-2.5 border-l border-t border-white/20 pointer-events-none transition-colors duration-300 group-hover:border-white/40" />
-          {/* Top Right */}
-          <span className="absolute right-4 top-4 size-2.5 border-r border-t border-white/20 pointer-events-none transition-colors duration-300 group-hover:border-white/40" />
-          {/* Bottom Left */}
-          <span className="absolute left-4 bottom-4 size-2.5 border-l border-b border-white/20 pointer-events-none transition-colors duration-300 group-hover:border-white/40" />
-          {/* Bottom Right */}
-          <span className="absolute right-4 bottom-4 size-2.5 border-r border-b border-white/20 pointer-events-none transition-colors duration-300 group-hover:border-white/40" />
-        </>
-      )}
 
       {/* Inner Content Area */}
       <div className="relative z-10 p-8">{children}</div>

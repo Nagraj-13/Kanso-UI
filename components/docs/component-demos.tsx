@@ -33,6 +33,8 @@ import {
 } from '@/components/kanso/three-d-masonry-orbit';
 import { ThreeDPhotoCarousel } from '@/components/kanso/three-d-photo-carousel';
 import { GlowCard } from '@/components/kanso/glow-card';
+import { FeatureGridCard } from '@/components/kanso/feature-grid-card';
+import { BlurRevealCode } from '@/components/kanso/blur-reveal-code';
 import {
   ColorPicker,
   ColorPickerSelection,
@@ -97,6 +99,100 @@ function DialKitSlider({
  */
 
 const demos: Record<string, React.ComponentType> = {
+  'blur-reveal-code': function BlurRevealCodeDemo() {
+    return (
+      <div className="flex items-center justify-center w-full min-h-[400px]">
+        <BlurRevealCode code="034872" label="Glide To Reveal Secret Code" />
+      </div>
+    );
+  },
+  'feature-grid-card': function FeatureGridCardDemo() {
+    type ThemeColor = 'emerald' | 'blue' | 'violet' | 'rose' | 'amber' | 'zinc';
+    const [theme, setTheme] = React.useState<ThemeColor>('emerald');
+
+    const colors: { name: ThemeColor; class: string }[] = [
+      { name: 'zinc', class: 'bg-zinc-500' },
+      { name: 'blue', class: 'bg-blue-500' },
+      { name: 'emerald', class: 'bg-emerald-500' },
+      { name: 'violet', class: 'bg-violet-500' },
+      { name: 'amber', class: 'bg-amber-500' },
+      { name: 'rose', class: 'bg-rose-500' },
+    ];
+
+    return (
+      <div className="flex flex-col items-center gap-8 w-full max-w-2xl">
+        {/* Color customizer */}
+        <div className="flex flex-col items-center gap-3 w-full rounded-xl border border-zinc-200/60 bg-zinc-50/20 p-4 dark:border-zinc-800/60 dark:bg-zinc-900/10">
+          <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest">
+            Select Hover Theme Color
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-3.5 mt-1">
+            {colors.map((c) => (
+              <button
+                key={c.name}
+                onClick={() => setTheme(c.name)}
+                className={cn(
+                  'size-5 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-400 dark:focus:ring-zinc-700 cursor-pointer',
+                  c.class,
+                  theme === c.name
+                    ? 'ring-2 ring-zinc-500 ring-offset-2 scale-110'
+                    : 'opacity-80 hover:opacity-100 hover:scale-105'
+                )}
+                aria-label={`Select ${c.name} theme`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Demo Cards */}
+        <div className="flex flex-wrap gap-8 items-center justify-center w-full">
+          <div className="w-[280px]">
+            <FeatureGridCard
+              themeColor={theme}
+              icon={
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-full"
+                >
+                  <path d="M14.5 3.5C14.5 3.5 14.5 5.5 12 5.5C9.5 5.5 9.5 3.5 9.5 3.5H7.5L4.20711 6.79289C3.81658 7.18342 3.81658 7.81658 4.20711 8.20711L6.5 10.5V20.5H17.5V10.5L19.7929 8.20711C20.1834 7.81658 20.1834 7.18342 19.7929 6.79289L16.5 3.5H14.5Z" />
+                </svg>
+              }
+              title="Products"
+              description="A beautiful card component that uses shadcn/ui Card primitives under the hood with a premium hover grid."
+            />
+          </div>
+          <div className="w-[280px]">
+            <FeatureGridCard
+              themeColor={theme}
+              icon={
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-full"
+                >
+                  <path d="M4.5 9.5V5.5C4.5 4.94772 4.94772 4.5 5.5 4.5H9.5C10.0523 4.5 10.5 4.94772 10.5 5.5V9.5C10.5 10.0523 10.0523 10.5 9.5 10.5H5.5C4.94772 10.5 4.5 10.0523 4.5 9.5Z" />
+                  <path d="M13.5 18.5V14.5C13.5 13.9477 13.9477 13.5 14.5 13.5H18.5C19.0523 13.5 19.5 13.9477 19.5 14.5V18.5C19.5 19.0523 19.0523 19.5 18.5 19.5H14.5C13.9477 19.5 13.5 19.0523 13.5 18.5Z" />
+                  <path d="M4.5 19.5L7.5 13.5L10.5 19.5H4.5Z" />
+                  <path d="M16.5 4.5C18.1569 4.5 19.5 5.84315 19.5 7.5C19.5 9.15685 18.1569 10.5 16.5 10.5C14.8431 10.5 13.5 9.15685 13.5 7.5C13.5 5.84315 14.8431 4.5 16.5 4.5Z" />
+                </svg>
+              }
+              title="Categories"
+              description="Customize the colors to match your brand. Fully accessible and responsive with dark mode support."
+            />
+          </div>
+        </div>
+      </div>
+    );
+  },
   button: function ButtonDemo() {
     type ButtonColor =
       | 'zinc'
