@@ -32,6 +32,9 @@ import {
   CurvedRingArchive,
 } from '@/components/kanso/three-d-masonry-orbit';
 import { ThreeDPhotoCarousel } from '@/components/kanso/three-d-photo-carousel';
+import { GlowCard } from '@/components/kanso/glow-card';
+import { FeatureGridCard } from '@/components/kanso/feature-grid-card';
+import { BlurRevealCode } from '@/components/kanso/blur-reveal-code';
 import {
   ColorPicker,
   ColorPickerSelection,
@@ -96,6 +99,100 @@ function DialKitSlider({
  */
 
 const demos: Record<string, React.ComponentType> = {
+  'blur-reveal-code': function BlurRevealCodeDemo() {
+    return (
+      <div className="flex items-center justify-center w-full min-h-[400px]">
+        <BlurRevealCode code="034872" label="Glide To Reveal Secret Code" />
+      </div>
+    );
+  },
+  'feature-grid-card': function FeatureGridCardDemo() {
+    type ThemeColor = 'emerald' | 'blue' | 'violet' | 'rose' | 'amber' | 'zinc';
+    const [theme, setTheme] = React.useState<ThemeColor>('emerald');
+
+    const colors: { name: ThemeColor; class: string }[] = [
+      { name: 'zinc', class: 'bg-zinc-500' },
+      { name: 'blue', class: 'bg-blue-500' },
+      { name: 'emerald', class: 'bg-emerald-500' },
+      { name: 'violet', class: 'bg-violet-500' },
+      { name: 'amber', class: 'bg-amber-500' },
+      { name: 'rose', class: 'bg-rose-500' },
+    ];
+
+    return (
+      <div className="flex flex-col items-center gap-8 w-full max-w-2xl">
+        {/* Color customizer */}
+        <div className="flex flex-col items-center gap-3 w-full rounded-xl border border-zinc-200/60 bg-zinc-50/20 p-4 dark:border-zinc-800/60 dark:bg-zinc-900/10">
+          <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest">
+            Select Hover Theme Color
+          </div>
+          <div className="flex flex-wrap items-center justify-center gap-3.5 mt-1">
+            {colors.map((c) => (
+              <button
+                key={c.name}
+                onClick={() => setTheme(c.name)}
+                className={cn(
+                  'size-5 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-400 dark:focus:ring-zinc-700 cursor-pointer',
+                  c.class,
+                  theme === c.name
+                    ? 'ring-2 ring-zinc-500 ring-offset-2 scale-110'
+                    : 'opacity-80 hover:opacity-100 hover:scale-105'
+                )}
+                aria-label={`Select ${c.name} theme`}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* Demo Cards */}
+        <div className="flex flex-wrap gap-8 items-center justify-center w-full">
+          <div className="w-[280px]">
+            <FeatureGridCard
+              themeColor={theme}
+              icon={
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-full"
+                >
+                  <path d="M14.5 3.5C14.5 3.5 14.5 5.5 12 5.5C9.5 5.5 9.5 3.5 9.5 3.5H7.5L4.20711 6.79289C3.81658 7.18342 3.81658 7.81658 4.20711 8.20711L6.5 10.5V20.5H17.5V10.5L19.7929 8.20711C20.1834 7.81658 20.1834 7.18342 19.7929 6.79289L16.5 3.5H14.5Z" />
+                </svg>
+              }
+              title="Products"
+              description="A beautiful card component that uses shadcn/ui Card primitives under the hood with a premium hover grid."
+            />
+          </div>
+          <div className="w-[280px]">
+            <FeatureGridCard
+              themeColor={theme}
+              icon={
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  className="size-full"
+                >
+                  <path d="M4.5 9.5V5.5C4.5 4.94772 4.94772 4.5 5.5 4.5H9.5C10.0523 4.5 10.5 4.94772 10.5 5.5V9.5C10.5 10.0523 10.0523 10.5 9.5 10.5H5.5C4.94772 10.5 4.5 10.0523 4.5 9.5Z" />
+                  <path d="M13.5 18.5V14.5C13.5 13.9477 13.9477 13.5 14.5 13.5H18.5C19.0523 13.5 19.5 13.9477 19.5 14.5V18.5C19.5 19.0523 19.0523 19.5 18.5 19.5H14.5C13.9477 19.5 13.5 19.0523 13.5 18.5Z" />
+                  <path d="M4.5 19.5L7.5 13.5L10.5 19.5H4.5Z" />
+                  <path d="M16.5 4.5C18.1569 4.5 19.5 5.84315 19.5 7.5C19.5 9.15685 18.1569 10.5 16.5 10.5C14.8431 10.5 13.5 9.15685 13.5 7.5C13.5 5.84315 14.8431 4.5 16.5 4.5Z" />
+                </svg>
+              }
+              title="Categories"
+              description="Customize the colors to match your brand. Fully accessible and responsive with dark mode support."
+            />
+          </div>
+        </div>
+      </div>
+    );
+  },
   button: function ButtonDemo() {
     type ButtonColor =
       | 'zinc'
@@ -2663,6 +2760,130 @@ const demos: Record<string, React.ComponentType> = {
             container & press Left/Right arrow keys to spin.
           </div>
         </div>
+      </div>
+    );
+  },
+  'glow-card': function GlowCardDemo() {
+    return (
+      <div className="flex flex-col items-center gap-6 w-full max-w-xl">
+        <GlowCard className="w-full">
+          {/* Card Title Header */}
+          <div className="flex items-center gap-2 text-zinc-400 text-xs font-semibold uppercase tracking-wider mb-5">
+            <svg
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="1.5"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="size-4 text-blue-500"
+            >
+              <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+              <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+              <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+              <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+              <circle cx="12" cy="12" r="3"></circle>
+              <path d="M12 9v-2"></path>
+              <path d="M12 17v-2"></path>
+              <path d="M9 12H7"></path>
+              <path d="M17 12h-2"></path>
+            </svg>
+            Real time location tracking
+          </div>
+
+          <h3 className="text-2xl font-bold text-white tracking-tight leading-snug">
+            Advanced tracking system,
+            <br />
+            instantly locate all your assets.
+          </h3>
+
+          <div className="h-px bg-white/10 my-6 border-dashed border-t" />
+
+          {/* Payments Section */}
+          <div className="flex flex-col gap-1.5 mb-5">
+            <h4 className="text-base font-semibold text-white">Payments</h4>
+            <p className="text-xs text-zinc-450">Track your transactions</p>
+          </div>
+
+          {/* Filter Bar mock */}
+          <div className="flex items-center justify-between bg-white/[0.02] border border-white/5 rounded-lg px-4 py-2.5 mb-6 text-sm">
+            <span className="text-zinc-300">Transaction</span>
+            <span className="flex items-center gap-1.5 text-zinc-400 cursor-pointer hover:text-white transition-colors">
+              Custom
+              <svg
+                className="size-4"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                stroke-width="2"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+              >
+                <path d="m6 9 6 6 6-6" />
+              </svg>
+            </span>
+          </div>
+
+          {/* Table List mock */}
+          <div className="flex flex-col text-sm">
+            {/* Table Header */}
+            <div className="grid grid-cols-[30px_1fr_1fr_1fr] pb-3 border-b border-white/5 text-zinc-500 font-medium text-xs">
+              <div className="flex items-center">
+                <span className="size-3.5 rounded-full border border-white/10" />
+              </div>
+              <div>Status</div>
+              <div>Date</div>
+              <div className="text-right">Amount</div>
+            </div>
+
+            {/* Row 1 */}
+            <div className="grid grid-cols-[30px_1fr_1fr_1fr] py-3.5 border-b border-white/[0.03] items-center">
+              <div className="flex items-center">
+                <span className="size-3.5 rounded-full border border-white/10" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="size-2 rounded-full bg-green-500" />
+                <span className="text-zinc-200">Success</span>
+              </div>
+              <div className="text-zinc-400">May 15</div>
+              <div className="text-right text-zinc-100 font-medium">
+                $2,450.00
+              </div>
+            </div>
+
+            {/* Row 2 */}
+            <div className="grid grid-cols-[30px_1fr_1fr_1fr] py-3.5 border-b border-white/[0.03] items-center">
+              <div className="flex items-center">
+                <span className="size-3.5 rounded-full border border-white/10" />
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="size-2 rounded-full bg-red-500" />
+                <span className="text-zinc-200">Failed</span>
+              </div>
+              <div className="text-zinc-400">May 14</div>
+              <div className="text-right text-zinc-100 font-medium">
+                $950.00
+              </div>
+            </div>
+
+            {/* Row 3 */}
+            <div className="grid grid-cols-[30px_1fr_1fr_1fr] py-3.5 items-center">
+              <div className="flex items-center">
+                <span className="size-3.5 rounded-full border border-blue-500/50 flex items-center justify-center">
+                  <span className="size-1.5 rounded-full bg-blue-500" />
+                </span>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="size-2 rounded-full bg-blue-500" />
+                <span className="text-zinc-200">Processing</span>
+              </div>
+              <div className="text-zinc-400">orders@acme.com</div>
+              <div className="text-right text-zinc-100 font-medium">
+                $3,250.00
+              </div>
+            </div>
+          </div>
+        </GlowCard>
       </div>
     );
   },

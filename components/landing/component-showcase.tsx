@@ -73,7 +73,7 @@ export function ComponentShowcase({
   return (
     <section
       id="showcase"
-      className="border-t border-b border-dashed border-border  dark:bg-zinc-950 relative"
+      className="border-t border-b border-dashed border-border  relative"
     >
       <SectionDivider />
       <div className="mx-auto max-w-7xl border-l border-r border-dashed border-border px-6 py-28 md:px-8">
