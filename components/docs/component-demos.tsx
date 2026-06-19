@@ -33,6 +33,7 @@ import {
 } from '@/components/kanso/three-d-masonry-orbit';
 import { ThreeDPhotoCarousel } from '@/components/kanso/three-d-photo-carousel';
 import { ThreeDCarousel } from '@/components/kanso/three-d-carousel';
+import { SphereCarousel } from '@/components/kanso/sphere-carousel';
 import { GlowCard } from '@/components/kanso/glow-card';
 import { FeatureGridCard } from '@/components/kanso/feature-grid-card';
 import { BlurRevealCode } from '@/components/kanso/blur-reveal-code';
@@ -3044,6 +3045,72 @@ const demos: Record<string, React.ComponentType> = {
             mouse up/down to tilt perspective. Keyboard Focus support: select
             container and use ArrowLeft/Right to manually step, Space to toggle
             Autospin.
+          </div>
+        </div>
+      </div>
+    );
+  },
+  'sphere-carousel': function SphereCarouselDemo() {
+    const [radius, setRadius] = React.useState(200);
+    const [cardSize, setCardSize] = React.useState(100);
+    const [autoSpin, setAutoSpin] = React.useState(true);
+
+    return (
+      <div className="flex flex-col gap-8 w-full max-w-5xl items-center">
+        <div className="w-full h-[550px] rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-950/5 dark:bg-zinc-950/40 relative shadow-md">
+          <SphereCarousel
+            radius={radius}
+            cardSize={cardSize}
+            autoSpin={autoSpin}
+            className="size-full border-0 rounded-none bg-transparent"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full p-6 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="col-span-1 md:col-span-2 text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1 font-sans">
+            Adjust Sphere Carousel Parameters
+          </div>
+
+          <div className="flex flex-col gap-5">
+            <DialKitSlider
+              label="Sphere Radius"
+              min={120}
+              max={300}
+              step={10}
+              value={radius}
+              onChange={setRadius}
+              suffix="px"
+            />
+          </div>
+
+          <div className="flex flex-col gap-5 justify-between">
+            <DialKitSlider
+              label="Card Dimension Size"
+              min={60}
+              max={150}
+              step={5}
+              value={cardSize}
+              onChange={setCardSize}
+              suffix="px"
+            />
+
+            <div className="flex items-center justify-between pt-2 border-t border-zinc-150 dark:border-zinc-800">
+              <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">
+                Enable Idle Autospin
+              </span>
+              <input
+                type="checkbox"
+                checked={autoSpin}
+                onChange={(e) => setAutoSpin(e.target.checked)}
+                className="accent-indigo-600 cursor-pointer size-4"
+              />
+            </div>
+          </div>
+
+          <div className="col-span-1 md:col-span-2 text-[9px] text-zinc-400/85 dark:text-zinc-500/85 italic text-center font-mono mt-1 leading-normal border-t border-zinc-150 dark:border-zinc-800 pt-3">
+            * Drag the sphere in any direction (X or Y coordinates) to rotate.
+            Release to spin with inertia. Keyboard Focus support: select
+            container and use Arrow keys to steer, Space to toggle Autospin.
           </div>
         </div>
       </div>

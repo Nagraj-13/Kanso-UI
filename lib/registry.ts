@@ -763,6 +763,60 @@ export default function ThreeDCarouselDemo() {
     ],
   },
   {
+    name: 'sphere-carousel',
+    title: 'Sphere Carousel',
+    description:
+      'A premium 3D holographic sphere carousel distributing circular image cards evenly via Fibonacci points, featuring dual-axis drag inertia, autoplay spinning, and camera depth-of-field blur.',
+    category: 'data-display',
+    dependencies: [],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/sphere-carousel.tsx',
+    tags: [
+      '3d',
+      'carousel',
+      'sphere',
+      'orbit',
+      'gallery',
+      'drag',
+      'inertia',
+      'interactive',
+    ],
+    usage: `import { SphereCarousel } from "@/components/kanso/sphere-carousel"
+
+export default function SphereCarouselDemo() {
+  return (
+    <div className="w-full h-[550px] overflow-hidden">
+      <SphereCarousel />
+    </div>
+  )
+}`,
+    props: [
+      {
+        name: 'images',
+        type: 'string[]',
+        description: 'Array of image URLs to render inside the sphere.',
+      },
+      {
+        name: 'radius',
+        type: 'number',
+        default: '200',
+        description: 'Radius of the sphere in pixels.',
+      },
+      {
+        name: 'cardSize',
+        type: 'number',
+        default: '100',
+        description: 'Width and height of the circular cards in pixels.',
+      },
+      {
+        name: 'autoSpin',
+        type: 'boolean',
+        default: 'true',
+        description: 'Whether the sphere auto-spins when idle.',
+      },
+    ],
+  },
+  {
     name: 'three-d-photo-carousel',
     title: '3D Photo Carousel',
     description:
