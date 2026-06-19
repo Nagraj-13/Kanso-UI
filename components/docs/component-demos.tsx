@@ -32,6 +32,7 @@ import {
   CurvedRingArchive,
 } from '@/components/kanso/three-d-masonry-orbit';
 import { ThreeDPhotoCarousel } from '@/components/kanso/three-d-photo-carousel';
+import { ThreeDCarousel } from '@/components/kanso/three-d-carousel';
 import { GlowCard } from '@/components/kanso/glow-card';
 import { FeatureGridCard } from '@/components/kanso/feature-grid-card';
 import { BlurRevealCode } from '@/components/kanso/blur-reveal-code';
@@ -2967,6 +2968,84 @@ const demos: Record<string, React.ComponentType> = {
             <CurvedRingArchive embedded={true} />
           </div>
         )}
+      </div>
+    );
+  },
+  'three-d-carousel': function ThreeDCarouselDemo() {
+    const [radius, setRadius] = React.useState(240);
+    const [cardW, setCardW] = React.useState(180);
+    const [cardH, setCardH] = React.useState(240);
+    const [autoSpin, setAutoSpin] = React.useState(true);
+
+    return (
+      <div className="flex flex-col gap-8 w-full max-w-5xl items-center">
+        <div className="w-full h-[500px] rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-950/5 dark:bg-zinc-950/40 relative shadow-md">
+          <ThreeDCarousel
+            radius={radius}
+            cardW={cardW}
+            cardH={cardH}
+            autoSpin={autoSpin}
+            className="size-full border-0 rounded-none bg-transparent"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full p-6 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="col-span-1 md:col-span-2 text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1 font-sans">
+            Adjust 3D Carousel Parameters
+          </div>
+
+          <div className="flex flex-col gap-5">
+            <DialKitSlider
+              label="Orbit Radius"
+              min={150}
+              max={400}
+              step={10}
+              value={radius}
+              onChange={setRadius}
+              suffix="px"
+            />
+            <DialKitSlider
+              label="Card Width"
+              min={120}
+              max={250}
+              step={10}
+              value={cardW}
+              onChange={setCardW}
+              suffix="px"
+            />
+          </div>
+
+          <div className="flex flex-col gap-5 justify-between">
+            <DialKitSlider
+              label="Card Height"
+              min={160}
+              max={320}
+              step={10}
+              value={cardH}
+              onChange={setCardH}
+              suffix="px"
+            />
+
+            <div className="flex items-center justify-between pt-2 border-t border-zinc-150 dark:border-zinc-800">
+              <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">
+                Enable Autospin When Idle
+              </span>
+              <input
+                type="checkbox"
+                checked={autoSpin}
+                onChange={(e) => setAutoSpin(e.target.checked)}
+                className="accent-indigo-600 cursor-pointer size-4"
+              />
+            </div>
+          </div>
+
+          <div className="col-span-1 md:col-span-2 text-[9px] text-zinc-400/85 dark:text-zinc-500/85 italic text-center font-mono mt-1 leading-normal border-t border-zinc-150 dark:border-zinc-800 pt-3">
+            * Drag cards vertically or horizontally to spin with inertia. Move
+            mouse up/down to tilt perspective. Keyboard Focus support: select
+            container and use ArrowLeft/Right to manually step, Space to toggle
+            Autospin.
+          </div>
+        </div>
       </div>
     );
   },

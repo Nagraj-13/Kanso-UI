@@ -50,7 +50,6 @@ const NoiseCard = React.forwardRef<HTMLDivElement, NoiseCardProps>(
     ref
   ) => {
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
-    const containerRef = React.useRef<HTMLDivElement>(null);
     const frameRef = React.useRef<number>(0);
     const animationFrameIdRef = React.useRef<number>(0);
 

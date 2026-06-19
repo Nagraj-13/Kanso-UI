@@ -704,6 +704,65 @@ export default function ThreeDMasonryOrbitDemo() {
     ],
   },
   {
+    name: 'three-d-carousel',
+    title: '3D Carousel',
+    description:
+      'A lightweight, high-performance 3D image carousel with physics-based drag inertia, autoplay spin, and cursor hover tilting.',
+    category: 'data-display',
+    dependencies: [],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/three-d-carousel.tsx',
+    tags: [
+      '3d',
+      'carousel',
+      'gallery',
+      'orbit',
+      'drag',
+      'inertia',
+      'interactive',
+    ],
+    usage: `import { ThreeDCarousel } from "@/components/kanso/three-d-carousel"
+
+export default function ThreeDCarouselDemo() {
+  return (
+    <div className="w-full h-[500px] overflow-hidden">
+      <ThreeDCarousel />
+    </div>
+  )
+}`,
+    props: [
+      {
+        name: 'images',
+        type: 'string[]',
+        description: 'Array of custom image URLs to display in the carousel.',
+      },
+      {
+        name: 'radius',
+        type: 'number',
+        default: '240',
+        description: 'Outer orbit cylinder radius in pixels.',
+      },
+      {
+        name: 'cardW',
+        type: 'number',
+        default: '180',
+        description: 'Width of each card in pixels.',
+      },
+      {
+        name: 'cardH',
+        type: 'number',
+        default: '240',
+        description: 'Height of each card in pixels.',
+      },
+      {
+        name: 'autoSpin',
+        type: 'boolean',
+        default: 'true',
+        description: 'Whether the carousel auto-spins when idle.',
+      },
+    ],
+  },
+  {
     name: 'three-d-photo-carousel',
     title: '3D Photo Carousel',
     description:
