@@ -32,9 +32,12 @@ import {
   CurvedRingArchive,
 } from '@/components/kanso/three-d-masonry-orbit';
 import { ThreeDPhotoCarousel } from '@/components/kanso/three-d-photo-carousel';
+import { ThreeDCarousel } from '@/components/kanso/three-d-carousel';
+import { SphereCarousel } from '@/components/kanso/sphere-carousel';
 import { GlowCard } from '@/components/kanso/glow-card';
 import { FeatureGridCard } from '@/components/kanso/feature-grid-card';
 import { BlurRevealCode } from '@/components/kanso/blur-reveal-code';
+import { NoiseCard } from '@/components/kanso/noise-card';
 import {
   ColorPicker,
   ColorPickerSelection,
@@ -188,6 +191,291 @@ const demos: Record<string, React.ComponentType> = {
               title="Categories"
               description="Customize the colors to match your brand. Fully accessible and responsive with dark mode support."
             />
+          </div>
+        </div>
+      </div>
+    );
+  },
+  'noise-card': function NoiseCardDemo() {
+    const [theme, setTheme] = React.useState<
+      'kanso' | 'indigo' | 'sunset' | 'light' | 'glass' | 'none'
+    >('indigo');
+    const [animated, setAnimated] = React.useState(true);
+    const [noiseOpacity, setNoiseOpacity] = React.useState(0.06);
+    const [grainSize, setGrainSize] = React.useState(1);
+    const [interactive, setInteractive] = React.useState(true);
+    const [spotlightSize, setSpotlightSize] = React.useState(300);
+
+    const themes: { name: typeof theme; label: string; class: string }[] = [
+      {
+        name: 'kanso',
+        label: 'Kanso Minimal',
+        class: 'bg-zinc-900 border-zinc-700',
+      },
+      {
+        name: 'indigo',
+        label: 'Deep Indigo',
+        class: 'bg-indigo-950 border-indigo-700',
+      },
+      {
+        name: 'sunset',
+        label: 'Sunset Amber',
+        class: 'bg-rose-950 border-rose-800',
+      },
+      {
+        name: 'light',
+        label: 'Pure Light',
+        class: 'bg-zinc-200 border-zinc-400 text-zinc-900',
+      },
+      {
+        name: 'glass',
+        label: 'Frosted Glass',
+        class: 'bg-white/10 dark:bg-black/10 border-white/20',
+      },
+      {
+        name: 'none',
+        label: 'Custom Flat',
+        class: 'bg-blue-600 border-blue-400',
+      },
+    ];
+
+    const handleThemeChange = (newTheme: typeof theme) => {
+      setTheme(newTheme);
+      if (newTheme === 'light') {
+        setNoiseOpacity(0.02);
+      } else if (newTheme === 'glass') {
+        setNoiseOpacity(0.035);
+      } else {
+        setNoiseOpacity(0.06);
+      }
+    };
+
+    return (
+      <div className="flex flex-col items-center gap-10 w-full max-w-4xl">
+        <div className="flex flex-col md:flex-row gap-8 items-stretch justify-center w-full">
+          <div className="flex-1 flex items-center justify-center p-6 border border-zinc-200/50 dark:border-zinc-800/50 rounded-2xl bg-zinc-50/10 dark:bg-zinc-950/20 min-h-[350px]">
+            <NoiseCard
+              theme={theme}
+              animated={animated}
+              noiseOpacity={noiseOpacity}
+              grainSize={grainSize}
+              interactive={interactive}
+              spotlightSize={spotlightSize}
+              bgColor="bg-indigo-600"
+              className="w-full max-w-sm h-64 shadow-2xl transition-all duration-500"
+            >
+              <div className="flex flex-col justify-between h-full select-none">
+                <div>
+                  <div className="flex items-center justify-between">
+                    <span className="text-[10px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                      Telemetry Node
+                    </span>
+                    <span
+                      className={cn(
+                        'size-2 rounded-full',
+                        animated
+                          ? 'bg-emerald-500 animate-pulse'
+                          : 'bg-zinc-600'
+                      )}
+                    />
+                  </div>
+                  <h3 className="text-xl font-bold mt-4 tracking-tight">
+                    {theme === 'kanso' && 'Kanso Simplicity'}
+                    {theme === 'indigo' && 'Quantum Wavefront'}
+                    {theme === 'sunset' && 'Solar Flare Core'}
+                    {theme === 'light' && 'Clean Canvas'}
+                    {theme === 'glass' && 'Frosted Silica'}
+                    {theme === 'none' && 'Flat Field Override'}
+                  </h3>
+                  <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-2 leading-relaxed">
+                    A premium React container with hardware-accelerated
+                    static/animated noise grain layers and hover interactions.
+                  </p>
+                </div>
+                <div className="flex items-center justify-between text-[10px] font-mono text-zinc-500/70 border-t border-zinc-200/20 dark:border-zinc-800/30 pt-4 mt-4">
+                  <span>GRAIN: {grainSize}px</span>
+                  <span>OPACITY: {(noiseOpacity * 100).toFixed(1)}%</span>
+                  <span>ACTIVE</span>
+                </div>
+              </div>
+            </NoiseCard>
+          </div>
+
+          <div className="w-full md:w-80 flex flex-col gap-6 p-6 border border-zinc-200 dark:border-zinc-800 rounded-2xl bg-white dark:bg-zinc-900/30 justify-between">
+            <div className="flex flex-col gap-5">
+              <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest">
+                Card Parameters (Props)
+              </div>
+
+              <div className="flex flex-col gap-2">
+                <label className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">
+                  Theme Preset
+                </label>
+                <div className="grid grid-cols-3 gap-1.5 p-1 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-zinc-50/50 dark:bg-zinc-950/20">
+                  {themes.map((t) => (
+                    <button
+                      key={t.name}
+                      onClick={() => handleThemeChange(t.name)}
+                      className={cn(
+                        'px-2 py-1 text-[10px] font-semibold rounded-md border transition-all cursor-pointer text-center',
+                        theme === t.name
+                          ? 'border-zinc-300 dark:border-zinc-700 bg-white dark:bg-zinc-900 text-zinc-900 dark:text-zinc-50 shadow-xs'
+                          : 'border-transparent text-zinc-500 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-100'
+                      )}
+                    >
+                      {t.name === 'none' ? 'Custom' : t.name}
+                    </button>
+                  ))}
+                </div>
+              </div>
+
+              <DialKitSlider
+                label="Noise Opacity"
+                min={0.01}
+                max={0.2}
+                step={0.005}
+                value={noiseOpacity}
+                onChange={setNoiseOpacity}
+                suffix=""
+              />
+
+              <DialKitSlider
+                label="Grain Size"
+                min={1}
+                max={4}
+                step={1}
+                value={grainSize}
+                onChange={setGrainSize}
+                suffix="px"
+              />
+
+              <DialKitSlider
+                label="Spotlight Size"
+                min={150}
+                max={500}
+                step={25}
+                value={spotlightSize}
+                onChange={setSpotlightSize}
+                suffix="px"
+              />
+            </div>
+
+            <div className="flex flex-col gap-3 border-t border-zinc-100 dark:border-zinc-800/80 pt-4 mt-2">
+              <label className="flex items-center gap-2.5 text-xs font-semibold text-zinc-600 dark:text-zinc-400 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={animated}
+                  onChange={(e) => setAnimated(e.target.checked)}
+                  className="rounded border-zinc-300 dark:border-zinc-700 text-indigo-600 focus:ring-indigo-500 cursor-pointer size-3.5"
+                />
+                Animated Noise Grain
+              </label>
+
+              <label className="flex items-center gap-2.5 text-xs font-semibold text-zinc-600 dark:text-zinc-400 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={interactive}
+                  onChange={(e) => setInteractive(e.target.checked)}
+                  className="rounded border-zinc-300 dark:border-zinc-700 text-indigo-600 focus:ring-indigo-500 cursor-pointer size-3.5"
+                />
+                Hover Spotlight & Lift
+              </label>
+            </div>
+          </div>
+        </div>
+
+        <div className="flex flex-col gap-4 w-full">
+          <div className="text-[10px] font-bold text-zinc-400 uppercase tracking-widest text-center">
+            Theme Gallery Showcase
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 w-full">
+            <NoiseCard theme="kanso" className="h-44 shadow-lg">
+              <div className="flex flex-col justify-between h-full">
+                <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-500">
+                  Preset: kanso
+                </span>
+                <h4 className="text-base font-bold text-zinc-50 mt-1">
+                  Kanso Minimal
+                </h4>
+                <p className="text-[11px] text-zinc-400 dark:text-zinc-400 leading-relaxed mt-1">
+                  Ultra-minimalist dark slate/zinc finish.
+                </p>
+              </div>
+            </NoiseCard>
+
+            <NoiseCard theme="indigo" className="h-44 shadow-lg">
+              <div className="flex flex-col justify-between h-full">
+                <span className="text-[9px] font-bold uppercase tracking-widest text-indigo-400">
+                  Preset: indigo
+                </span>
+                <h4 className="text-base font-bold text-zinc-50 mt-1">
+                  Deep Indigo
+                </h4>
+                <p className="text-[11px] text-zinc-400 dark:text-zinc-400 leading-relaxed mt-1">
+                  Sophisticated deep navy and purple glow.
+                </p>
+              </div>
+            </NoiseCard>
+
+            <NoiseCard theme="sunset" className="h-44 shadow-lg">
+              <div className="flex flex-col justify-between h-full">
+                <span className="text-[9px] font-bold uppercase tracking-widest text-rose-400">
+                  Preset: sunset
+                </span>
+                <h4 className="text-base font-bold text-zinc-50 mt-1">
+                  Sunset Amber
+                </h4>
+                <p className="text-[11px] text-zinc-400 dark:text-zinc-400 leading-relaxed mt-1">
+                  Warm amber and rich burgundy glow.
+                </p>
+              </div>
+            </NoiseCard>
+
+            <NoiseCard theme="light" className="h-44 shadow-lg">
+              <div className="flex flex-col justify-between h-full">
+                <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-400">
+                  Preset: light
+                </span>
+                <h4 className="text-base font-bold text-zinc-900 mt-1">
+                  Pure Light
+                </h4>
+                <p className="text-[11px] text-zinc-500 leading-relaxed mt-1">
+                  Crisp paper-white with micro shadow and dark grain.
+                </p>
+              </div>
+            </NoiseCard>
+
+            <NoiseCard theme="glass" className="h-44 shadow-lg">
+              <div className="flex flex-col justify-between h-full">
+                <span className="text-[9px] font-bold uppercase tracking-widest text-zinc-400 dark:text-zinc-500">
+                  Preset: glass
+                </span>
+                <h4 className="text-base font-bold text-zinc-900 dark:text-zinc-50 mt-1">
+                  Frosted Glass
+                </h4>
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-relaxed mt-1">
+                  Semi-transparent blur overlay.
+                </p>
+              </div>
+            </NoiseCard>
+
+            <NoiseCard
+              theme="none"
+              bgColor="bg-emerald-900"
+              className="h-44 border border-emerald-800/30 shadow-lg"
+            >
+              <div className="flex flex-col justify-between h-full">
+                <span className="text-[9px] font-bold uppercase tracking-widest text-emerald-300">
+                  Preset: none (Custom)
+                </span>
+                <h4 className="text-base font-bold text-white mt-1">
+                  Custom Emerald
+                </h4>
+                <p className="text-[11px] text-emerald-100/70 leading-relaxed mt-1">
+                  Leverages custom class names and backgrounds.
+                </p>
+              </div>
+            </NoiseCard>
           </div>
         </div>
       </div>
@@ -2681,6 +2969,150 @@ const demos: Record<string, React.ComponentType> = {
             <CurvedRingArchive embedded={true} />
           </div>
         )}
+      </div>
+    );
+  },
+  'three-d-carousel': function ThreeDCarouselDemo() {
+    const [radius, setRadius] = React.useState(240);
+    const [cardW, setCardW] = React.useState(180);
+    const [cardH, setCardH] = React.useState(240);
+    const [autoSpin, setAutoSpin] = React.useState(true);
+
+    return (
+      <div className="flex flex-col gap-8 w-full max-w-5xl items-center">
+        <div className="w-full h-[500px] rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-950/5 dark:bg-zinc-950/40 relative shadow-md">
+          <ThreeDCarousel
+            radius={radius}
+            cardW={cardW}
+            cardH={cardH}
+            autoSpin={autoSpin}
+            className="size-full border-0 rounded-none bg-transparent"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full p-6 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="col-span-1 md:col-span-2 text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1 font-sans">
+            Adjust 3D Carousel Parameters
+          </div>
+
+          <div className="flex flex-col gap-5">
+            <DialKitSlider
+              label="Orbit Radius"
+              min={150}
+              max={400}
+              step={10}
+              value={radius}
+              onChange={setRadius}
+              suffix="px"
+            />
+            <DialKitSlider
+              label="Card Width"
+              min={120}
+              max={250}
+              step={10}
+              value={cardW}
+              onChange={setCardW}
+              suffix="px"
+            />
+          </div>
+
+          <div className="flex flex-col gap-5 justify-between">
+            <DialKitSlider
+              label="Card Height"
+              min={160}
+              max={320}
+              step={10}
+              value={cardH}
+              onChange={setCardH}
+              suffix="px"
+            />
+
+            <div className="flex items-center justify-between pt-2 border-t border-zinc-150 dark:border-zinc-800">
+              <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">
+                Enable Autospin When Idle
+              </span>
+              <input
+                type="checkbox"
+                checked={autoSpin}
+                onChange={(e) => setAutoSpin(e.target.checked)}
+                className="accent-indigo-600 cursor-pointer size-4"
+              />
+            </div>
+          </div>
+
+          <div className="col-span-1 md:col-span-2 text-[9px] text-zinc-400/85 dark:text-zinc-500/85 italic text-center font-mono mt-1 leading-normal border-t border-zinc-150 dark:border-zinc-800 pt-3">
+            * Drag cards vertically or horizontally to spin with inertia. Move
+            mouse up/down to tilt perspective. Keyboard Focus support: select
+            container and use ArrowLeft/Right to manually step, Space to toggle
+            Autospin.
+          </div>
+        </div>
+      </div>
+    );
+  },
+  'sphere-carousel': function SphereCarouselDemo() {
+    const [radius, setRadius] = React.useState(200);
+    const [cardSize, setCardSize] = React.useState(100);
+    const [autoSpin, setAutoSpin] = React.useState(true);
+
+    return (
+      <div className="flex flex-col gap-8 w-full max-w-5xl items-center">
+        <div className="w-full h-[550px] rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 bg-zinc-950/5 dark:bg-zinc-950/40 relative shadow-md">
+          <SphereCarousel
+            radius={radius}
+            cardSize={cardSize}
+            autoSpin={autoSpin}
+            className="size-full border-0 rounded-none bg-transparent"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full p-6 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="col-span-1 md:col-span-2 text-[10px] font-bold text-zinc-400 uppercase tracking-widest mb-1 font-sans">
+            Adjust Sphere Carousel Parameters
+          </div>
+
+          <div className="flex flex-col gap-5">
+            <DialKitSlider
+              label="Sphere Radius"
+              min={120}
+              max={300}
+              step={10}
+              value={radius}
+              onChange={setRadius}
+              suffix="px"
+            />
+          </div>
+
+          <div className="flex flex-col gap-5 justify-between">
+            <DialKitSlider
+              label="Card Dimension Size"
+              min={60}
+              max={150}
+              step={5}
+              value={cardSize}
+              onChange={setCardSize}
+              suffix="px"
+            />
+
+            <div className="flex items-center justify-between pt-2 border-t border-zinc-150 dark:border-zinc-800">
+              <span className="text-[10px] font-semibold text-zinc-400 uppercase tracking-wider">
+                Enable Idle Autospin
+              </span>
+              <input
+                type="checkbox"
+                checked={autoSpin}
+                onChange={(e) => setAutoSpin(e.target.checked)}
+                className="accent-indigo-600 cursor-pointer size-4"
+              />
+            </div>
+          </div>
+
+          <div className="col-span-1 md:col-span-2 text-[9px] text-zinc-400/85 dark:text-zinc-500/85 italic text-center font-mono mt-1 leading-normal border-t border-zinc-150 dark:border-zinc-800 pt-3">
+            * Drag the sphere in any direction (X or Y coordinates) to rotate.
+            Release to spin with inertia. Keyboard Focus support: select
+            container and use Arrow keys to steer, Space to toggle Autospin.
+          </div>
+        </div>
       </div>
     );
   },

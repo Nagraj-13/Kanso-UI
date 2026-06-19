@@ -102,6 +102,112 @@ export default function BlurRevealCodeDemo() {
     ],
   },
   {
+    name: 'noise-card',
+    title: 'Noise Card',
+    description:
+      'A premium card component featuring customizable background themes, optimized animated noise overlays, and interactive hover spotlight effects.',
+    category: 'cards',
+    dependencies: [],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/noise-card.tsx',
+    tags: [
+      'card',
+      'noise',
+      'grain',
+      'spotlight',
+      'hover',
+      'interactive',
+      'glow',
+    ],
+    usage: `import { NoiseCard } from "@/components/kanso/noise-card"
+
+export default function NoiseCardDemo() {
+  return (
+    <NoiseCard theme="indigo" className="w-96 h-72">
+      <div className="flex flex-col justify-between h-full">
+        <div>
+          <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400">Card Element</span>
+          <h3 className="text-xl font-bold mt-1 text-white">Indigo Noise</h3>
+        </div>
+        <p className="text-sm text-zinc-400">
+          A premium card component with optimized noise overlays and hover effects.
+        </p>
+      </div>
+    </NoiseCard>
+  )
+}`,
+    props: [
+      {
+        name: 'theme',
+        type: '"kanso" | "indigo" | "sunset" | "light" | "glass" | "none"',
+        default: '"kanso"',
+        description:
+          'The visual theme preset of the card background and borders.',
+      },
+      {
+        name: 'width',
+        type: 'string',
+        default: '"w-full"',
+        description: 'The width utility class or value of the card container.',
+      },
+      {
+        name: 'height',
+        type: 'string',
+        default: '"h-auto"',
+        description: 'The height utility class or value of the card container.',
+      },
+      {
+        name: 'noiseOpacity',
+        type: 'number',
+        description:
+          'The opacity of the noise overlay (0 to 1). Defaults to theme-specific presets.',
+      },
+      {
+        name: 'grainSize',
+        type: 'number',
+        default: '1',
+        description: 'Pixel size of the noise grains.',
+      },
+      {
+        name: 'animated',
+        type: 'boolean',
+        default: 'true',
+        description: 'Whether the noise pattern is animated.',
+      },
+      {
+        name: 'interactive',
+        type: 'boolean',
+        default: 'true',
+        description:
+          'Enables custom interactive mouse spotlight tracking and lift effects.',
+      },
+      {
+        name: 'spotlightColor',
+        type: 'string',
+        description: 'Override for the hover spotlight color.',
+      },
+      {
+        name: 'spotlightSize',
+        type: 'number',
+        default: '300',
+        description:
+          'The size/radius of the spotlight gradient circle in pixels.',
+      },
+      {
+        name: 'bgColor',
+        type: 'string',
+        default: '"bg-[#0014FF]"',
+        description:
+          'Background color override, only used if theme is set to "none".',
+      },
+      {
+        name: 'className',
+        type: 'string',
+        description: 'Additional CSS classes to apply custom overrides.',
+      },
+    ],
+  },
+  {
     name: 'feature-grid-card',
     title: 'Feature Grid Card',
     description:
@@ -594,6 +700,119 @@ export default function ThreeDMasonryOrbitDemo() {
         type: 'number',
         default: '1.0',
         description: 'Column width/spacing multiplier factor.',
+      },
+    ],
+  },
+  {
+    name: 'three-d-carousel',
+    title: '3D Carousel',
+    description:
+      'A lightweight, high-performance 3D image carousel with physics-based drag inertia, autoplay spin, and cursor hover tilting.',
+    category: 'data-display',
+    dependencies: [],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/three-d-carousel.tsx',
+    tags: [
+      '3d',
+      'carousel',
+      'gallery',
+      'orbit',
+      'drag',
+      'inertia',
+      'interactive',
+    ],
+    usage: `import { ThreeDCarousel } from "@/components/kanso/three-d-carousel"
+
+export default function ThreeDCarouselDemo() {
+  return (
+    <div className="w-full h-[500px] overflow-hidden">
+      <ThreeDCarousel />
+    </div>
+  )
+}`,
+    props: [
+      {
+        name: 'images',
+        type: 'string[]',
+        description: 'Array of custom image URLs to display in the carousel.',
+      },
+      {
+        name: 'radius',
+        type: 'number',
+        default: '240',
+        description: 'Outer orbit cylinder radius in pixels.',
+      },
+      {
+        name: 'cardW',
+        type: 'number',
+        default: '180',
+        description: 'Width of each card in pixels.',
+      },
+      {
+        name: 'cardH',
+        type: 'number',
+        default: '240',
+        description: 'Height of each card in pixels.',
+      },
+      {
+        name: 'autoSpin',
+        type: 'boolean',
+        default: 'true',
+        description: 'Whether the carousel auto-spins when idle.',
+      },
+    ],
+  },
+  {
+    name: 'sphere-carousel',
+    title: 'Sphere Carousel',
+    description:
+      'A premium 3D holographic sphere carousel distributing circular image cards evenly via Fibonacci points, featuring dual-axis drag inertia, autoplay spinning, and camera depth-of-field blur.',
+    category: 'data-display',
+    dependencies: [],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/sphere-carousel.tsx',
+    tags: [
+      '3d',
+      'carousel',
+      'sphere',
+      'orbit',
+      'gallery',
+      'drag',
+      'inertia',
+      'interactive',
+    ],
+    usage: `import { SphereCarousel } from "@/components/kanso/sphere-carousel"
+
+export default function SphereCarouselDemo() {
+  return (
+    <div className="w-full h-[550px] overflow-hidden">
+      <SphereCarousel />
+    </div>
+  )
+}`,
+    props: [
+      {
+        name: 'images',
+        type: 'string[]',
+        description: 'Array of image URLs to render inside the sphere.',
+      },
+      {
+        name: 'radius',
+        type: 'number',
+        default: '200',
+        description: 'Radius of the sphere in pixels.',
+      },
+      {
+        name: 'cardSize',
+        type: 'number',
+        default: '100',
+        description: 'Width and height of the circular cards in pixels.',
+      },
+      {
+        name: 'autoSpin',
+        type: 'boolean',
+        default: 'true',
+        description: 'Whether the sphere auto-spins when idle.',
       },
     ],
   },
