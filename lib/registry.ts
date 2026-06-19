@@ -102,6 +102,112 @@ export default function BlurRevealCodeDemo() {
     ],
   },
   {
+    name: 'noise-card',
+    title: 'Noise Card',
+    description:
+      'A premium card component featuring customizable background themes, optimized animated noise overlays, and interactive hover spotlight effects.',
+    category: 'cards',
+    dependencies: [],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/noise-card.tsx',
+    tags: [
+      'card',
+      'noise',
+      'grain',
+      'spotlight',
+      'hover',
+      'interactive',
+      'glow',
+    ],
+    usage: `import { NoiseCard } from "@/components/kanso/noise-card"
+
+export default function NoiseCardDemo() {
+  return (
+    <NoiseCard theme="indigo" className="w-96 h-72">
+      <div className="flex flex-col justify-between h-full">
+        <div>
+          <span className="text-xs font-semibold uppercase tracking-wider text-indigo-400">Card Element</span>
+          <h3 className="text-xl font-bold mt-1 text-white">Indigo Noise</h3>
+        </div>
+        <p className="text-sm text-zinc-400">
+          A premium card component with optimized noise overlays and hover effects.
+        </p>
+      </div>
+    </NoiseCard>
+  )
+}`,
+    props: [
+      {
+        name: 'theme',
+        type: '"kanso" | "indigo" | "sunset" | "light" | "glass" | "none"',
+        default: '"kanso"',
+        description:
+          'The visual theme preset of the card background and borders.',
+      },
+      {
+        name: 'width',
+        type: 'string',
+        default: '"w-full"',
+        description: 'The width utility class or value of the card container.',
+      },
+      {
+        name: 'height',
+        type: 'string',
+        default: '"h-auto"',
+        description: 'The height utility class or value of the card container.',
+      },
+      {
+        name: 'noiseOpacity',
+        type: 'number',
+        description:
+          'The opacity of the noise overlay (0 to 1). Defaults to theme-specific presets.',
+      },
+      {
+        name: 'grainSize',
+        type: 'number',
+        default: '1',
+        description: 'Pixel size of the noise grains.',
+      },
+      {
+        name: 'animated',
+        type: 'boolean',
+        default: 'true',
+        description: 'Whether the noise pattern is animated.',
+      },
+      {
+        name: 'interactive',
+        type: 'boolean',
+        default: 'true',
+        description:
+          'Enables custom interactive mouse spotlight tracking and lift effects.',
+      },
+      {
+        name: 'spotlightColor',
+        type: 'string',
+        description: 'Override for the hover spotlight color.',
+      },
+      {
+        name: 'spotlightSize',
+        type: 'number',
+        default: '300',
+        description:
+          'The size/radius of the spotlight gradient circle in pixels.',
+      },
+      {
+        name: 'bgColor',
+        type: 'string',
+        default: '"bg-[#0014FF]"',
+        description:
+          'Background color override, only used if theme is set to "none".',
+      },
+      {
+        name: 'className',
+        type: 'string',
+        description: 'Additional CSS classes to apply custom overrides.',
+      },
+    ],
+  },
+  {
     name: 'feature-grid-card',
     title: 'Feature Grid Card',
     description:
