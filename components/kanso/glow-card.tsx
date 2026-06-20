@@ -17,14 +17,14 @@ interface GlowCardProps extends React.HTMLAttributes<HTMLDivElement> {
 function GlowCard({
   className,
   children,
-  showCropMarks = true,
+  showCropMarks = false,
   interactive = true,
   ...props
 }: GlowCardProps) {
   return (
     <div
       className={cn(
-        'group relative overflow-hidden rounded-[32px] border border bg-[#05070b] text-zinc-50',
+        'group relative overflow-hidden rounded-[32px] border bg-[#05070b] text-zinc-50',
         'shadow-[0_8px_32px_rgba(0,0,0,0.4)] ring-1 ring-ring ring-inset transition-all duration-500 ease-out',
         interactive && 'hover:ring-white/15',
         className
@@ -55,6 +55,14 @@ function GlowCard({
       />
 
       {/* Blueprint Corner Crop Marks */}
+      {showCropMarks && (
+        <>
+          <div className="absolute left-4 top-4 h-6 w-6 border-l border-t border-white/20" />
+          <div className="absolute right-4 top-4 h-6 w-6 border-r border-t border-white/20" />
+          <div className="absolute left-4 bottom-4 h-6 w-6 border-l border-b border-white/20" />
+          <div className="absolute right-4 bottom-4 h-6 w-6 border-r border-b border-white/20" />
+        </>
+      )}
 
       {/* Inner Content Area */}
       <div className="relative z-10 p-8">{children}</div>
