@@ -62,6 +62,172 @@ export interface RegistryComponent {
  */
 export const registry: RegistryComponent[] = [
   {
+    name: 'ray-card',
+    title: 'Ray Card',
+    description:
+      'A premium, draft-grid style card featuring an animated border-tracer dot and a soft, glowing diagonal light ray.',
+    category: 'cards',
+    dependencies: [],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/ray-card.tsx',
+    tags: ['card', 'tracing', 'glow', 'draft', 'grid', 'minimalist'],
+    usage: `import { RayCard } from "@/components/kanso/ray-card"
+
+export default function RayCardDemo() {
+  return (
+    <RayCard 
+      variant="metric" 
+      value="750k" 
+      label="Views" 
+      glowColor="blue" 
+    />
+  )
+}`,
+    cssCode: `/* Add to app/globals.css */
+@theme inline {
+  --animate-kanso-ray-dot: kanso-ray-dot 6s linear infinite;
+
+  @keyframes kanso-ray-dot {
+    0%, 100% { top: 4px; left: 4px; }
+    25% { top: 4px; left: calc(100% - 12px); }
+    50% { top: calc(100% - 12px); left: calc(100% - 12px); }
+    75% { top: calc(100% - 12px); left: 4px; }
+  }
+}`,
+    props: [
+      {
+        name: 'variant',
+        type: '"metric" | "feature" | "custom"',
+        default: '"metric"',
+        description: 'The layout content style inside the card.',
+      },
+      {
+        name: 'value',
+        type: 'string',
+        description:
+          'Large statistic number or main value for the metric variant.',
+      },
+      {
+        name: 'label',
+        type: 'string',
+        description:
+          'Descriptive sublabel text rendered under the stat or title.',
+      },
+      {
+        name: 'title',
+        type: 'string',
+        description: 'Title header text for the feature variant.',
+      },
+      {
+        name: 'icon',
+        type: 'React.ReactNode',
+        description: 'Icon element rendered at the top of the feature variant.',
+      },
+      {
+        name: 'glowColor',
+        type: '"zinc" | "blue" | "indigo" | "violet" | "emerald" | "rose" | string',
+        default: '"zinc"',
+        description:
+          'Color theme of the tracing dot and internal ray. Supports custom colors.',
+      },
+      {
+        name: 'showGridLines',
+        type: 'boolean',
+        default: 'true',
+        description: 'Controls visibility of the card draft lines.',
+      },
+      {
+        name: 'speed',
+        type: 'number',
+        default: '6',
+        description: 'Rotation speed of the tracing dot in seconds.',
+      },
+    ],
+  },
+  {
+    name: 'browser-loader',
+    title: 'Browser Loader',
+    description:
+      'A premium, interactive SVG mock browser loader with glowing trace flows and pulsing content skeleton overlays.',
+    category: 'effects',
+    dependencies: [],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/browser-loader.tsx',
+    tags: [
+      'loader',
+      'browser',
+      'svg',
+      'animation',
+      'glow',
+      'skeleton',
+      'vercel',
+    ],
+    usage: `import { BrowserLoader } from "@/components/kanso/browser-loader"
+
+export default function BrowserLoaderDemo() {
+  return (
+    <div className="w-full max-w-2xl aspect-video">
+      <BrowserLoader themeColor="cyan" loadingText="Deploying..." />
+    </div>
+  )
+}`,
+    cssCode: `/* Add to app/globals.css */
+@theme inline {
+  --animate-kanso-loader-flow: kanso-loader-flow 5s linear infinite;
+
+  @keyframes kanso-loader-flow {
+    from {
+      stroke-dashoffset: 720;
+    }
+    to {
+      stroke-dashoffset: 0;
+    }
+  }
+}`,
+    props: [
+      {
+        name: 'themeColor',
+        type: '"indigo" | "cyan" | "emerald" | "rose" | "amber" | "monochrome" | string',
+        default: '"cyan"',
+        description:
+          'The color theme of the flowing tracer paths. Supports presets or any CSS color.',
+      },
+      {
+        name: 'loadingText',
+        type: 'string',
+        default: '"Loading..."',
+        description:
+          'The uppercase tracking text displayed in the mock browser window tab header.',
+      },
+      {
+        name: 'showGrid',
+        type: 'boolean',
+        default: 'true',
+        description: 'Toggles the background SVG grid lines visibility.',
+      },
+      {
+        name: 'flowDuration',
+        type: 'number',
+        default: '5',
+        description:
+          'The animation duration in seconds for the moving trace paths.',
+      },
+      {
+        name: 'glowIntensity',
+        type: 'number',
+        default: '0.6',
+        description:
+          'Adjusts the soft volumetric neon aura glow filter strength on the active lines.',
+      },
+      {
+        name: 'className',
+        type: 'string',
+        description:
+          'Additional CSS classes to apply overrides to the container.',
+      },
+    ],
+  },
+  {
     name: 'blur-reveal-code',
     title: 'Blur Reveal Code',
     description:
@@ -438,6 +604,12 @@ export default function KeyboardButtonDemo() {
         type: '"dark" | "light" | "blue"',
         default: '"dark"',
         description: 'The keycap color variation.',
+      },
+      {
+        name: 'size',
+        type: '"sm" | "md" | "lg"',
+        default: '"lg"',
+        description: 'The height and padding scale of the keycap.',
       },
       {
         name: 'icon',

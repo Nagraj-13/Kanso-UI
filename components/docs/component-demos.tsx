@@ -38,6 +38,8 @@ import { GlowCard } from '@/components/kanso/glow-card';
 import { FeatureGridCard } from '@/components/kanso/feature-grid-card';
 import { BlurRevealCode } from '@/components/kanso/blur-reveal-code';
 import { NoiseCard } from '@/components/kanso/noise-card';
+import { BrowserLoader } from '@/components/kanso/browser-loader';
+import { RayCard } from '@/components/kanso/ray-card';
 import {
   ColorPicker,
   ColorPickerSelection,
@@ -102,6 +104,356 @@ function DialKitSlider({
  */
 
 const demos: Record<string, React.ComponentType> = {
+  'ray-card': function RayCardDemo() {
+    type ThemeColor = 'silver' | 'cyan' | 'gold' | 'violet';
+    type CardVariant = 'metric' | 'feature' | 'custom';
+    type StyleVariant = 'glossy' | 'matte';
+    const [color, setColor] = React.useState<ThemeColor>('silver');
+    const [variant, setVariant] = React.useState<CardVariant>('metric');
+    const [finish, setFinish] = React.useState<StyleVariant>('glossy');
+    const [value, setValue] = React.useState('750k');
+    const [label, setLabel] = React.useState('Total Page Views');
+    const [showGridLines, setShowGridLines] = React.useState(true);
+    const [speed, setSpeed] = React.useState(6);
+
+    const colors: { name: ThemeColor; class: string }[] = [
+      {
+        name: 'silver',
+        class: 'bg-zinc-400 border border-zinc-500 dark:border-zinc-300',
+      },
+      { name: 'cyan', class: 'bg-cyan-500' },
+      { name: 'gold', class: 'bg-amber-500' },
+      { name: 'violet', class: 'bg-violet-500' },
+    ];
+
+    return (
+      <div className="flex flex-col items-center gap-8 w-full max-w-2xl">
+        {/* Customizer controls */}
+        <div className="flex flex-col md:flex-row gap-6 w-full rounded-xl border border-zinc-200/60 bg-zinc-50/20 p-5 dark:border-zinc-800/60 dark:bg-zinc-900/10 text-left">
+          <div className="flex-1 flex flex-col gap-4">
+            <div className="flex flex-col gap-1.5">
+              <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest">
+                Glow / Tracer Color
+              </div>
+              <div className="flex flex-wrap items-center gap-3.5 mt-1">
+                {colors.map((c) => (
+                  <button
+                    key={c.name}
+                    type="button"
+                    onClick={() => setColor(c.name)}
+                    className={cn(
+                      'size-5 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-400 dark:focus:ring-zinc-700 cursor-pointer',
+                      c.class,
+                      color === c.name
+                        ? 'ring-2 ring-zinc-500 ring-offset-2 scale-110'
+                        : 'opacity-80 hover:opacity-100 hover:scale-105'
+                    )}
+                    aria-label={`Select ${c.name} glow color`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest">
+                Card Variant
+              </span>
+              <div className="flex gap-1 bg-zinc-100 dark:bg-zinc-900 p-0.5 rounded-lg border border-zinc-200/50 dark:border-zinc-800/80">
+                {(['metric', 'feature', 'custom'] as CardVariant[]).map((v) => (
+                  <button
+                    key={v}
+                    type="button"
+                    onClick={() => setVariant(v)}
+                    className={cn(
+                      'flex-1 text-[10px] font-mono capitalize py-1.5 rounded-md transition-all cursor-pointer',
+                      variant === v
+                        ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-xs font-semibold'
+                        : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200'
+                    )}
+                  >
+                    {v}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest">
+                Surface Finish
+              </span>
+              <div className="flex gap-1 bg-zinc-100 dark:bg-zinc-900 p-0.5 rounded-lg border border-zinc-200/50 dark:border-zinc-800/80">
+                {(['glossy', 'matte'] as StyleVariant[]).map((f) => (
+                  <button
+                    key={f}
+                    type="button"
+                    onClick={() => setFinish(f)}
+                    className={cn(
+                      'flex-1 text-[10px] font-mono capitalize py-1.5 rounded-md transition-all cursor-pointer',
+                      finish === f
+                        ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-xs font-semibold'
+                        : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200'
+                    )}
+                  >
+                    {f}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col gap-4">
+            {variant === 'metric' && (
+              <div className="flex flex-col gap-1.5">
+                <label
+                  htmlFor="metric-value-input"
+                  className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest cursor-pointer"
+                >
+                  Metric Value
+                </label>
+                <input
+                  id="metric-value-input"
+                  type="text"
+                  value={value}
+                  onChange={(e) => setValue(e.target.value)}
+                  className="w-full text-xs font-mono px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400"
+                  placeholder="e.g. 750k"
+                />
+              </div>
+            )}
+
+            {variant === 'feature' && (
+              <div className="flex flex-col gap-1.5">
+                <label
+                  htmlFor="feature-label-input"
+                  className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest cursor-pointer"
+                >
+                  Feature Description
+                </label>
+                <input
+                  id="feature-label-input"
+                  type="text"
+                  value={label}
+                  onChange={(e) => setLabel(e.target.value)}
+                  className="w-full text-xs font-mono px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400"
+                  placeholder="e.g. Total Page Views"
+                />
+              </div>
+            )}
+
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="show-card-grid-checkbox"
+                className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest select-none cursor-pointer"
+              >
+                Show Drafting Grid
+              </label>
+              <input
+                id="show-card-grid-checkbox"
+                type="checkbox"
+                checked={showGridLines}
+                onChange={(e) => setShowGridLines(e.target.checked)}
+                className="size-4 rounded border-zinc-300 dark:border-zinc-800 accent-zinc-500 cursor-pointer"
+              />
+            </div>
+
+            <DialKitSlider
+              label="Tracer speed"
+              min={1}
+              max={15}
+              step={0.5}
+              value={speed}
+              onChange={setSpeed}
+              suffix="s"
+            />
+          </div>
+        </div>
+
+        {/* Live Demo Container */}
+        <div className="flex items-center justify-center p-4">
+          <RayCard
+            variant={variant}
+            value={value}
+            label={variant === 'feature' ? label : 'Total Views'}
+            title="Premium Performance"
+            icon={
+              <svg
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2.5"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="size-6 flex items-center justify-center"
+              >
+                <path d="m8 3 4 8 5-5 5 15H2L8 3z" />
+              </svg>
+            }
+            themeColor={color}
+            styleVariant={finish}
+            showGridLines={showGridLines}
+            speed={speed}
+          >
+            {variant === 'custom' && (
+              <div className="flex flex-col items-center gap-2">
+                <span className="text-zinc-500 dark:text-zinc-400 text-xs font-mono">
+                  Custom Layout
+                </span>
+                <button
+                  type="button"
+                  className="px-4 py-1.5 text-[10px] font-mono font-semibold uppercase tracking-wider rounded-lg bg-zinc-900 dark:bg-zinc-100 text-white dark:text-black border border-zinc-800 dark:border-zinc-200 hover:scale-105 active:scale-95 transition-transform duration-200 cursor-pointer"
+                >
+                  Deploy App
+                </button>
+              </div>
+            )}
+          </RayCard>
+        </div>
+      </div>
+    );
+  },
+  'browser-loader': function BrowserLoaderDemo() {
+    type ThemeColor =
+      | 'indigo'
+      | 'cyan'
+      | 'emerald'
+      | 'rose'
+      | 'amber'
+      | 'monochrome';
+    type LoaderVariant = 'browser' | 'sidebar' | 'dashboard';
+    const [theme, setTheme] = React.useState<ThemeColor>('cyan');
+    const [variant, setVariant] = React.useState<LoaderVariant>('browser');
+    const [loadingText, setLoadingText] = React.useState(
+      'Deploying project...'
+    );
+    const [showGrid, setShowGrid] = React.useState(true);
+    const [flowDuration, setFlowDuration] = React.useState(5);
+
+    const colors: { name: ThemeColor; class: string }[] = [
+      { name: 'cyan', class: 'bg-cyan-500' },
+      { name: 'indigo', class: 'bg-indigo-500' },
+      { name: 'emerald', class: 'bg-emerald-500' },
+      { name: 'rose', class: 'bg-rose-500' },
+      { name: 'amber', class: 'bg-amber-500' },
+      {
+        name: 'monochrome',
+        class: 'bg-white border border-zinc-200 dark:border-zinc-800',
+      },
+    ];
+
+    return (
+      <div className="flex flex-col items-center gap-8 w-full max-w-2xl">
+        {/* Customizer controls */}
+        <div className="flex flex-col md:flex-row gap-6 w-full rounded-xl border border-zinc-200/60 bg-zinc-50/20 p-5 dark:border-zinc-800/60 dark:bg-zinc-900/10 text-left">
+          <div className="flex-1 flex flex-col gap-4">
+            <div className="flex flex-col gap-1.5">
+              <div className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest">
+                Select Theme Color
+              </div>
+              <div className="flex flex-wrap items-center gap-3.5 mt-1">
+                {colors.map((c) => (
+                  <button
+                    key={c.name}
+                    type="button"
+                    onClick={() => setTheme(c.name)}
+                    className={cn(
+                      'size-5 rounded-full transition-all focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-zinc-400 dark:focus:ring-zinc-700 cursor-pointer',
+                      c.class,
+                      theme === c.name
+                        ? 'ring-2 ring-zinc-500 ring-offset-2 scale-110'
+                        : 'opacity-80 hover:opacity-100 hover:scale-105'
+                    )}
+                    aria-label={`Select ${c.name} theme`}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="flex flex-col gap-1.5">
+              <label
+                htmlFor="loading-text-input"
+                className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest cursor-pointer"
+              >
+                Loading Tab Text
+              </label>
+              <input
+                id="loading-text-input"
+                type="text"
+                value={loadingText}
+                onChange={(e) => setLoadingText(e.target.value)}
+                className="w-full text-xs font-mono px-3 py-2 rounded-lg border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 text-zinc-900 dark:text-zinc-100 focus:outline-none focus:ring-1 focus:ring-zinc-400"
+                placeholder="Enter text..."
+              />
+            </div>
+          </div>
+
+          <div className="flex-1 flex flex-col gap-4">
+            <div className="flex flex-col gap-1.5">
+              <span className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest">
+                Layout Variant
+              </span>
+              <div className="flex gap-1 bg-zinc-100 dark:bg-zinc-900 p-0.5 rounded-lg border border-zinc-200/50 dark:border-zinc-800/80">
+                {(['browser', 'sidebar', 'dashboard'] as LoaderVariant[]).map(
+                  (v) => (
+                    <button
+                      key={v}
+                      type="button"
+                      onClick={() => setVariant(v)}
+                      className={cn(
+                        'flex-1 text-[10px] font-mono capitalize py-1.5 rounded-md transition-all cursor-pointer',
+                        variant === v
+                          ? 'bg-white dark:bg-zinc-800 text-zinc-900 dark:text-white shadow-xs font-semibold'
+                          : 'text-zinc-400 hover:text-zinc-600 dark:hover:text-zinc-200'
+                      )}
+                    >
+                      {v}
+                    </button>
+                  )
+                )}
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between">
+              <label
+                htmlFor="show-grid-checkbox"
+                className="text-[11px] font-semibold text-zinc-400 uppercase tracking-widest select-none cursor-pointer"
+              >
+                Show Background Grid
+              </label>
+              <input
+                id="show-grid-checkbox"
+                type="checkbox"
+                checked={showGrid}
+                onChange={(e) => setShowGrid(e.target.checked)}
+                className="size-4 rounded border-zinc-300 dark:border-zinc-800 accent-zinc-500 cursor-pointer"
+              />
+            </div>
+
+            <DialKitSlider
+              label="Flow duration"
+              min={1}
+              max={15}
+              step={0.5}
+              value={flowDuration}
+              onChange={setFlowDuration}
+              suffix="s"
+            />
+          </div>
+        </div>
+
+        {/* Live Demo Container */}
+        <div className="w-full aspect-[4/3] max-h-[500px]">
+          <BrowserLoader
+            variant={variant}
+            themeColor={theme}
+            loadingText={loadingText}
+            showGrid={showGrid}
+            flowDuration={flowDuration}
+            className="w-full h-full"
+          />
+        </div>
+      </div>
+    );
+  },
   'blur-reveal-code': function BlurRevealCodeDemo() {
     return (
       <div className="flex items-center justify-center w-full min-h-[400px]">
