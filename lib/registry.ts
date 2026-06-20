@@ -440,6 +440,12 @@ export default function KeyboardButtonDemo() {
         description: 'The keycap color variation.',
       },
       {
+        name: 'size',
+        type: '"sm" | "md" | "lg"',
+        default: '"lg"',
+        description: 'The height and padding scale of the keycap.',
+      },
+      {
         name: 'icon',
         type: 'React.ReactNode',
         description:
