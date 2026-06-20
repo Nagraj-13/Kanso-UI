@@ -1,5 +1,3 @@
-'use client';
-
 import * as React from 'react';
 import { cn } from '@/lib/utils';
 
@@ -10,57 +8,67 @@ interface GlowCardProps extends React.HTMLAttributes<HTMLDivElement> {
   children?: React.ReactNode;
   /** Whether to show the blueprint-style corner crop marks */
   showCropMarks?: boolean;
-  /** Enable hover glow transitions */
-  interactive?: boolean;
 }
 
-function GlowCard({
-  className,
-  children,
-  showCropMarks = true,
-  interactive = true,
-  ...props
-}: GlowCardProps) {
-  return (
-    <div
-      className={cn(
-        'group relative overflow-hidden rounded-[32px] border border bg-[#05070b] text-zinc-50',
-        'shadow-[0_8px_32px_rgba(0,0,0,0.4)] ring-1 ring-ring ring-inset transition-all duration-500 ease-out',
-        interactive && 'hover:ring-white/15',
-        className
-      )}
-      {...props}
-    >
-      {/* 
-        Premium Base Glow — soft, dispersed blue light anchoring the bottom edges.
-        Lowered opacities prevent harsh color banding and make it look volumetric.
-      */}
-      <div className="pointer-events-none absolute inset-0 z-0 [background:radial-gradient(100%_100%_at_30%_0%,transparent_45%,rgba(48, 51, 252, 1)_75%,rgba(49, 103, 254, 1)_100%)]" />
+const GlowCard = React.forwardRef<HTMLDivElement, GlowCardProps>(
+  ({ className, children, showCropMarks = true, ...props }, ref) => {
+    return (
+      <div ref={ref} className="relative w-full">
+        {/* 
+          Outward Base Glow — soft, dispersed blue light spilling outward behind the bottom edges.
+          Matches the reference image volumetric aura.
+        */}
+        <div className="pointer-events-none absolute -bottom-16 left-1/2 -translate-x-1/2 w-[90%] h-32 bg-blue-600/20 blur-[60px] rounded-full z-0" />
 
-      {/* 
-        Interactive Hover Bloom — intensifies the glow with a smooth ease.
-      */}
-      {interactive && (
-        <div className="pointer-events-none absolute inset-0 z-0 opacity-0 group-hover:opacity-100 transition-opacity duration-700 ease-out [background:radial-gradient(100%_100%_at_30%_0%,transparent_35%,rgba(0, 4, 255, 0.97)_65%,rgba(26,86,255,0.9)_100%)]" />
-      )}
+        {/* Main Card Container */}
+        <div
+          className={cn(
+            'relative z-10 rounded-[32px] bg-[#05070b] text-zinc-50 shadow-[0_8px_32px_rgba(0,0,0,0.5)] overflow-hidden',
+            className
+          )}
+          {...props}
+        >
+          {/* 
+            Layer 1: Blue Glow Gradient (similar to the hero section gradient)
+          */}
+          <div
+            className="pointer-events-none absolute inset-x-0 bottom-0 h-full w-full z-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 70% 60% at 50% 100%, rgba(37, 99, 235, 0.7) 0%, rgba(29, 78, 216, 0.35) 45%, rgba(30, 58, 138, 0.1) 70%, transparent 100%)',
+            }}
+          />
 
-      {/* Subtle top border highlight (Premium Glassmorphism look) */}
-      <div
-        className="pointer-events-none absolute inset-0 z-0 rounded-[32px]"
-        style={{
-          boxShadow: 'inset 0 1px 1px 0 rgba(255,255,255,0.1)',
-          background:
-            'linear-gradient(to bottom, rgba(255,255,255,0.04) 0%, transparent 50%)',
-        }}
-      />
+          {/* 
+            Layer 2: Dark masking circle sitting on top of the gradient to create the eclipse/crescent glow effect
+          */}
+          <div className="pointer-events-none absolute left-1/2 top-[-25%] -translate-x-1/2 w-[130%] h-[95%] bg-[#05070b] blur-[30px] rounded-full z-0" />
 
-      {/* Blueprint Corner Crop Marks */}
+          {/* 
+            Layer 3: Premium Gradient Border Overlay
+          */}
+          <div
+            className="pointer-events-none absolute inset-0 z-10 rounded-[32px] border border-transparent"
+            style={{
+              backgroundImage:
+                'linear-gradient(to bottom, rgba(255,255,255,0.08), rgba(37,99,235,0.45))',
+              mask: 'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
+              WebkitMask:
+                'linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0)',
+              maskComposite: 'exclude',
+              WebkitMaskComposite: 'destination-out',
+            }}
+          />
 
-      {/* Inner Content Area */}
-      <div className="relative z-10 p-8">{children}</div>
-    </div>
-  );
-}
+          {/* Inner Content Area */}
+          <div className="relative z-10 p-8">{children}</div>
+        </div>
+      </div>
+    );
+  }
+);
+
+GlowCard.displayName = 'GlowCard';
 
 export { GlowCard };
 export type { GlowCardProps };

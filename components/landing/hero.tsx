@@ -8,6 +8,7 @@ import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import { GITHUB_URL } from '@/lib/constants';
 import { GithubButton } from '@/components/kanso/github-button';
+import { KeyboardButton } from '@/components/kanso/keyboard-button';
 import {
   LiquidMetalCardRoot,
   LiquidMetalCardVisual,
@@ -359,53 +360,41 @@ export function Hero() {
                     </div>
                     <div className="flex items-center justify-center gap-1.5 py-1">
                       {/* Ctrl Key */}
-                      <button
+                      <KeyboardButton
+                        size="sm"
+                        variantColor="dark"
+                        icon="ctrl"
                         onClick={handleCopy}
-                        className={cn(
-                          'flex flex-col items-start justify-between text-[10px] border border-black/10 p-2 rounded-t-[10px] rounded-b-[8px] cursor-pointer relative h-[45px] w-[50px] select-none transition-all duration-100 ease-in-out [transform:perspective(50px)_rotateX(5deg)] active:[transform:perspective(50px)_rotateX(5deg)_translateY(2px)_scale(0.96)] focus:outline-none focus-visible:ring-1 bg-zinc-900 text-zinc-50 shadow-[inset_-2px_-5px_0px_rgba(255,255,255,0.3),inset_-2px_-4px_0px_rgba(0,0,0,0.3),0px_1px_1px_rgba(0,0,0,0.3)] hover:bg-zinc-800 font-semibold uppercase font-sans tracking-tight'
-                        )}
+                        className="w-[50px] font-sans font-semibold uppercase tracking-tight"
                       >
-                        <span className="text-[7px] opacity-60 self-start">
-                          ctrl
-                        </span>
-                        <span className="self-end mt-auto text-[8px] font-bold">
-                          Ctrl
-                        </span>
-                      </button>
+                        Ctrl
+                      </KeyboardButton>
                       <span className="text-zinc-500 font-bold text-[9px] select-none">
                         +
                       </span>
                       {/* C Key */}
-                      <button
+                      <KeyboardButton
+                        size="sm"
+                        variantColor="light"
+                        icon="copy"
                         onClick={handleCopy}
-                        className={cn(
-                          'flex flex-col items-start justify-between text-[10px] border border-black/10 p-2 rounded-t-[10px] rounded-b-[8px] cursor-pointer relative h-[45px] w-[45px] select-none transition-all duration-100 ease-in-out [transform:perspective(50px)_rotateX(5deg)] active:[transform:perspective(50px)_rotateX(5deg)_translateY(2px)_scale(0.96)] focus:outline-none focus-visible:ring-1 bg-zinc-800 text-zinc-100 border-zinc-700 shadow-[inset_-2px_-5px_0px_rgba(255,255,255,0.2),inset_-2px_-4px_0px_rgba(0,0,0,0.3),0px_1px_1px_rgba(0,0,0,0.3)] hover:bg-zinc-700 font-semibold uppercase font-sans tracking-tight'
-                        )}
+                        className="w-[45px] font-sans font-semibold uppercase tracking-tight"
                       >
-                        <span className="text-[7px] opacity-60 self-start">
-                          copy
-                        </span>
-                        <span className="self-end mt-auto text-[9px] font-bold">
-                          C
-                        </span>
-                      </button>
+                        C
+                      </KeyboardButton>
                       <span className="text-zinc-500 font-bold text-[9px] select-none">
                         +
                       </span>
                       {/* V Key */}
-                      <button
+                      <KeyboardButton
+                        size="sm"
+                        variantColor="blue"
+                        icon="paste"
                         onClick={handleCopy}
-                        className={cn(
-                          'flex flex-col items-start justify-between text-[10px] border border-black/10 p-2 rounded-t-[10px] rounded-b-[8px] cursor-pointer relative h-[45px] w-[45px] select-none transition-all duration-100 ease-in-out [transform:perspective(50px)_rotateX(5deg)] active:[transform:perspective(50px)_rotateX(5deg)_translateY(2px)_scale(0.96)] focus:outline-none focus-visible:ring-1 bg-blue-600 text-white border-blue-700/50 shadow-[inset_-2px_-5px_0px_rgba(255,255,255,0.4),inset_-2px_-4px_0px_rgba(0,0,0,0.3),0px_1px_1px_rgba(0,0,0,0.3)] hover:bg-blue-500 font-semibold uppercase font-sans tracking-tight'
-                        )}
+                        className="w-[45px] font-sans font-semibold uppercase tracking-tight"
                       >
-                        <span className="text-[7px] opacity-60 self-start">
-                          paste
-                        </span>
-                        <span className="self-end mt-auto text-[9px] font-bold">
-                          V
-                        </span>
-                      </button>
+                        V
+                      </KeyboardButton>
                     </div>
                     <div className="flex items-center justify-between text-xs text-zinc-650 bg-zinc-200/50 dark:text-zinc-450 dark:bg-black/40 p-1.5 rounded border border-zinc-350 dark:border-zinc-800">
                       <span className="font-mono text-zinc-700 dark:text-zinc-400 select-all">
