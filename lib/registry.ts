@@ -62,6 +62,65 @@ export interface RegistryComponent {
  */
 export const registry: RegistryComponent[] = [
   {
+    name: 'telemetry-widgets',
+    title: 'Telemetry Widgets',
+    description:
+      'A premium collection of real-time bento telemetry widgets inspired by industrial instrument displays, featuring interactive audio, CPU heap tracking, battery states, and a custom mouse/keypress canvas seismograph.',
+    category: 'data-display',
+    dependencies: ['framer-motion', 'lucide-react'],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/telemetry-widgets.tsx',
+    tags: [
+      'bento',
+      'telemetry',
+      'grid',
+      'canvas',
+      'interactive',
+      'sound',
+      'hardware',
+      'dashboard',
+    ],
+    usage: `import { TelemetryGrid } from "@/components/kanso/telemetry-widgets"
+
+export default function TelemetryDashboardDemo() {
+  return (
+    <div className="w-full p-4 flex justify-center">
+      <TelemetryGrid />
+    </div>
+  )
+}`,
+    cssCode: `/* Add to app/globals.css */
+@theme inline {
+  --animate-kanso-shimmer-sweep: kanso-shimmer-sweep 0.95s ease-out forwards;
+
+  @keyframes kanso-shimmer-sweep {
+    0% {
+      left: -140px;
+      opacity: 1;
+    }
+    100% {
+      left: 110%;
+      opacity: 0;
+    }
+  }
+}`,
+    props: [
+      {
+        name: 'soundEnabled',
+        type: 'boolean',
+        default: 'true',
+        description:
+          'Toggles clock-second ticking sound synthesizer on initial load.',
+      },
+      {
+        name: 'className',
+        type: 'string',
+        description:
+          'Additional CSS classes to apply custom overrides to the grid container.',
+      },
+    ],
+  },
+  {
     name: 'ray-card',
     title: 'Ray Card',
     description:

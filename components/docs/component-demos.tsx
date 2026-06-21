@@ -39,6 +39,8 @@ import { FeatureGridCard } from '@/components/kanso/feature-grid-card';
 import { BlurRevealCode } from '@/components/kanso/blur-reveal-code';
 import { NoiseCard } from '@/components/kanso/noise-card';
 import { BrowserLoader } from '@/components/kanso/browser-loader';
+import { TelemetryGrid } from '@/components/kanso/telemetry-widgets';
+import { Volume2, VolumeX } from 'lucide-react';
 import { RayCard } from '@/components/kanso/ray-card';
 import {
   ColorPicker,
@@ -104,6 +106,47 @@ function DialKitSlider({
  */
 
 const demos: Record<string, React.ComponentType> = {
+  'telemetry-widgets': function TelemetryWidgetsDemo() {
+    const [soundEnabled, setSoundEnabled] = React.useState(true);
+
+    return (
+      <div className="flex flex-col items-center gap-8 w-full max-w-4xl">
+        {/* Customizer controls */}
+        <div className="flex flex-col sm:flex-row gap-6 w-full rounded-xl border border-zinc-200/60 bg-zinc-50/20 p-5 dark:border-zinc-800/60 dark:bg-zinc-900/10 justify-between items-center text-left">
+          <div className="flex flex-col gap-1">
+            <h4 className="text-sm font-semibold text-zinc-800 dark:text-zinc-200">
+              Interactive Telemetry Dashboard
+            </h4>
+            <p className="text-xs text-zinc-500 dark:text-zinc-400">
+              A premium, hardware-inspired bento grid with Web Audio ticks, heap
+              memory sensor rings, and an active canvas oscilloscope.
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={() => setSoundEnabled(!soundEnabled)}
+            className="flex items-center gap-2 px-3 py-1.5 text-xs font-mono border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 rounded-lg hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors cursor-pointer text-zinc-805 dark:text-zinc-200"
+          >
+            {soundEnabled ? (
+              <Volume2 className="size-4 text-emerald-500 animate-pulse" />
+            ) : (
+              <VolumeX className="size-4 text-rose-500" />
+            )}
+            <span>Clock ticks: {soundEnabled ? 'ON' : 'MUTED'}</span>
+          </button>
+        </div>
+
+        {/* Live Grid */}
+        <div className="w-full flex justify-center p-2">
+          <TelemetryGrid
+            className="w-full"
+            soundEnabled={soundEnabled}
+            key={soundEnabled ? 'sound-on' : 'sound-off'}
+          />
+        </div>
+      </div>
+    );
+  },
   'ray-card': function RayCardDemo() {
     type ThemeColor = 'silver' | 'cyan' | 'gold' | 'violet';
     type CardVariant = 'metric' | 'feature' | 'custom';
@@ -2016,6 +2059,7 @@ const demos: Record<string, React.ComponentType> = {
                 translateZ={translateZImage}
                 className="w-full overflow-hidden rounded-xl border border-zinc-200/80 dark:border-zinc-800/80 aspect-video shadow-2xl relative z-10"
               >
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img
                   src="/3d-card.png"
                   alt="Zen Artisan Card visual"
