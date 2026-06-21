@@ -99,6 +99,7 @@
   }
   --animate-kanso-loader-flow: kanso-loader-flow 5s linear infinite;
   --animate-kanso-ray-dot: kanso-ray-dot 6s linear infinite;
+  --animate-kanso-shimmer-sweep: kanso-shimmer-sweep 0.95s ease-out forwards;
 
   @keyframes star-shine {
     0% {
@@ -137,6 +138,17 @@
     75% {
       top: calc(100% - 12px);
       left: 4px;
+    }
+  }
+
+  @keyframes kanso-shimmer-sweep {
+    0% {
+      left: -140px;
+      opacity: 1;
+    }
+    100% {
+      left: 110%;
+      opacity: 0;
     }
   }
 }

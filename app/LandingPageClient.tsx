@@ -5,6 +5,7 @@ import { Header } from '@/components/landing/header';
 import { Hero } from '@/components/landing/hero';
 import { Features } from '@/components/landing/features';
 import { PremiumEffects } from '@/components/landing/premium-effects';
+import { TelemetryShowcase } from '@/components/landing/telemetry-showcase';
 import { ComponentShowcase } from '@/components/landing/component-showcase';
 import { DeveloperExperience } from '@/components/landing/developer-experience';
 import { Statistics } from '@/components/landing/statistics';
@@ -40,6 +41,7 @@ export default function LandingPageClient({
       <div className="relative ">
         <PremiumEffects />
       </div>
+      <TelemetryShowcase />
       <ComponentShowcase
         showcaseHtmls={showcaseHtmls}
         showcaseRaws={showcaseRaws}
