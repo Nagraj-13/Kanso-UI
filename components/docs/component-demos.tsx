@@ -2661,6 +2661,7 @@ const demos: Record<string, React.ComponentType> = {
         <div className="w-[300px] h-[300px] rounded-2xl overflow-hidden border border-zinc-200 bg-white shadow-xs dark:border-zinc-800 dark:bg-zinc-950 flex items-center justify-center">
           <HalftoneImage
             src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400&h=400"
+            allowUpload={true}
             dotSpacing={dotSpacing}
             contrast={contrast}
             brightness={brightness}

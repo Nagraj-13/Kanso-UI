@@ -2,10 +2,13 @@
 
 import * as React from 'react';
 import { cn } from '@/lib/utils';
+import { Upload } from 'lucide-react';
 
 export interface HalftoneImageProps extends React.HTMLAttributes<HTMLDivElement> {
-  /** The source image URL */
-  src: string;
+  /** The source image URL. If omitted and allowUpload is true, shows an upload prompt. */
+  src?: string;
+  /** Allow user to upload their own image */
+  allowUpload?: boolean;
   /** The spacing between dots in pixels (density). Lower value = higher detail. */
   dotSpacing?: number;
   /** The maximum dot radius. Defaults to dotSpacing * 0.7. */
@@ -48,6 +51,7 @@ const HalftoneImage = React.forwardRef<HTMLDivElement, HalftoneImageProps>(
   (
     {
       src,
+      allowUpload = false,
       dotSpacing = 8,
       maxDotRadius,
       inkColor = 'currentColor',
@@ -67,9 +71,14 @@ const HalftoneImage = React.forwardRef<HTMLDivElement, HalftoneImageProps>(
   ) => {
     const containerRef = React.useRef<HTMLDivElement>(null);
     const canvasRef = React.useRef<HTMLCanvasElement>(null);
+    const fileInputRef = React.useRef<HTMLInputElement>(null);
     const imageRef = React.useRef<HTMLImageElement | null>(null);
+
+    const [localSrc, setLocalSrc] = React.useState<string | null>(null);
     const [isLoaded, setIsLoaded] = React.useState(false);
     const [error, setError] = React.useState<string | null>(null);
+
+    const currentSrc = localSrc || src;
 
     // Animation state
     const mouseRef = React.useRef({ x: -1000, y: -1000, active: false });
@@ -77,11 +86,15 @@ const HalftoneImage = React.forwardRef<HTMLDivElement, HalftoneImageProps>(
 
     // Load image and analyze pixel data
     React.useEffect(() => {
-      if (!src) return;
+      if (!currentSrc) {
+        setIsLoaded(false);
+        setError(null);
+        return;
+      }
 
       const img = new Image();
       img.crossOrigin = 'anonymous';
-      img.src = src;
+      img.src = currentSrc;
       imageRef.current = img;
 
       img.onload = () => {
@@ -101,7 +114,7 @@ const HalftoneImage = React.forwardRef<HTMLDivElement, HalftoneImageProps>(
           cancelAnimationFrame(animationFrameId.current);
         }
       };
-    }, [src]);
+    }, [currentSrc]);
 
     // Draw function
     const draw = React.useCallback(() => {
@@ -112,8 +125,8 @@ const HalftoneImage = React.forwardRef<HTMLDivElement, HalftoneImageProps>(
       const ctx = canvas.getContext('2d');
       if (!ctx) return;
 
-      const width = canvas.width;
-      const height = canvas.height;
+      const width = canvas.clientWidth;
+      const height = canvas.clientHeight;
 
       // Read computed color values
       let resolvedInkColor = inkColor;
@@ -128,7 +141,24 @@ const HalftoneImage = React.forwardRef<HTMLDivElement, HalftoneImageProps>(
       tempCanvas.height = height;
       const tempCtx = tempCanvas.getContext('2d');
       if (!tempCtx) return;
-      tempCtx.drawImage(img, 0, 0, width, height);
+
+      // Use object-fit: contain logic to draw responsively without stretching
+      const imgRatio = img.width / img.height;
+      const canvasRatio = width / height;
+      let drawW = width;
+      let drawH = height;
+      let offsetX = 0;
+      let offsetY = 0;
+
+      if (imgRatio > canvasRatio) {
+        drawH = width / imgRatio;
+        offsetY = (height - drawH) / 2;
+      } else {
+        drawW = height * imgRatio;
+        offsetX = (width - drawW) / 2;
+      }
+
+      tempCtx.drawImage(img, offsetX, offsetY, drawW, drawH);
       const imgData = tempCtx.getImageData(0, 0, width, height);
       const pixels = imgData.data;
 
@@ -157,6 +187,9 @@ const HalftoneImage = React.forwardRef<HTMLDivElement, HalftoneImageProps>(
           const px = Math.min(width - 1, Math.max(0, Math.floor(cellCenterX)));
           const py = Math.min(height - 1, Math.max(0, Math.floor(cellCenterY)));
           const idx = (py * width + px) * 4;
+
+          const a = pixels[idx + 3];
+          if (a < 10) continue; // Skip transparent areas where image didn't draw
 
           const r = pixels[idx];
           const g = pixels[idx + 1];
@@ -307,6 +340,14 @@ const HalftoneImage = React.forwardRef<HTMLDivElement, HalftoneImageProps>(
       draw();
     };
 
+    const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+      const file = e.target.files?.[0];
+      if (file) {
+        const url = URL.createObjectURL(file);
+        setLocalSrc(url);
+      }
+    };
+
     return (
       <div
         ref={mergeRefs(ref, containerRef)}
@@ -320,8 +361,27 @@ const HalftoneImage = React.forwardRef<HTMLDivElement, HalftoneImageProps>(
         aria-label={alt}
         {...props}
       >
-        {/* Offscreen image loading helper */}
-        {error ? (
+        {allowUpload && (
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            onChange={handleFileChange}
+            className="hidden"
+          />
+        )}
+
+        {!currentSrc ? (
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center bg-zinc-50 dark:bg-zinc-900/50 cursor-pointer hover:bg-zinc-100 dark:hover:bg-zinc-900 transition-colors border border-dashed border-zinc-200 dark:border-zinc-800 m-4 rounded-xl"
+            onClick={() => fileInputRef.current?.click()}
+          >
+            <Upload className="size-8 text-zinc-400 mb-3" />
+            <span className="text-sm font-medium text-zinc-500">
+              Upload Image
+            </span>
+          </div>
+        ) : error ? (
           <div className="absolute inset-0 flex items-center justify-center bg-zinc-100 text-xs text-zinc-400 dark:bg-zinc-900">
             {error}
           </div>
@@ -332,6 +392,17 @@ const HalftoneImage = React.forwardRef<HTMLDivElement, HalftoneImageProps>(
             </span>
           </div>
         ) : null}
+
+        {allowUpload && currentSrc && (
+          <button
+            onClick={() => fileInputRef.current?.click()}
+            className="absolute top-4 right-4 z-20 bg-white/80 dark:bg-zinc-900/80 hover:bg-white dark:hover:bg-zinc-800 text-zinc-900 dark:text-white p-2 rounded-full shadow-sm backdrop-blur-md transition-all active:scale-95"
+            aria-label="Upload new image"
+            title="Upload new image"
+          >
+            <Upload className="size-4" />
+          </button>
+        )}
 
         <canvas
           ref={canvasRef}
