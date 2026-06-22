@@ -40,6 +40,7 @@ import { BlurRevealCode } from '@/components/kanso/blur-reveal-code';
 import { NoiseCard } from '@/components/kanso/noise-card';
 import { BrowserLoader } from '@/components/kanso/browser-loader';
 import { TelemetryGrid } from '@/components/kanso/telemetry-widgets';
+import { MagicTree } from '@/components/kanso/magic-tree';
 import { Volume2, VolumeX } from 'lucide-react';
 import { RayCard } from '@/components/kanso/ray-card';
 import {
@@ -106,6 +107,15 @@ function DialKitSlider({
  */
 
 const demos: Record<string, React.ComponentType> = {
+  'magic-tree': function MagicTreeDemo() {
+    return (
+      <div className="flex flex-col items-center gap-8 w-full max-w-sm">
+        <div className="w-full rounded-xl border border-zinc-200/60 bg-white/50 p-6 dark:border-zinc-800/60 dark:bg-zinc-950/50 shadow-xs">
+          <MagicTree />
+        </div>
+      </div>
+    );
+  },
   'telemetry-widgets': function TelemetryWidgetsDemo() {
     const [soundEnabled, setSoundEnabled] = React.useState(true);
 
@@ -2661,6 +2671,7 @@ const demos: Record<string, React.ComponentType> = {
         <div className="w-[300px] h-[300px] rounded-2xl overflow-hidden border border-zinc-200 bg-white shadow-xs dark:border-zinc-800 dark:bg-zinc-950 flex items-center justify-center">
           <HalftoneImage
             src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=400&h=400"
+            allowUpload={true}
             dotSpacing={dotSpacing}
             contrast={contrast}
             brightness={brightness}

@@ -62,6 +62,38 @@ export interface RegistryComponent {
  */
 export const registry: RegistryComponent[] = [
   {
+    name: 'magic-tree',
+    title: 'Magic Tree',
+    description:
+      'A beautiful animated file tree component with sparkles and smooth folder expansion.',
+    category: 'data-display',
+    dependencies: ['framer-motion', 'lucide-react'],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/magic-tree.tsx',
+    tags: ['tree', 'file', 'folder', 'navigation', 'animated'],
+    usage: `import { MagicTree } from "@/components/kanso/magic-tree"
+
+export default function MagicTreeDemo() {
+  return (
+    <div className="p-4 w-64 border rounded-xl">
+      <MagicTree />
+    </div>
+  )
+}`,
+    props: [
+      {
+        name: 'data',
+        type: 'MagicNode[]',
+        description: 'The hierarchical data structure to render.',
+      },
+      {
+        name: 'onSelect',
+        type: '(node: MagicNode) => void',
+        description: 'Callback fired when a node is clicked.',
+      },
+    ],
+  },
+  {
     name: 'telemetry-widgets',
     title: 'Telemetry Widgets',
     description:

@@ -137,18 +137,32 @@ export function TelemetrySegbar({
       {Array.from({ length: total }, (_, i) => {
         const isActive = i < on;
         return (
-          <div
+          <motion.div
             key={i}
+            initial={false}
+            animate={{
+              opacity: isActive ? 1 : 0.3,
+              scaleY: isActive ? 1 : 0.75,
+            }}
+            transition={{
+              type: 'spring',
+              stiffness: 400,
+              damping: 25,
+              delay: i * 0.015,
+            }}
             className={cn(
-              'flex-1 rounded-xs transition-colors duration-300',
+              'flex-1 rounded-xs',
               isActive
                 ? cn(
-                    color === 'white' && 'bg-zinc-100 dark:bg-zinc-200',
-                    color === 'green' && 'bg-emerald-500',
-                    color === 'orange' && 'bg-amber-500',
+                    color === 'white' &&
+                      'bg-zinc-100 dark:bg-zinc-200 shadow-[0_0_5px_rgba(255,255,255,0.4)]',
+                    color === 'green' &&
+                      'bg-emerald-500 shadow-[0_0_5px_rgba(16,185,129,0.5)]',
+                    color === 'orange' &&
+                      'bg-amber-500 shadow-[0_0_5px_rgba(245,158,11,0.5)]',
                     color === 'zinc' && 'bg-zinc-500'
                   )
-                : 'bg-zinc-200/10 dark:bg-zinc-800/40'
+                : 'bg-zinc-200/20 dark:bg-zinc-800/40'
             )}
           />
         );
@@ -361,11 +375,18 @@ export function TelemetryBattery() {
       .getBattery()
       .then((bat) => {
         activeBat = bat;
-        setLevel(bat.level);
-        setCharging(bat.charging);
+        setLevel(
+          typeof bat.level === 'number' && !isNaN(bat.level) ? bat.level : 0.85
+        );
+        setCharging(bat.charging || false);
 
-        onLevelChange = () => setLevel(bat.level);
-        onChargingChange = () => setCharging(bat.charging);
+        onLevelChange = () =>
+          setLevel(
+            typeof activeBat?.level === 'number' && !isNaN(activeBat.level)
+              ? activeBat.level
+              : 0.85
+          );
+        onChargingChange = () => setCharging(activeBat?.charging || false);
 
         bat.addEventListener('levelchange', onLevelChange);
         bat.addEventListener('chargingchange', onChargingChange);
@@ -389,15 +410,16 @@ export function TelemetryBattery() {
     if (!isSimulated) return;
     const interval = setInterval(() => {
       setLevel((prev) => {
-        if (prev <= 0.05) return 1.0; // Recharge back
+        if (isNaN(prev) || prev <= 0.05) return 1.0; // Recharge back
         return Math.max(0.01, prev - 0.001);
       });
     }, 8000);
     return () => clearInterval(interval);
   }, [isSimulated]);
 
-  const pct = Math.round(level * 100);
-  const barOnCount = Math.round(level * 24);
+  const safeLevel = isNaN(level) ? 0.85 : level;
+  const pct = Math.round(safeLevel * 100);
+  const barOnCount = Math.round(safeLevel * 24);
 
   return (
     <TelemetryCard
@@ -405,23 +427,49 @@ export function TelemetryBattery() {
       status={isSimulated ? 'sim' : 'live'}
       right={
         <div className="flex items-center gap-1.5 text-zinc-400">
-          <BatteryIcon className="size-3.5" />
-          <span className="text-[9px] font-mono tracking-wider">
+          <motion.div
+            animate={
+              charging ? { scale: [1, 1.2, 1], opacity: [0.7, 1, 0.7] } : {}
+            }
+            transition={{ repeat: Infinity, duration: 2 }}
+          >
+            <BatteryIcon
+              className={cn('size-3.5', charging && 'text-emerald-400')}
+            />
+          </motion.div>
+          <span
+            className={cn(
+              'text-[9px] font-mono tracking-wider transition-colors',
+              charging && 'text-emerald-400'
+            )}
+          >
             {charging ? 'CHARGING' : 'DISCHARGING'}
           </span>
         </div>
       }
       className="col-span-full sm:col-span-1 min-h-[190px]"
     >
-      <div className="flex-1 flex flex-col justify-between">
-        <div className="mt-2 flex items-baseline gap-1 select-all">
-          <span className="font-mono text-5xl font-bold tracking-tight text-white">
+      <div className="flex-1 flex flex-col justify-between relative overflow-hidden">
+        {charging && (
+          <motion.div
+            className="absolute -inset-4 bg-emerald-500/10 rounded-full blur-2xl pointer-events-none"
+            animate={{ opacity: [0.2, 0.5, 0.2] }}
+            transition={{ repeat: Infinity, duration: 3, ease: 'easeInOut' }}
+          />
+        )}
+        <div className="mt-2 flex items-baseline gap-1 select-all relative z-10">
+          <motion.span
+            key={pct}
+            initial={{ opacity: 0.5, y: -5 }}
+            animate={{ opacity: 1, y: 0 }}
+            className="font-mono text-5xl font-bold tracking-tight text-white drop-shadow-md"
+          >
             {pct}
-          </span>
+          </motion.span>
           <span className="font-mono text-sm text-zinc-400 font-light">%</span>
         </div>
 
-        <div className="my-2">
+        <div className="my-2 relative z-10">
           <TelemetrySegbar
             total={24}
             on={barOnCount}
@@ -429,10 +477,21 @@ export function TelemetryBattery() {
           />
         </div>
 
-        <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider select-none">
-          {charging
-            ? 'AC source · drawing power'
-            : 'Internal cell · on discharge'}
+        <div className="text-[10px] font-mono text-zinc-500 uppercase tracking-wider select-none relative z-10 flex justify-between items-end min-h-[14px]">
+          <span>
+            {charging
+              ? 'AC source · drawing power'
+              : 'Internal cell · on discharge'}
+          </span>
+          {pct < 20 && !charging && (
+            <motion.span
+              animate={{ opacity: [1, 0, 1] }}
+              transition={{ repeat: Infinity, duration: 1 }}
+              className="text-amber-500 font-bold"
+            >
+              LOW BATT
+            </motion.span>
+          )}
         </div>
       </div>
     </TelemetryCard>
@@ -444,10 +503,10 @@ export function TelemetryMemory() {
   const [heapMB, setHeapMB] = React.useState(124);
   const [heapLimitGB, setHeapLimitGB] = React.useState(4.2);
   const [percent, setPercent] = React.useState(3.5);
-  const [isSimulated] = React.useState(() => {
+  const [isSimulated, setIsSimulated] = React.useState(() => {
     if (typeof window === 'undefined') return true;
     const perf = window.performance as unknown as PerformanceWithMemory;
-    return !perf.memory;
+    return !perf.memory || !perf.memory.jsHeapLimit;
   });
 
   React.useEffect(() => {
@@ -456,7 +515,12 @@ export function TelemetryMemory() {
         typeof window !== 'undefined'
           ? (window.performance as unknown as PerformanceWithMemory)
           : null;
-      if (perf && perf.memory) {
+      if (
+        perf &&
+        perf.memory &&
+        perf.memory.jsHeapLimit > 0 &&
+        perf.memory.usedJSHeapSize > 0
+      ) {
         const mem = perf.memory;
         const usedMB = Math.round(mem.usedJSHeapSize / 1024 / 1024);
         const limitGB = parseFloat(
@@ -466,10 +530,12 @@ export function TelemetryMemory() {
           ((mem.usedJSHeapSize / mem.jsHeapLimit) * 100).toFixed(1)
         );
 
-        setHeapMB(usedMB);
-        setHeapLimitGB(limitGB);
-        setPercent(pct);
+        setHeapMB(isNaN(usedMB) ? 124 : usedMB);
+        setHeapLimitGB(isNaN(limitGB) ? 4.2 : limitGB);
+        setPercent(isNaN(pct) ? 3.5 : pct);
+        setIsSimulated(false);
       } else {
+        setIsSimulated(true);
         // Simulated oscillation
         const limit = 4.2;
         setHeapLimitGB(limit);
@@ -486,12 +552,16 @@ export function TelemetryMemory() {
     return () => clearInterval(interval);
   }, []);
 
+  const safePercent = isNaN(percent) ? 3.5 : percent;
+  const safeHeapLimitGB = isNaN(heapLimitGB) ? 4.2 : heapLimitGB;
+  const safeHeapMB = isNaN(heapMB) ? 124 : heapMB;
+
   // SVG Ring values
   const radius = 32;
   const strokeWidth = 5;
   const circumference = 2 * Math.PI * radius;
   // Cap visual percent at 100, memory usually occupies tiny percentage of limits
-  const visualPct = Math.min(100, Math.max(1, percent * 5)); // Scaled for aesthetic ring
+  const visualPct = Math.min(100, Math.max(1, safePercent * 5)); // Scaled for aesthetic ring
   const strokeDashoffset = circumference - (visualPct / 100) * circumference;
 
   return (
@@ -506,28 +576,40 @@ export function TelemetryMemory() {
       }
       className="col-span-full sm:col-span-1 min-h-[190px]"
     >
-      <div className="flex-1 flex items-center justify-between gap-4 mt-2">
-        <div className="flex-1 flex flex-col justify-between h-full">
+      <div className="flex-1 flex items-center justify-between gap-4 mt-2 relative">
+        {safePercent > 80 && (
+          <motion.div
+            className="absolute -inset-4 bg-amber-500/10 rounded-full blur-2xl pointer-events-none"
+            animate={{ opacity: [0.2, 0.6, 0.2] }}
+            transition={{ repeat: Infinity, duration: 2 }}
+          />
+        )}
+        <div className="flex-1 flex flex-col justify-between h-full relative z-10">
           <div>
             <div className="flex items-baseline gap-1 select-all">
-              <span className="font-mono text-4xl font-bold tracking-tight text-white">
-                {heapMB}
-              </span>
+              <motion.span
+                key={safeHeapMB}
+                initial={{ opacity: 0.8, y: -2 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="font-mono text-4xl font-bold tracking-tight text-white drop-shadow-sm"
+              >
+                {safeHeapMB}
+              </motion.span>
               <span className="font-mono text-xs text-zinc-400 font-light">
                 MB
               </span>
             </div>
             <div className="font-mono text-[10px] text-zinc-500 uppercase mt-1 tracking-wider">
-              / {heapLimitGB} GB Limit
+              / {safeHeapLimitGB} GB Limit
             </div>
           </div>
           <div className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest mt-4">
-            {percent}% UTILIZED
+            {safePercent}% UTILIZED
           </div>
         </div>
 
         {/* Circular Indicator */}
-        <div className="relative size-18 shrink-0 flex items-center justify-center">
+        <div className="relative size-18 shrink-0 flex items-center justify-center z-10">
           <svg className="size-full transform rotate-[-90deg]">
             <circle
               cx="36"
@@ -536,21 +618,31 @@ export function TelemetryMemory() {
               className="stroke-zinc-200/5 dark:stroke-zinc-800/80 fill-none"
               strokeWidth={strokeWidth}
             />
-            <circle
+            <motion.circle
               cx="36"
               cy="36"
               r={radius}
-              className="stroke-amber-500 fill-none transition-all duration-700 ease-out"
+              className="stroke-amber-500 fill-none"
               strokeWidth={strokeWidth}
               strokeDasharray={circumference}
-              strokeDashoffset={strokeDashoffset}
+              initial={{ strokeDashoffset: circumference }}
+              animate={{ strokeDashoffset }}
+              transition={{ duration: 1, ease: 'easeOut' }}
               strokeLinecap="round"
+              style={{
+                filter: 'drop-shadow(0px 0px 4px rgba(245,158,11,0.5))',
+              }}
             />
           </svg>
           <div className="absolute inset-0 flex flex-col items-center justify-center select-none">
-            <span className="text-xs font-mono font-bold text-white">
-              {Math.round(percent)}%
-            </span>
+            <motion.span
+              key={safePercent}
+              initial={{ scale: 0.9 }}
+              animate={{ scale: 1 }}
+              className="text-xs font-mono font-bold text-white drop-shadow-md"
+            >
+              {Math.round(safePercent)}%
+            </motion.span>
           </div>
         </div>
       </div>
