@@ -41,7 +41,6 @@ export default function LandingPageClient({
       <div className="relative ">
         <PremiumEffects />
       </div>
-      <TelemetryShowcase />
       <ComponentShowcase
         showcaseHtmls={showcaseHtmls}
         showcaseRaws={showcaseRaws}
