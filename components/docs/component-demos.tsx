@@ -40,6 +40,7 @@ import { BlurRevealCode } from '@/components/kanso/blur-reveal-code';
 import { NoiseCard } from '@/components/kanso/noise-card';
 import { BrowserLoader } from '@/components/kanso/browser-loader';
 import { TelemetryGrid } from '@/components/kanso/telemetry-widgets';
+import { MagicTree } from '@/components/kanso/magic-tree';
 import { Volume2, VolumeX } from 'lucide-react';
 import { RayCard } from '@/components/kanso/ray-card';
 import {
@@ -106,6 +107,15 @@ function DialKitSlider({
  */
 
 const demos: Record<string, React.ComponentType> = {
+  'magic-tree': function MagicTreeDemo() {
+    return (
+      <div className="flex flex-col items-center gap-8 w-full max-w-sm">
+        <div className="w-full rounded-xl border border-zinc-200/60 bg-white/50 p-6 dark:border-zinc-800/60 dark:bg-zinc-950/50 shadow-xs">
+          <MagicTree />
+        </div>
+      </div>
+    );
+  },
   'telemetry-widgets': function TelemetryWidgetsDemo() {
     const [soundEnabled, setSoundEnabled] = React.useState(true);
 
