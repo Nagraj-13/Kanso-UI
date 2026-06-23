@@ -49,6 +49,11 @@ const categoryMeta: Record<string, { label: string; description: string }> = {
     label: 'Data Display',
     description: 'Minimalist tables, lists, and visual card alignments.',
   },
+  scroll: {
+    label: 'Scroll',
+    description:
+      'Beautiful, smooth scroll-driven interactive experiences and typography highlights.',
+  },
 };
 
 /**

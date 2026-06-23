@@ -17,6 +17,7 @@ const categoryMeta: Record<string, { label: string; icon: string }> = {
   typography: { label: 'Typography', icon: 'Aa' },
   feedback: { label: 'Feedback', icon: '◈' },
   'data-display': { label: 'Data Display', icon: '▤' },
+  scroll: { label: 'Scroll', icon: '↕' },
 };
 
 export default function DocsLayout({
