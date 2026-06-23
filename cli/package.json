@@ -1,0 +1,38 @@
+{
+  "name": "kanso-ui",
+  "version": "0.1.0",
+  "description": "Copy-paste component CLI for Kanso UI",
+  "main": "dist/index.js",
+  "bin": {
+    "kanso-ui": "./dist/index.js"
+  },
+  "scripts": {
+    "build": "tsup src/index.ts --format cjs --dts",
+    "dev": "tsup src/index.ts --format cjs --watch",
+    "prepublishOnly": "npm run build"
+  },
+  "keywords": [
+    "react",
+    "ui",
+    "components",
+    "kanso-ui",
+    "tailwind"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^13.1.0",
+    "framer-motion": "^12.40.0",
+    "lucide-react": "^1.21.0",
+    "node-fetch": "^3.3.2",
+    "ora": "^8.2.0",
+    "picocolors": "^1.1.1",
+    "prompts": "^2.4.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@types/prompts": "^2.4.9",
+    "tsup": "^8.3.5",
+    "typescript": "^5.7.2"
+  }
+}
