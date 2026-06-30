@@ -1,0 +1,1332 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Cipherion | Quantum-Resilient Encryption-as-a-Service</title>
+  <meta name="description" content="Cipherion provides enterprise-grade, zero-key architecture Encryption-as-a-Service (EaaS) backed by AWS Nitro Enclaves. Built in Belagavi." />
+  
+  <style>
+    /* =========================================
+       CSS VARIABLES & THEME PRIMITIVES
+       ========================================= */
+    :root {
+      /* Light mode base */
+      --background: #ffffff;
+      --foreground: #09090b;
+      --muted: #f4f4f5;
+      --muted-foreground: #71717a;
+      --border: #e4e4e7;
+      --line: #e7e7ea;
+      --stripe-line: rgba(0, 0, 0, 0.18);
+      --accent-muted: rgba(0, 0, 0, 0.03);
+      --info: #3b82f6;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --danger: #ef4444;
+      --radius: 0.5rem;
+      
+      /* Typography */
+      --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      --font-mono: "JetBrains Mono", ui-monospace, "SF Mono", "Cascadia Code", "Roboto Mono", Menlo, Consolas, monospace;
+      --font-serif: "Playfair Display", Georgia, "Iowan Old Style", "Times New Roman", serif;
+      
+      /* Code highlighting colors (Light) */
+      --code-bg: #f8f9fa;
+      --code-text: #24292e;
+      --code-keyword: #d73a49;
+      --code-string: #032f62;
+      --code-function: #6f42c1;
+      --code-comment: #6a737d;
+    }
+
+    .dark {
+      /* Dark mode overrides (Linear/Vercel style) */
+      --background: #09090b;
+      --foreground: #fafafa;
+      --muted: #18181b;
+      --muted-foreground: #a1a1aa;
+      --border: #27272a;
+      --line: #27272a;
+      --stripe-line: rgba(255, 255, 255, 0.07);
+      --accent-muted: rgba(255, 255, 255, 0.03);
+      --info: #3b82f6;
+      
+      /* Code highlighting colors (Dark) */
+      --code-bg: #0d0d0f;
+      --code-text: #e1e4e8;
+      --code-keyword: #f97583;
+      --code-string: #9ecbff;
+      --code-function: #b392f0;
+      --code-comment: #6a737d;
+    }
+
+    /* =========================================
+       RESET & BASE STYLES
+       ========================================= */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--foreground);
+      font-family: var(--font-sans);
+      line-height: 1.6;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s ease;
+    }
+
+    a:hover {
+      color: var(--info);
+    }
+
+    ul, ol {
+      list-style: none;
+    }
+
+    button {
+      cursor: pointer;
+      font-family: inherit;
+    }
+
+    /* =========================================
+       TYPOGRAPHY
+       ========================================= */
+    h1, h2, h3, h4, h5, h6 {
+      font-weight: 600;
+      line-height: 1.2;
+      letter-spacing: -0.03em;
+      margin-bottom: 1rem;
+    }
+
+    h1 {
+      font-size: clamp(2.5rem, 5vw, 4rem);
+    }
+
+    h2 {
+      font-size: clamp(1.8rem, 3vw, 2.5rem);
+    }
+
+    h3 {
+      font-size: 1.5rem;
+    }
+
+    p {
+      margin-bottom: 1.5rem;
+      color: var(--muted-foreground);
+    }
+
+    strong {
+      color: var(--foreground);
+      font-weight: 600;
+    }
+
+    .mono {
+      font-family: var(--font-mono);
+    }
+
+    .text-sm {
+      font-size: 0.875rem;
+    }
+
+    .text-xs {
+      font-size: 0.75rem;
+    }
+
+    .text-center {
+      text-align: center;
+    }
+
+    /* =========================================
+       LAYOUT SHELL & GRID SYSTEM
+       ========================================= */
+    .container {
+      max-width: 64rem; /* 1024px */
+      margin-inline: auto;
+      padding-inline: 1rem;
+    }
+
+    .col {
+      max-width: 56rem;
+      margin-inline: auto;
+      position: relative;
+    }
+
+    /* The core panel wrapper that creates the vertical wireframe borders */
+    .panel {
+      position: relative;
+      border-left: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+      background: var(--background);
+    }
+
+    .panel-header {
+      padding: 1.5rem 2rem;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      background: var(--accent-muted);
+    }
+
+    .panel-header.row {
+      flex-direction: row;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .panel-title {
+      font-size: 1.25rem;
+      font-weight: 500;
+      letter-spacing: -0.02em;
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .panel-title sup {
+      font-size: 0.75rem;
+      color: var(--muted-foreground);
+      font-weight: 500;
+      margin-left: 0.25rem;
+    }
+
+    .panel-content {
+      padding: 2rem;
+    }
+
+    .grid-2 {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    
+    .grid-2 > div {
+      background: var(--background);
+      padding: 2rem;
+    }
+
+    .grid-3 {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .grid-3 > div {
+      background: var(--background);
+      padding: 1.5rem;
+      position: relative;
+    }
+
+    .grid-4 {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 1px;
+      background: var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+
+    .grid-4 > div {
+      background: var(--background);
+      padding: 1.5rem;
+    }
+
+    @media (max-width: 768px) {
+      .grid-2, .grid-3, .grid-4 {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    /* =========================================
+       DIVIDERS & VISUAL PRIMITIVES
+       ========================================= */
+    .line-top, .line-bottom {
+      position: relative;
+    }
+
+    .line-top::before, .line-bottom::after {
+      content: "";
+      position: absolute;
+      left: -2000px;
+      width: 4000px;
+      height: 1px;
+      background: var(--line);
+      z-index: 1;
+    }
+
+    .line-top::before {
+      top: 0;
+    }
+
+    .line-bottom::after {
+      bottom: 0;
+    }
+
+    .dashed-bottom {
+      position: relative;
+    }
+
+    .dashed-bottom::after {
+      content: "";
+      position: absolute;
+      left: -2000px;
+      width: 4000px;
+      bottom: 0;
+      height: 1px;
+      background-image: linear-gradient(to right, var(--line) 4px, transparent 2px);
+      background-size: 6px 1px;
+      background-repeat: repeat-x;
+    }
+
+    .stripe-divider {
+      position: relative;
+      height: 3rem;
+      border-left: 1px solid var(--line);
+      border-right: 1px solid var(--line);
+    }
+
+    .stripe-divider::before {
+      content: "";
+      position: absolute;
+      left: -2000px;
+      width: 4000px;
+      height: 100%;
+      background-image: repeating-linear-gradient(
+        315deg,
+        var(--stripe-line) 0,
+        var(--stripe-line) 1px,
+        transparent 0,
+        transparent 50%
+      );
+      background-size: 10px 10px;
+    }
+
+    .glow-effect {
+      position: absolute;
+      width: 300px;
+      height: 300px;
+      background: radial-gradient(circle, rgba(59,130,246,0.15) 0%, rgba(0,0,0,0) 70%);
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    /* =========================================
+       COMPONENTS
+       ========================================= */
+    
+    /* Buttons */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      height: 2.5rem;
+      padding: 0 1.25rem;
+      border-radius: 0.375rem;
+      font-size: 0.875rem;
+      font-weight: 500;
+      border: 1px solid transparent;
+      transition: all 0.2s ease;
+      font-family: var(--font-sans);
+    }
+
+    .btn-primary {
+      background: var(--foreground);
+      color: var(--background);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.9;
+      transform: translateY(-1px);
+    }
+
+    .btn-outline {
+      background: transparent;
+      border-color: var(--border);
+      color: var(--foreground);
+    }
+
+    .btn-outline:hover {
+      background: var(--muted);
+    }
+
+    .pill-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      height: 2rem;
+      padding: 0 0.75rem;
+      border-radius: 999px;
+      background: var(--muted);
+      color: var(--foreground);
+      font-size: 0.75rem;
+      font-weight: 500;
+      border: 1px solid var(--border);
+      transition: all 0.2s;
+    }
+
+    .pill-btn:hover {
+      border-color: var(--muted-foreground);
+    }
+
+    /* Badges & Icons */
+    .icon-badge {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2rem;
+      height: 2rem;
+      flex-shrink: 0;
+      border-radius: 0.375rem;
+      border: 1px solid color-mix(in oklab, var(--muted-foreground) 15%, transparent);
+      background: var(--muted);
+      box-shadow: 0 0 0 1px var(--background), 0 0 0 2px var(--line);
+      color: var(--muted-foreground);
+      position: relative;
+    }
+
+    .icon-badge svg {
+      width: 16px;
+      height: 16px;
+    }
+
+    .notify-dot {
+      position: absolute;
+      top: -4px;
+      right: -4px;
+      width: 8px;
+      height: 8px;
+      border-radius: 2px;
+      background: var(--info);
+      box-shadow: 0 0 0 1px var(--background);
+    }
+    
+    .status-dot {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: var(--success);
+      display: inline-block;
+      box-shadow: 0 0 8px var(--success);
+    }
+
+    .intro-row {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.8125rem;
+      color: var(--foreground);
+    }
+
+    /* Figure / Terminal */
+    .fig-figure {
+      position: relative;
+      border: 1px solid var(--line);
+      margin: 1.5rem;
+      height: 220px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(var(--line) 1px, transparent 1px);
+      background-size: 16px 16px;
+      overflow: hidden;
+    }
+
+    .fig-caption {
+      position: absolute;
+      right: 8px;
+      bottom: 8px;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--muted-foreground);
+      opacity: 0.7;
+      background: var(--background);
+      padding: 0.1rem 0.4rem;
+      border: 1px solid var(--line);
+    }
+
+    /* Code Block */
+    .code-window {
+      background: var(--code-bg);
+      border: 1px solid var(--line);
+      border-radius: 0.5rem;
+      overflow: hidden;
+      margin: 1.5rem 0;
+    }
+
+    .code-header {
+      display: flex;
+      align-items: center;
+      padding: 0.75rem 1rem;
+      border-bottom: 1px solid var(--line);
+      background: var(--muted);
+      gap: 0.5rem;
+    }
+
+    .code-dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+    }
+    .code-dot.r { background: #ff5f56; }
+    .code-dot.y { background: #ffbd2e; }
+    .code-dot.g { background: #27c93f; }
+
+    .code-title {
+      margin-left: 1rem;
+      font-family: var(--font-mono);
+      font-size: 0.75rem;
+      color: var(--muted-foreground);
+    }
+
+    .code-body {
+      padding: 1rem;
+      overflow-x: auto;
+      font-family: var(--font-mono);
+      font-size: 0.875rem;
+      line-height: 1.5;
+      color: var(--code-text);
+    }
+
+    .token.keyword { color: var(--code-keyword); }
+    .token.string { color: var(--code-string); }
+    .token.function { color: var(--code-function); }
+    .token.comment { color: var(--code-comment); font-style: italic; }
+
+    /* Testimonial / Profile Cards */
+    .card {
+      border-radius: 0.75rem;
+      box-shadow: inset 0 0 0 1px var(--border);
+      padding: 1.5rem;
+      background: var(--background);
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      height: 100%;
+    }
+
+    .quote {
+      font-family: var(--font-serif);
+      font-size: 1.05rem;
+      margin: 0 0 1.5rem;
+      line-height: 1.5;
+      color: var(--foreground);
+    }
+
+    .author {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background: var(--muted);
+      border: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: var(--font-mono);
+      font-size: 0.7rem;
+      color: var(--muted-foreground);
+    }
+
+    .name {
+      font-size: 0.875rem;
+      font-weight: 600;
+    }
+
+    .tagline {
+      font-size: 0.75rem;
+      color: var(--info);
+      font-family: var(--font-mono);
+    }
+
+    /* Accordion / FAQ */
+    details {
+      border-bottom: 1px solid var(--line);
+    }
+    
+    summary {
+      padding: 1.25rem 0;
+      font-weight: 500;
+      cursor: pointer;
+      list-style: none;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    summary::-webkit-details-marker {
+      display: none;
+    }
+
+    summary::after {
+      content: "+";
+      font-family: var(--font-mono);
+      color: var(--muted-foreground);
+    }
+
+    details[open] summary::after {
+      content: "-";
+    }
+
+    details p {
+      padding-bottom: 1.25rem;
+      margin: 0;
+    }
+
+    /* Animations */
+    @keyframes pulse-ring {
+      0% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0.7); }
+      70% { transform: scale(1); box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
+      100% { transform: scale(0.8); box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
+    }
+
+    .animated-ring {
+      animation: pulse-ring 2s infinite;
+    }
+
+  </style>
+</head>
+<body>
+
+<div class="col">
+
+  <!-- =========================================
+       HEADER / NAVIGATION
+       ========================================= -->
+  <header class="line-bottom" style="display:flex; align-items:center; justify-content:space-between; height:4rem; padding:0 1.5rem; border-left:1px solid var(--line); border-right:1px solid var(--line); font-size:0.875rem; background: var(--background); position: sticky; top: 0; z-index: 50;">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="var(--foreground)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+        <path d="M12 8v4"></path>
+        <path d="M12 16h.01"></path>
+      </svg>
+      <strong style="letter-spacing: 0.1em; font-family: var(--font-mono); font-size: 1rem;">CIPHERION</strong>
+    </div>
+    
+    <nav style="display:none; gap:2rem; color:var(--muted-foreground); font-weight: 500;" class="desktop-nav">
+      <a href="#architecture">Architecture</a>
+      <a href="#eaas">EaaS API</a>
+      <a href="#enclaves">Nitro Enclaves</a>
+      <a href="#pricing">Pricing</a>
+    </nav>
+
+    <div style="display:flex; gap:1rem; align-items: center;">
+      <a href="#" class="mono text-xs" style="color: var(--muted-foreground);">Documentation</a>
+      <button class="btn btn-primary" style="height: 2rem; padding: 0 1rem; font-size: 0.75rem;">Get API Keys</button>
+    </div>
+  </header>
+  
+  <style>
+    @media (min-width: 768px) {
+      .desktop-nav { display: flex !important; }
+    }
+  </style>
+
+  <!-- =========================================
+       HERO SECTION
+       ========================================= -->
+  <main class="panel line-bottom">
+    <div class="glow-effect"></div>
+    
+    <!-- Hero Figure / Abstract Graphic -->
+    <div class="fig-figure" style="height: 320px;">
+      <svg width="400" height="200" viewBox="0 0 400 200" style="z-index: 10;">
+        <defs>
+          <linearGradient id="blueGrad" x1="0%" y1="0%" x2="100%" y2="0%">
+            <stop offset="0%" stop-color="var(--info)" stop-opacity="0.2" />
+            <stop offset="100%" stop-color="var(--info)" stop-opacity="0.8" />
+          </linearGradient>
+          <pattern id="grid" width="20" height="20" patternUnits="userSpaceOnUse">
+            <path d="M 20 0 L 0 0 0 20" fill="none" stroke="var(--line)" stroke-width="1"/>
+          </pattern>
+        </defs>
+        
+        <!-- Background Grid -->
+        <rect width="400" height="200" fill="url(#grid)" opacity="0.3" />
+
+        <!-- Geometric Encryption Node Representation -->
+        <g transform="translate(200, 100)">
+          <!-- Outer rotating ring -->
+          <circle cx="0" cy="0" r="80" fill="none" stroke="var(--line)" stroke-width="1" stroke-dasharray="4 4" />
+          
+          <!-- Abstract Isometric Cube -->
+          <polygon points="0,-40 34,-20 34,20 0,40 -34,20 -34,-20" fill="none" stroke="var(--info)" stroke-width="2"/>
+          <polygon points="0,-40 34,-20 0,0 -34,-20" fill="url(#blueGrad)" opacity="0.1"/>
+          <line x1="0" y1="0" x2="0" y2="40" stroke="var(--info)" stroke-width="2"/>
+          <line x1="0" y1="0" x2="34" y2="-20" stroke="var(--info)" stroke-width="2"/>
+          <line x1="0" y1="0" x2="-34" y2="-20" stroke="var(--info)" stroke-width="2"/>
+          
+          <!-- Data nodes connecting -->
+          <circle cx="0" cy="-40" r="4" fill="var(--background)" stroke="var(--info)" stroke-width="2" />
+          <circle cx="34" cy="-20" r="4" fill="var(--background)" stroke="var(--info)" stroke-width="2" />
+          <circle cx="-34" cy="-20" r="4" fill="var(--background)" stroke="var(--info)" stroke-width="2" />
+          <circle cx="34" cy="20" r="4" fill="var(--background)" stroke="var(--info)" stroke-width="2" />
+          <circle cx="-34" cy="20" r="4" fill="var(--background)" stroke="var(--info)" stroke-width="2" />
+          <circle cx="0" cy="40" r="4" fill="var(--background)" stroke="var(--info)" stroke-width="2" />
+          
+          <circle cx="0" cy="0" r="6" fill="var(--info)" class="animated-ring"/>
+        </g>
+        
+        <!-- Abstract connecting lines -->
+        <path d="M 0,100 Q 100,50 166,80" fill="none" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 2"/>
+        <path d="M 400,100 Q 300,150 234,120" fill="none" stroke="var(--line)" stroke-width="1" stroke-dasharray="2 2"/>
+      </svg>
+      <span class="fig-caption">SYS_ARCH_NODE_01 :: AES-256 GCM</span>
+    </div>
+
+    <!-- Hero Content -->
+    <div class="line-top" style="padding: 3rem 2rem; position: relative; z-index: 10;">
+      <div style="display: inline-flex; align-items: center; gap: 0.5rem; background: var(--muted); padding: 0.25rem 0.75rem; border-radius: 999px; font-size: 0.75rem; margin-bottom: 1.5rem; border: 1px solid var(--line); font-family: var(--font-mono);">
+        <span class="status-dot"></span>
+        Cipherion V2.0 is now live in AWS Mumbai (ap-south-1)
+      </div>
+      
+      <h1 style="margin: 0 0 1rem 0; font-size: clamp(2.5rem, 6vw, 4.5rem); font-weight: 600; tracking: -0.04em;">
+        Encryption as a <br/>
+        <span style="color: var(--info);">Zero-Key</span> Service.
+      </h1>
+      
+      <p style="font-size: 1.125rem; max-width: 32rem; margin-bottom: 2rem;">
+        The graphomancer's approach to data security. Cipherion provides field-level, post-quantum resilient encryption through a developer-first API. We secure the data, but we never see your keys.
+      </p>
+
+      <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+        <button class="btn btn-primary" style="height: 3rem; padding: 0 1.5rem;">Start Building Free</button>
+        <button class="btn btn-outline" style="height: 3rem; padding: 0 1.5rem;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+            <polyline points="14 2 14 8 20 8"></polyline>
+            <line x1="16" y1="13" x2="8" y2="13"></line>
+            <line x1="16" y1="17" x2="8" y2="17"></line>
+            <polyline points="10 9 9 9 8 9"></polyline>
+          </svg>
+          Read the Docs
+        </button>
+      </div>
+
+      <!-- Quick Install Snippet -->
+      <div class="code-window" style="max-width: 28rem; margin-top: 3rem; margin-bottom: 0;">
+        <div class="code-header">
+          <span class="code-title" style="margin-left: 0;">Terminal</span>
+        </div>
+        <div class="code-body" style="padding: 0.75rem 1rem;">
+          <span style="color: var(--info);">~</span> <span style="color: var(--muted-foreground);">npm install</span> @cipherion/node-sdk
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- =========================================
+       SYSTEM OVERVIEW / BADGES
+       ========================================= -->
+  <div class="panel">
+    <div class="panel-content" style="display:grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1.5rem 1rem;">
+      <div class="intro-row">
+        <span class="icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"></path>
+          </svg>
+        </span> 
+        Zero-Key Architecture
+      </div>
+      <div class="intro-row">
+        <span class="icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <rect x="2" y="2" width="20" height="8" rx="2" ry="2"></rect>
+            <rect x="2" y="14" width="20" height="8" rx="2" ry="2"></rect>
+            <line x1="6" y1="6" x2="6.01" y2="6"></line>
+            <line x1="6" y1="18" x2="6.01" y2="18"></line>
+          </svg>
+        </span> 
+        AWS Nitro Enclaves
+      </div>
+      <div class="intro-row">
+        <span class="icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+          </svg>
+        </span> 
+        AES-256 GCM Standard
+      </div>
+      <div class="intro-row">
+        <span class="icon-badge">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+            <circle cx="12" cy="10" r="3"></circle>
+          </svg>
+          <span class="notify-dot"></span>
+        </span> 
+        Built in Belagavi, IN
+      </div>
+    </div>
+  </div>
+
+  <!-- STRIPE DIVIDER: major section break -->
+  <div class="stripe-divider"></div>
+
+  <!-- =========================================
+       THE PROBLEM & EAAS SOLUTION
+       ========================================= -->
+  <section id="eaas" class="panel line-bottom">
+    <div class="panel-header line-bottom">
+      <h2 class="panel-title">The Encryption Dilemma</h2>
+    </div>
+    
+    <div class="grid-2">
+      <!-- Left Column: The Problem -->
+      <div>
+        <h3 style="font-size: 1.125rem; font-family: var(--font-mono); color: var(--danger);">01. The Legacy Approach</h3>
+        <p>
+          Traditional encryption architectures force developers to manage cryptographic keys within their own application state. This creates massive liability. If a database is breached, the keys are often found nearby.
+        </p>
+        <ul style="color: var(--muted-foreground); display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.875rem;">
+          <li style="display: flex; gap: 0.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            Key rotation requires system downtime.
+          </li>
+          <li style="display: flex; gap: 0.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            PII is exposed during database migrations.
+          </li>
+          <li style="display: flex; gap: 0.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--danger)" stroke-width="2"><line x1="18" y1="6" x2="6" y2="18"></line><line x1="6" y1="6" x2="18" y2="18"></line></svg>
+            Compliance boundaries (GDPR/DPDP) are hard to map.
+          </li>
+        </ul>
+      </div>
+
+      <!-- Right Column: EaaS -->
+      <div style="border-left: 1px solid var(--line);">
+        <h3 style="font-size: 1.125rem; font-family: var(--font-mono); color: var(--info);">02. Encryption-as-a-Service</h3>
+        <p>
+          Cipherion decouples data storage from data protection. By utilizing a proxy middleware or direct REST/gRPC APIs, fields are encrypted <em>before</em> they hit your database. 
+        </p>
+        <ul style="color: var(--muted-foreground); display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.875rem;">
+          <li style="display: flex; gap: 0.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Zero-Key Architecture: Passphrases never touch our servers.
+          </li>
+          <li style="display: flex; gap: 0.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Dynamic Tokenization for analytics on masked data.
+          </li>
+          <li style="display: flex; gap: 0.5rem;">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--success)" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Field-level granularity down to the JSON key.
+          </li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRIPE DIVIDER -->
+  <div class="stripe-divider"></div>
+
+  <!-- =========================================
+       DEVELOPER EXPERIENCE / CODE SNIPPETS
+       ========================================= -->
+  <section class="panel line-bottom">
+    <div class="panel-header line-bottom row">
+      <div>
+        <h2 class="panel-title">Developer Experience</h2>
+        <p style="margin: 0; font-size: 0.875rem; margin-top: 0.25rem;">Integrate field-level encryption in under 10 lines of code.</p>
+      </div>
+      <div style="display: flex; gap: 0.5rem;">
+        <button class="pill-btn" style="background: var(--foreground); color: var(--background);">Node.js</button>
+        <button class="pill-btn">Python</button>
+        <button class="pill-btn">Go</button>
+      </div>
+    </div>
+
+    <div class="panel-content" style="padding: 0;">
+      <div class="code-window" style="margin: 0; border: none; border-radius: 0;">
+        <div class="code-header" style="background: var(--background);">
+          <div style="display: flex; gap: 0.4rem;">
+            <div class="code-dot r"></div>
+            <div class="code-dot y"></div>
+            <div class="code-dot g"></div>
+          </div>
+          <span class="code-title">auth-service.ts</span>
+        </div>
+        <pre class="code-body" style="margin: 0;"><code><span class="token keyword">import</span> { Cipherion } <span class="token keyword">from</span> <span class="token string">'@cipherion/node-sdk'</span>;
+
+<span class="token comment">// Initialize the client with your scoped environment token</span>
+<span class="token keyword">const</span> cipherion <span class="token keyword">=</span> <span class="token keyword">new</span> <span class="token function">Cipherion</span>({
+  apiKey: process.env.CIPHERION_API_KEY,
+  enclaveRegion: <span class="token string">'ap-south-1'</span>
+});
+
+<span class="token keyword">async function</span> <span class="token function">registerUser</span>(userData) {
+  <span class="token comment">// Define which fields represent PII/Sensitive data</span>
+  <span class="token keyword">const</span> policy <span class="token keyword">=</span> {
+    encrypt: [<span class="token string">'ssn'</span>, <span class="token string">'credit_card'</span>],
+    tokenize: [<span class="token string">'email'</span>], <span class="token comment">// Preserves format for DB lookups</span>
+    ignore: [<span class="token string">'created_at'</span>, <span class="token string">'tier'</span>]
+  };
+
+  <span class="token comment">// Data is encrypted locally or via secure proxy before DB insertion</span>
+  <span class="token keyword">const</span> securedPayload <span class="token keyword">=</span> <span class="token keyword">await</span> cipherion.<span class="token function">protect</span>(userData, policy);
+  
+  <span class="token keyword">await</span> db.users.<span class="token function">insert</span>(securedPayload);
+  <span class="token keyword">return</span> { status: 200, message: <span class="token string">'User safely stored.'</span> };
+}</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRIPE DIVIDER -->
+  <div class="stripe-divider"></div>
+
+  <!-- =========================================
+       ARCHITECTURE: AWS NITRO ENCLAVES
+       ========================================= -->
+  <section id="enclaves" class="panel line-bottom">
+    <div class="panel-header line-bottom">
+      <h2 class="panel-title">Hardware-Enforced Security<sup>(Nitro)</sup></h2>
+    </div>
+    
+    <div class="panel-content">
+      <p style="max-width: 48rem;">
+        Software security is only as strong as the underlying OS. Cipherion leverages <strong>AWS Nitro Enclaves</strong> to create isolated compute environments to process your cryptographic materials. These enclaves have no persistent storage, no interactive access, and no external networking. 
+      </p>
+      
+      <div class="fig-figure" style="height: auto; padding: 2rem; background: var(--muted); border-radius: 0.5rem; margin: 2rem 0;">
+        <svg width="100%" height="250" viewBox="0 0 800 250" preserveAspectRatio="xMidYMid meet">
+          <defs>
+            <marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="6" markerHeight="6" orient="auto-start-reverse">
+              <path d="M 0 0 L 10 5 L 0 10 z" fill="var(--muted-foreground)"/>
+            </marker>
+          </defs>
+
+          <!-- Client App -->
+          <rect x="50" y="80" width="120" height="90" rx="8" fill="var(--background)" stroke="var(--line)" stroke-width="2"/>
+          <text x="110" y="125" text-anchor="middle" fill="var(--foreground)" font-family="var(--font-mono)" font-size="14">Your App</text>
+          <text x="110" y="145" text-anchor="middle" fill="var(--muted-foreground)" font-family="var(--font-sans)" font-size="10">(SDK / Proxy)</text>
+
+          <!-- AWS EC2 Instance Parent -->
+          <rect x="280" y="40" width="450" height="170" rx="8" fill="var(--background)" stroke="var(--line)" stroke-width="2" stroke-dasharray="4"/>
+          <text x="505" y="65" text-anchor="middle" fill="var(--muted-foreground)" font-family="var(--font-sans)" font-size="12">AWS EC2 Parent Instance</text>
+
+          <!-- Cipherion API -->
+          <rect x="310" y="80" width="120" height="90" rx="8" fill="var(--muted)" stroke="var(--line)" stroke-width="1"/>
+          <text x="370" y="125" text-anchor="middle" fill="var(--foreground)" font-family="var(--font-mono)" font-size="14">Cipherion API</text>
+          <text x="370" y="145" text-anchor="middle" fill="var(--muted-foreground)" font-family="var(--font-sans)" font-size="10">(Untrusted OS)</text>
+
+          <!-- Nitro Enclave -->
+          <rect x="580" y="80" width="120" height="90" rx="8" fill="#18181b" stroke="var(--info)" stroke-width="2"/>
+          <text x="640" y="125" text-anchor="middle" fill="var(--info)" font-weight="bold" font-family="var(--font-mono)" font-size="14">Nitro Enclave</text>
+          <text x="640" y="145" text-anchor="middle" fill="var(--muted-foreground)" font-family="var(--font-sans)" font-size="10">(Isolated KMS)</text>
+
+          <!-- Connections -->
+          <line x1="170" y1="125" x2="300" y2="125" stroke="var(--muted-foreground)" stroke-width="2" marker-end="url(#arrow)"/>
+          <text x="235" y="115" text-anchor="middle" fill="var(--muted-foreground)" font-family="var(--font-mono)" font-size="10">HTTPS/TLS</text>
+
+          <!-- Vsock Connection -->
+          <line x1="430" y1="125" x2="570" y2="125" stroke="var(--info)" stroke-width="2" stroke-dasharray="4" marker-end="url(#arrow)"/>
+          <text x="500" y="115" text-anchor="middle" fill="var(--info)" font-family="var(--font-mono)" font-size="10">Local Vsock</text>
+        </svg>
+      </div>
+
+      <p style="font-size: 0.875rem;">
+        Even if Cipherion's parent EC2 instances are compromised, the memory containing the cryptographic operations and plaintext data inside the Nitro Enclave cannot be read by any user, not even a root user or an AWS administrator. Cryptographic attestation ensures the enclave is running the exact, untampered code.
+      </p>
+    </div>
+  </section>
+
+  <!-- STRIPE DIVIDER -->
+  <div class="stripe-divider"></div>
+
+  <!-- =========================================
+       FEATURES GRID (COMPONENTS STYLE)
+       ========================================= -->
+  <section class="panel line-bottom">
+    <div class="panel-header line-bottom">
+      <h2 class="panel-title">Security Fabric<sup>(8)</sup></h2>
+    </div>
+    
+    <div class="grid-4">
+      
+      <!-- Feature 1 -->
+      <div>
+        <div class="item-row" style="margin-bottom: 0.75rem;">
+          <span class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+            <span class="notify-dot"></span>
+          </span>
+          <span class="item-title" style="font-weight: 500;">Field-Level Auth</span>
+        </div>
+        <p class="text-xs" style="margin: 0;">Encrypt specific JSON fields (like SSN or Credit Card) while leaving non-sensitive data plaintext for fast querying.</p>
+      </div>
+
+      <!-- Feature 2 -->
+      <div>
+        <div class="item-row" style="margin-bottom: 0.75rem;">
+          <span class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+          </span>
+          <span class="item-title" style="font-weight: 500;">Format-Preserving</span>
+        </div>
+        <p class="text-xs" style="margin: 0;">Tokenize emails or phone numbers into fake but valid formats (FPE) to keep your existing database schemas unbroken.</p>
+      </div>
+
+      <!-- Feature 3 -->
+      <div>
+        <div class="item-row" style="margin-bottom: 0.75rem;">
+          <span class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
+          </span>
+          <span class="item-title" style="font-weight: 500;">Zero-Key Arch</span>
+        </div>
+        <p class="text-xs" style="margin: 0;">Your passphrases are never stored on our servers. We use derived, ephemeral keys that exist only in memory during processing.</p>
+      </div>
+
+      <!-- Feature 4 -->
+      <div>
+        <div class="item-row" style="margin-bottom: 0.75rem;">
+          <span class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+            <span class="notify-dot"></span>
+          </span>
+          <span class="item-title" style="font-weight: 500;">Proxy Middleware</span>
+        </div>
+        <p class="text-xs" style="margin: 0;">Drop in our Dockerized proxy between your app and database. It intercepts and encrypts data transparently, zero code changes.</p>
+      </div>
+
+      <!-- Feature 5 -->
+      <div>
+        <div class="item-row" style="margin-bottom: 0.75rem;">
+          <span class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+          </span>
+          <span class="item-title" style="font-weight: 500;">Audit Logging</span>
+        </div>
+        <p class="text-xs" style="margin: 0;">Immutable, cryptographic logs of every decryption request. Exportable to Datadog, Splunk, or AWS CloudWatch.</p>
+      </div>
+
+      <!-- Feature 6 -->
+      <div>
+        <div class="item-row" style="margin-bottom: 0.75rem;">
+          <span class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          </span>
+          <span class="item-title" style="font-weight: 500;">Cross-Border</span>
+        </div>
+        <p class="text-xs" style="margin: 0;">Multi-region KMS backing ensures compliance with GDPR and India's DPDP Act regarding data residency and sovereignty.</p>
+      </div>
+
+      <!-- Feature 7 -->
+      <div>
+        <div class="item-row" style="margin-bottom: 0.75rem;">
+          <span class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          </span>
+          <span class="item-title" style="font-weight: 500;">Post-Quantum</span>
+        </div>
+        <p class="text-xs" style="margin: 0;">Ready for the future. We are implementing lattice-based cryptography standards approved by NIST to resist quantum attacks.</p>
+      </div>
+
+      <!-- Feature 8 -->
+      <div>
+        <div class="item-row" style="margin-bottom: 0.75rem;">
+          <span class="icon-badge">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="4 14 10 14 10 20"/><polyline points="20 10 14 10 14 4"/><line x1="14" y1="10" x2="21" y2="3"/><line x1="3" y1="21" x2="10" y2="14"/></svg>
+          </span>
+          <span class="item-title" style="font-weight: 500;">gRPC Support</span>
+        </div>
+        <p class="text-xs" style="margin: 0;">Need extreme throughput? Connect to our service via gRPC for ultra-low latency, persistent-connection cryptography operations.</p>
+      </div>
+
+    </div>
+    
+    <div class="line-top" style="display: flex; justify-content: center; padding: 1rem 0;">
+      <button class="pill-btn" style="height: 2.5rem; padding: 0 1.5rem; background: transparent;">View Complete Feature Matrix →</button>
+    </div>
+  </section>
+
+  <!-- STRIPE DIVIDER -->
+  <div class="stripe-divider"></div>
+
+  <!-- =========================================
+       PRICING
+       ========================================= -->
+  <section id="pricing" class="panel line-bottom">
+    <div class="panel-header line-bottom text-center">
+      <h2 class="panel-title" style="justify-content: center;">Transparent Pricing</h2>
+      <p style="margin: 0; font-size: 0.875rem;">Scale your security without scaling your costs exponentially.</p>
+    </div>
+
+    <div class="grid-3">
+      
+      <!-- Tier 1 -->
+      <div style="display: flex; flex-direction: column;">
+        <h3 style="font-size: 1.125rem;">Developer</h3>
+        <div style="font-size: 2rem; font-weight: 600; margin-bottom: 0.5rem; font-family: var(--font-mono);">
+          $0<span style="font-size: 0.875rem; color: var(--muted-foreground); font-weight: 400; font-family: var(--font-sans);"> /mo</span>
+        </div>
+        <p class="text-xs">Perfect for local testing and side projects.</p>
+        
+        <ul style="flex-grow: 1; font-size: 0.875rem; color: var(--muted-foreground); display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem;">
+          <li>✓ 10,000 API operations / mo</li>
+          <li>✓ REST API access</li>
+          <li>✓ Standard AES-256 GCM</li>
+          <li>✓ Community Support</li>
+        </ul>
+        
+        <button class="btn btn-outline" style="width: 100%;">Start Free</button>
+      </div>
+
+      <!-- Tier 2 -->
+      <div style="display: flex; flex-direction: column; border: 1px solid var(--info); box-shadow: 0 0 20px rgba(59,130,246,0.1);">
+        <div style="position: absolute; top: -10px; left: 50%; transform: translateX(-50%); background: var(--info); color: white; font-size: 0.65rem; padding: 0.2rem 0.5rem; border-radius: 999px; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase;">
+          Most Popular
+        </div>
+        <h3 style="font-size: 1.125rem;">Startup</h3>
+        <div style="font-size: 2rem; font-weight: 600; margin-bottom: 0.5rem; font-family: var(--font-mono);">
+          $49<span style="font-size: 0.875rem; color: var(--muted-foreground); font-weight: 400; font-family: var(--font-sans);"> /mo</span>
+        </div>
+        <p class="text-xs">For production apps scaling to the first 10k users.</p>
+        
+        <ul style="flex-grow: 1; font-size: 0.875rem; color: var(--muted-foreground); display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem;">
+          <li style="color: var(--foreground); font-weight: 500;">✓ 1,000,000 API ops / mo</li>
+          <li>✓ Format-Preserving Encryption</li>
+          <li>✓ Proxy Middleware access</li>
+          <li>✓ 7-day Audit Log Retention</li>
+          <li>✓ Email Support</li>
+        </ul>
+        
+        <button class="btn btn-primary" style="width: 100%;">Upgrade to Startup</button>
+      </div>
+
+      <!-- Tier 3 -->
+      <div style="display: flex; flex-direction: column;">
+        <h3 style="font-size: 1.125rem;">Enterprise</h3>
+        <div style="font-size: 2rem; font-weight: 600; margin-bottom: 0.5rem; font-family: var(--font-mono);">
+          Custom
+        </div>
+        <p class="text-xs">Hardware-enforced security for compliance-heavy sectors.</p>
+        
+        <ul style="flex-grow: 1; font-size: 0.875rem; color: var(--muted-foreground); display: flex; flex-direction: column; gap: 0.5rem; margin-bottom: 2rem;">
+          <li>✓ Unlimited API operations</li>
+          <li>✓ Dedicated AWS Nitro Enclave</li>
+          <li>✓ gRPC streaming support</li>
+          <li>✓ Custom KMS integration (BYOK)</li>
+          <li>✓ SLA + 24/7 Phone Support</li>
+        </ul>
+        
+        <button class="btn btn-outline" style="width: 100%;">Contact Sales</button>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- STRIPE DIVIDER -->
+  <div class="stripe-divider"></div>
+
+  <!-- =========================================
+       TESTIMONIALS / FOUNDING TEAM
+       ========================================= -->
+  <section class="panel line-bottom">
+    <div class="panel-header line-bottom">
+      <h2 class="panel-title">The Graphomancers Building Cipherion</h2>
+      <p style="margin: 0; font-size: 0.875rem; margin-top: 0.25rem;">Architecting systems where code is poetry, and security is absolute.</p>
+    </div>
+    
+    <div class="grid-3">
+      <!-- Kunaal -->
+      <div class="card" style="border: none; box-shadow: none; padding: 0;">
+        <p class="quote">"We are building a security fabric that will withstand not just today's threats, but the post-quantum era. Encryption shouldn't be an afterthought; it should be an accessible utility."</p>
+        <div class="author">
+          <div class="avatar">KS</div>
+          <div>
+            <div class="name">Kunaal Shindagi</div>
+            <div class="tagline">Co-Founder & CEO</div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Tech Lead / User -->
+      <div class="card" style="border: none; box-shadow: none; padding: 0;">
+        <p class="quote">"A graphomancer finds peace in the rhythm of architecting code. We designed Cipherion's proxy to provide inline data protection without forcing teams into massive code refactoring."</p>
+        <div class="author">
+          <div class="avatar">TL</div>
+          <div>
+            <div class="name">Founder & Tech Lead</div>
+            <div class="tagline">Director, Engineering</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Pooja -->
+      <div class="card" style="border: none; box-shadow: none; padding: 0;">
+        <p class="quote">"Compliance isn't just a checklist; it's a promise to users. We abstract the complexity of cross-border data rules so developers can focus strictly on building product."</p>
+        <div class="author">
+          <div class="avatar">PE</div>
+          <div>
+            <div class="name">Pooja Ekbote</div>
+            <div class="tagline">Co-Founder & COO</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- STRIPE DIVIDER -->
+  <div class="stripe-divider"></div>
+
+  <!-- =========================================
+       FAQ SECTION
+       ========================================= -->
+  <section class="panel line-bottom">
+    <div class="panel-header line-bottom">
+      <h2 class="panel-title">Frequently Asked Questions</h2>
+    </div>
+    
+    <div class="panel-content" style="max-width: 48rem; margin: 0 auto;">
+      
+      <details>
+        <summary>What exactly is "Zero-Key Architecture"?</summary>
+        <p class="text-sm">In a standard setup, you store an encryption key in your environment variables. If your server is compromised, the key is compromised. With Cipherion's Zero-Key architecture, the master keys are derived per-session and exist only in the volatile memory of an isolated hardware enclave. Once the operation is complete, the memory is scrubbed.</p>
+      </details>
+
+      <details>
+        <summary>How does this affect database performance?</summary>
+        <p class="text-sm">Direct REST API calls add roughly 15-25ms of latency depending on region. However, if you deploy our Dockerized Proxy Middleware directly in your VPC, or use our gRPC endpoints, latency is typically under 3ms. By only encrypting specific fields (like PII), the overall query performance of your database remains largely unaffected.</p>
+      </details>
+
+      <details>
+        <summary>Does Cipherion store any of my data?</summary>
+        <p class="text-sm">No. Cipherion is strictly a compute layer. We receive plaintext, process it in memory, and return ciphertext (or vice versa). We do not have a persistent database that stores your payloads. We only store metadata related to your API usage for billing and audit logging purposes.</p>
+      </details>
+      
+      <details>
+        <summary>What happens if Cipherion goes down?</summary>
+        <p class="text-sm">We operate across multiple availability zones within AWS. In the Enterprise tier, we deploy dedicated proxy instances directly into your infrastructure, meaning even if our control plane experiences an outage, your local encryption/decryption processes will continue uninterrupted using cached, short-lived derived keys.</p>
+      </details>
+
+    </div>
+  </section>
+
+  <!-- STRIPE DIVIDER -->
+  <div class="stripe-divider"></div>
+
+  <!-- =========================================
+       BOTTOM CTA
+       ========================================= -->
+  <section class="panel line-bottom text-center" style="padding: 6rem 2rem; background: radial-gradient(circle at center, var(--muted) 0%, var(--background) 100%);">
+    <div style="display: inline-block; border: 1px solid var(--info); border-radius: 50%; padding: 1rem; margin-bottom: 1.5rem; background: rgba(59,130,246,0.1);">
+      <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="var(--info)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+      </svg>
+    </div>
+    <h2 style="font-size: clamp(2rem, 4vw, 3rem); font-weight: 600; margin-bottom: 1rem;">Secure your stack today.</h2>
+    <p style="font-size: 1.125rem; max-width: 32rem; margin: 0 auto 2rem auto;">
+      Join the modern teams treating encryption as a fundamental utility rather than an operational burden.
+    </p>
+    <div style="display: flex; gap: 1rem; justify-content: center;">
+      <button class="btn btn-primary" style="height: 3rem; padding: 0 2rem; font-size: 1rem;">Generate API Key</button>
+      <button class="btn btn-outline" style="height: 3rem; padding: 0 2rem; font-size: 1rem;">View SDK Source</button>
+    </div>
+  </section>
+
+  <!-- =========================================
+       FOOTER
+       ========================================= -->
+  <footer class="panel line-bottom">
+    <div class="panel-content" style="padding: 4rem 2rem;">
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 3rem;">
+        
+        <!-- Brand / Identity -->
+        <div style="grid-column: 1 / -1; max-width: 300px;">
+          <strong style="letter-spacing: 0.1em; font-family: var(--font-mono); font-size: 1.25rem;">CIPHERION</strong>
+          <p class="text-sm" style="margin-top: 1rem;">
+            Quantum-Resilient Encryption-as-a-Service. Engineered for the paranoid.
+          </p>
+          <div style="display: flex; gap: 1rem; margin-top: 1rem;">
+            <a href="#" style="color: var(--muted-foreground);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg></a>
+            <a href="#" style="color: var(--muted-foreground);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 3a10.9 10.9 0 0 1-3.14 1.53 4.48 4.48 0 0 0-7.86 3v1A10.66 10.66 0 0 1 3 4s-4 9 5 13a11.64 11.64 0 0 1-7 2c9 5 20 0 20-11.5a4.5 4.5 0 0 0-.08-.83A7.72 7.72 0 0 0 23 3z"></path></svg></a>
+            <a href="#" style="color: var(--muted-foreground);"><svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"></rect><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"></path><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"></line></svg></a>
+          </div>
+        </div>
+
+        <!-- Links: Product -->
+        <div>
+          <h4 style="font-size: 0.875rem; font-weight: 600; color: var(--foreground);">Product</h4>
+          <ul style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.875rem; color: var(--muted-foreground); margin-top: 1rem;">
+            <li><a href="#">Proxy Middleware</a></li>
+            <li><a href="#">REST API</a></li>
+            <li><a href="#">Nitro Enclaves</a></li>
+            <li><a href="#">Pricing</a></li>
+            <li><a href="#">Changelog</a></li>
+          </ul>
+        </div>
+
+        <!-- Links: Developers -->
+        <div>
+          <h4 style="font-size: 0.875rem; font-weight: 600; color: var(--foreground);">Developers</h4>
+          <ul style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.875rem; color: var(--muted-foreground); margin-top: 1rem;">
+            <li><a href="#">Documentation</a></li>
+            <li><a href="#">Node.js SDK</a></li>
+            <li><a href="#">Python SDK</a></li>
+            <li><a href="#">Go SDK</a></li>
+            <li><a href="#">GitHub</a></li>
+          </ul>
+        </div>
+
+        <!-- Links: Company -->
+        <div>
+          <h4 style="font-size: 0.875rem; font-weight: 600; color: var(--foreground);">Company</h4>
+          <ul style="display: flex; flex-direction: column; gap: 0.75rem; font-size: 0.875rem; color: var(--muted-foreground); margin-top: 1rem;">
+            <li><a href="#">About Us</a></li>
+            <li><a href="#">Blog</a></li>
+            <li><a href="#">Careers</a></li>
+            <li><a href="#">Contact Sales</a></li>
+          </ul>
+        </div>
+      </div>
+      
+      <div class="line-top" style="margin-top: 4rem; padding-top: 2rem; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 1rem;">
+        <p class="text-xs" style="margin: 0; color: var(--muted-foreground);">
+          &copy; 2026 Cipherion Pvt. Ltd. All rights reserved. <br/>
+          Designed and engineered in Belagavi, Karnataka, India.
+        </p>
+        
+        <div style="display: flex; gap: 1.5rem; font-size: 0.75rem; color: var(--muted-foreground);">
+          <a href="#">Privacy Policy</a>
+          <a href="#">Terms of Service</a>
+          <a href="#">Security</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+</div>
+
+</body>
+</html>

@@ -41,6 +41,13 @@ import { NoiseCard } from '@/components/kanso/noise-card';
 import { BrowserLoader } from '@/components/kanso/browser-loader';
 import { TelemetryGrid } from '@/components/kanso/telemetry-widgets';
 import { MagicTree } from '@/components/kanso/magic-tree';
+import {
+  Panel,
+  PanelHeader,
+  PanelTitle,
+  PanelContent,
+  StripeDivider,
+} from '@/components/kanso/panel';
 import { Volume2, VolumeX } from 'lucide-react';
 import { RayCard } from '@/components/kanso/ray-card';
 import { ScrollRevealList } from '@/components/kanso/scroll-reveal-list';
@@ -108,6 +115,32 @@ function DialKitSlider({
  */
 
 const demos: Record<string, React.ComponentType> = {
+  panel: function PanelDemo() {
+    return (
+      <div className="flex flex-col w-full max-w-xl">
+        <Panel className="w-full">
+          <PanelHeader>
+            <PanelTitle>ACID Panel Layout</PanelTitle>
+          </PanelHeader>
+          <PanelContent>
+            <p className="text-sm text-zinc-655 dark:text-zinc-400">
+              This layout is framed inside two vertical border rails. You can
+              place headers, descriptions, and content blocks in it.
+            </p>
+          </PanelContent>
+        </Panel>
+        <StripeDivider />
+        <Panel className="w-full">
+          <PanelContent>
+            <p className="text-sm text-zinc-655 dark:text-zinc-400">
+              Sections can be separated cleanly by a StripeDivider that
+              maintains the continuous vertical rails.
+            </p>
+          </PanelContent>
+        </Panel>
+      </div>
+    );
+  },
   'magic-tree': function MagicTreeDemo() {
     return (
       <div className="flex flex-col items-center gap-8 w-full max-w-sm">
