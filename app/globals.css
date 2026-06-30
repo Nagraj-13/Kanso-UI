@@ -26,6 +26,8 @@
   --color-ring: var(--ring);
   --color-input: var(--input);
   --color-border: var(--border);
+  --color-line: var(--line);
+  --color-ghost: var(--ghost);
   --color-destructive: var(--destructive);
   --color-accent-foreground: var(--accent-foreground);
   --color-accent: var(--accent);
@@ -170,6 +172,8 @@
   --accent-foreground: oklch(0.205 0 0);
   --destructive: oklch(0.577 0.245 27.325);
   --border: oklch(0.922 0 0);
+  --line: color-mix(in oklab, var(--border) 64%, var(--background));
+  --ghost: color-mix(in oklab, var(--foreground) 6%, transparent);
   --input: oklch(0.922 0 0);
   --ring: oklch(0.708 0 0);
   --chart-1: oklch(0.87 0 0);
@@ -380,5 +384,137 @@ html.dark .docs-sidebar-link[data-active='true']::before {
   25%,
   82.5% {
     opacity: 0;
+  }
+}
+
+/* Constructional Design Utilities */
+@utility screen-line-top {
+  position: relative;
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100vw;
+    z-index: -1;
+    height: 1px;
+    width: 200vw;
+    background-color: var(--line);
+  }
+}
+
+@utility screen-line-bottom {
+  position: relative;
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -100vw;
+    z-index: -1;
+    height: 1px;
+    width: 200vw;
+    background-color: var(--line);
+  }
+}
+
+@utility screen-dashed-line-top {
+  position: relative;
+  &:before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100vw;
+    z-index: -1;
+    height: 1px;
+    width: 200vw;
+    background-color: inherit;
+    background-image: linear-gradient(
+      to right,
+      var(--line) 4px,
+      transparent 2px
+    );
+    background-size: 6px 1px;
+    background-repeat: repeat-x;
+  }
+}
+
+@utility screen-dashed-line-bottom {
+  position: relative;
+  &:after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: -100vw;
+    z-index: -1;
+    height: 1px;
+    width: 200vw;
+    background-color: inherit;
+    background-image: linear-gradient(
+      to right,
+      var(--line) 4px,
+      transparent 2px
+    );
+    background-size: 6px 1px;
+    background-repeat: repeat-x;
+  }
+}
+
+@utility screen-line-top-none {
+  &:before {
+    content: none !important;
+  }
+}
+
+@utility screen-line-bottom-none {
+  &:after {
+    content: none !important;
+  }
+}
+
+@utility diagonal-stripes {
+  --pattern-foreground: color-mix(in oklab, var(--color-line) 56%, transparent);
+  background-image: repeating-linear-gradient(
+    315deg,
+    var(--pattern-foreground) 0,
+    var(--pattern-foreground) 1px,
+    transparent 0,
+    transparent 50%
+  );
+  background-size: 10px 10px;
+}
+
+@utility stripe-divider {
+  position: relative;
+  /* h-8; fallback height utility */
+  &:before {
+    content: '';
+    position: absolute;
+    left: -100vw;
+    z-index: -1;
+    height: 100%;
+    width: 200vw;
+    --pattern-foreground: color-mix(
+      in oklab,
+      var(--color-line) 56%,
+      transparent
+    );
+    background-image: repeating-linear-gradient(
+      315deg,
+      var(--pattern-foreground) 0,
+      var(--pattern-foreground) 1px,
+      transparent 0,
+      transparent 50%
+    );
+    background-size: 10px 10px;
+  }
+}
+
+@utility link-underline {
+  text-decoration: underline;
+  text-decoration-color: color-mix(in oklab, currentColor 30%, transparent);
+  text-decoration-thickness: 1px;
+  text-underline-offset: 3px;
+  transition: text-decoration-color 0.2s ease;
+  &:hover {
+    text-decoration-color: currentColor;
   }
 }

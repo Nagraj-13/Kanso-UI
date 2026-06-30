@@ -43,8 +43,14 @@ import { HalftoneGrid } from '@/components/kanso/halftone-grid';
 import { HalftoneImage } from '@/components/kanso/halftone-image';
 import { MagicRings } from '@/components/kanso/magic-rings';
 import { Antigravity } from '@/components/kanso/antigravity';
+import {
+  Panel,
+  PanelHeader,
+  PanelTitle,
+  PanelDescription,
+  PanelContent,
+} from '@/components/landing/panel';
 import { CodeBlock } from '@/components/docs/code-block';
-import { SectionDivider } from '@/components/landing/editorial-grid';
 
 interface ComponentShowcaseProps {
   showcaseHtmls: Record<string, string>;
@@ -71,34 +77,31 @@ export function ComponentShowcase({
   >('preview');
 
   return (
-    <section
-      id="showcase"
-      className="border-t border-b border-dashed border-border  relative"
-    >
-      <SectionDivider />
-      <div className="mx-auto max-w-7xl border-l border-r border-dashed border-border px-6 py-28 md:px-8">
-        <div className="flex flex-col items-start gap-4">
-          <h2 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-white">
-            Component Showcase
-          </h2>
-          <p className="max-w-xl text-base text-zinc-500 dark:text-zinc-400">
-            Inspect and interact with premium components. See the exact code
-            that builds them.
-          </p>
+    <Panel id="showcase">
+      <PanelHeader>
+        <div className="flex items-center gap-1.5 font-mono text-[9px] text-muted-foreground/50 uppercase select-none">
+          <span>§04 / PLAYGROUND</span>
         </div>
+        <PanelTitle>Component Showcase</PanelTitle>
+        <PanelDescription>
+          Inspect and interact with premium components. See the exact code that
+          builds them.
+        </PanelDescription>
+      </PanelHeader>
 
-        <div className="mt-16 grid items-start gap-8 lg:grid-cols-12 w-full min-w-0">
+      <PanelContent className="bg-background">
+        <div className="grid items-start gap-6 lg:grid-cols-12 w-full min-w-0">
           {/* Left selector menu styled as IDE workspace */}
           <div className="lg:col-span-3 w-full flex flex-col gap-4">
-            <div className="flex flex-col border border-border bg-card dark:bg-card/45 rounded-2xl overflow-hidden shadow-xs">
-              <div className="flex items-center justify-between border-b border-border bg-muted/40 dark:bg-muted/15 px-4 py-3 font-mono text-[10px] font-bold text-muted-foreground uppercase tracking-wider select-none">
+            <div className="flex flex-col border border-line bg-card rounded-sm overflow-hidden">
+              <div className="flex items-center justify-between border-b border-line bg-muted/40 px-3 py-2 font-mono text-[9px] font-bold text-muted-foreground/50 uppercase tracking-wider select-none">
                 <span>workspace</span>
-                <span className="text-[9px] text-zinc-400 font-medium">
+                <span className="text-[9px] text-muted-foreground/40 font-medium">
                   9 files
                 </span>
               </div>
-              <div className="flex flex-col gap-1 p-2">
-                <div className="flex items-center gap-1.5 px-2.5 py-1 text-[9px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest select-none">
+              <div className="flex flex-col gap-0.5 p-1">
+                <div className="flex items-center gap-1.5 px-2 py-1 text-[9px] font-mono text-muted-foreground/45 uppercase select-none">
                   <span>components</span>
                 </div>
                 {(
@@ -121,18 +124,18 @@ export function ComponentShowcase({
                       setActiveSandboxTab('preview');
                     }}
                     className={cn(
-                      'flex items-center gap-2 justify-start px-3 py-2 text-xs rounded-md font-mono transition-all shrink-0 cursor-pointer select-none border-l-2 text-left w-full',
+                      'flex items-center gap-2 justify-start px-2 py-1.5 text-xs rounded-sm font-mono transition-all shrink-0 cursor-pointer select-none border-l-2 text-left w-full',
                       selectedShowcase === item.id
-                        ? 'bg-muted text-foreground border-primary font-semibold'
-                        : 'border-transparent text-muted-foreground hover:bg-muted/40 hover:text-foreground'
+                        ? 'bg-muted text-foreground border-primary font-medium'
+                        : 'border-transparent text-muted-foreground/70 hover:bg-muted/40 hover:text-foreground'
                     )}
                   >
                     <span
                       className={cn(
                         'size-1.5 rounded-full shrink-0',
                         selectedShowcase === item.id
-                          ? 'bg-violet-500'
-                          : 'bg-zinc-400/60 dark:bg-zinc-600'
+                          ? 'bg-foreground'
+                          : 'bg-zinc-300 dark:bg-zinc-700'
                       )}
                     />
                     <span>{item.label}</span>
@@ -143,46 +146,46 @@ export function ComponentShowcase({
           </div>
 
           {/* Right side: Modern Unified Editor & Preview Sandbox window */}
-          <div className="lg:col-span-9 w-full min-w-0 border border-border bg-card dark:bg-card/45 rounded-2xl overflow-hidden shadow-md flex flex-col">
+          <div className="lg:col-span-9 w-full min-w-0 border border-line bg-card rounded-sm overflow-hidden flex flex-col">
             {/* Window Header */}
-            <div className="flex items-center justify-between border-b border-border bg-muted/40 dark:bg-muted/15 px-4 py-2 flex-wrap gap-2">
+            <div className="flex items-center justify-between border-b border-line bg-muted/40 px-3 py-1.5 flex-wrap gap-2">
               <div className="flex items-center gap-3">
                 {/* Mac dots */}
-                <div className="flex items-center gap-1.5 select-none shrink-0">
-                  <span className="size-2.5 rounded-full bg-red-400/80" />
-                  <span className="size-2.5 rounded-full bg-yellow-400/80" />
-                  <span className="size-2.5 rounded-full bg-green-400/80" />
+                <div className="flex items-center gap-1 select-none shrink-0">
+                  <span className="size-2 rounded-full bg-zinc-200 dark:bg-zinc-800" />
+                  <span className="size-2 rounded-full bg-zinc-200 dark:bg-zinc-800" />
+                  <span className="size-2 rounded-full bg-zinc-200 dark:bg-zinc-800" />
                 </div>
                 {/* Tab Selectors */}
-                <div className="flex items-center gap-1 border-l border-border pl-4 shrink-0">
+                <div className="flex items-center gap-1 border-l border-line pl-3 shrink-0">
                   <button
                     onClick={() => setActiveSandboxTab('preview')}
                     className={cn(
-                      'flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium cursor-pointer transition-all select-none',
+                      'flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-mono cursor-pointer transition-all select-none border',
                       activeSandboxTab === 'preview'
-                        ? 'bg-background text-foreground shadow-xs border border-border'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/45'
+                        ? 'bg-background text-foreground border-line'
+                        : 'border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/45'
                     )}
                   >
-                    <SparklesIcon className="size-3 text-violet-500" />
+                    <SparklesIcon className="size-3 text-muted-foreground" />
                     <span>Preview</span>
                   </button>
                   <button
                     onClick={() => setActiveSandboxTab('code')}
                     className={cn(
-                      'flex items-center gap-1.5 px-3 py-1 rounded-md text-xs font-medium cursor-pointer transition-all select-none',
+                      'flex items-center gap-1.5 px-2.5 py-1 rounded-sm text-xs font-mono cursor-pointer transition-all select-none border',
                       activeSandboxTab === 'code'
-                        ? 'bg-background text-foreground shadow-xs border border-border'
-                        : 'text-muted-foreground hover:text-foreground hover:bg-muted/45'
+                        ? 'bg-background text-foreground border-line'
+                        : 'border-transparent text-muted-foreground hover:text-foreground hover:bg-muted/45'
                     )}
                   >
-                    <Code2Icon className="size-3 text-blue-500" />
+                    <Code2Icon className="size-3 text-muted-foreground" />
                     <span>Code</span>
                   </button>
                 </div>
               </div>
               {/* Active filename */}
-              <span className="font-mono text-[10px] text-zinc-400 bg-background/50 dark:bg-zinc-900/50 px-2 py-0.5 rounded border border-border/40 select-all shrink-0">
+              <span className="font-mono text-[9px] text-muted-foreground/60 bg-muted px-2 py-0.5 rounded-sm border border-line select-all shrink-0">
                 {selectedShowcase === 'buttons'
                   ? 'ButtonDemo.tsx'
                   : selectedShowcase === 'cards'
@@ -476,7 +479,7 @@ export function ComponentShowcase({
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </PanelContent>
+    </Panel>
   );
 }

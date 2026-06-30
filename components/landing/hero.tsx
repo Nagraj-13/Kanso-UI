@@ -13,6 +13,7 @@ import {
   LiquidMetalCardRoot,
   LiquidMetalCardVisual,
 } from '@/components/kanso/liquid-metal-card';
+import { Panel, PanelContent } from '@/components/landing/panel';
 import { cn } from '@/lib/utils';
 
 const COLOR_THEMES = [
@@ -149,130 +150,83 @@ export function Hero() {
   }, [theme, halftoneParams.themeName, halftoneParams.ringColor]);
 
   return (
-    <section className="relative w-full pt-10 pb-6 overflow-hidden  text-foreground">
-      <div className="relative m-4 md:m-6 py-12 md:py-20 rounded-3xl overflow-hidden bg-[linear-gradient(to_bottom,_var(--background)_30%,_#6d18ff_75%,_#9569fe_100%)]">
-        <div className="absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[95%] bg-[var(--background)] blur-3xl rounded-full z-0" />
+    <Panel id="hero" className="border-t-0">
+      {/* Plane implicit grid overlay */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,var(--line)_1px,transparent_1px),linear-gradient(to_bottom,var(--line)_1px,transparent_1px)] bg-[size:16px_16px] opacity-15 pointer-events-none" />
 
-        {/* Evervault Styled Upward-Sweeping Gradient Aura at the bottom */}
-        <div
-          className="absolute inset-x-0 bottom-0 h-[420px] pointer-events-none transition-all duration-500 opacity-95 z-0"
-          style={{
-            background:
-              'radial-gradient(ellipse 70% 60% at 50% 100%, rgba(99, 102, 241, 0.35) 0%, rgba(139, 92, 246, 0.18) 45%, rgba(168, 85, 247, 0.05) 70%, transparent 100%)',
-          }}
-        />
-
-        {/* Hero Content Container - Split Layout */}
-        <div className="mx-auto max-w-7xl px-6 md:px-8 relative z-20 w-full grid gap-12 lg:grid-cols-12 items-center">
+      <PanelContent className="pt-16 pb-12">
+        <div className="grid gap-12 lg:grid-cols-12 items-center">
           {/* Left Column: Text Content */}
-          <div className="lg:col-span-7 flex flex-col items-start text-left">
-            {/* Introducing Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.4 }}
-              className="mb-6 inline-flex items-center gap-1.5 rounded-full border border-zinc-200 bg-zinc-100/60 dark:border-zinc-800 dark:bg-zinc-900/60 px-3 py-1 text-xs font-semibold text-zinc-800 dark:text-zinc-300 shadow-xs select-none"
-            >
-              <SparklesIcon className="size-3 text-zinc-500 dark:text-zinc-400" />
-              <span>Introducing Kanso UI</span>
-            </motion.div>
+          <div className="lg:col-span-7 flex flex-col items-start text-left relative z-10">
+            {/* Introducing Badge / Coordinate Tag */}
+            <div className="mb-6 inline-flex items-center gap-1.5 rounded-sm border border-line bg-zinc-50 dark:bg-zinc-900/60 px-2 py-0.5 font-mono text-[10px] text-muted-foreground uppercase select-none">
+              <SparklesIcon className="size-3 text-muted-foreground/60" />
+              <span>FIG.001 / INTRO</span>
+            </div>
 
-            {/* Staggered Word Reveal Animated Headline */}
-            <h1 className="max-w-2xl font-sans text-4xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-5xl md:text-6xl md:leading-[1.1] flex flex-wrap justify-start gap-x-3 gap-y-1">
-              {'Build Beautiful Interfaces Without Complexity'
-                .split(' ')
-                .map((word, i) => (
-                  <motion.span
-                    key={i}
-                    initial={{ opacity: 0, y: 15 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{
-                      duration: 0.5,
-                      delay: i * 0.05 + 0.1,
-                      ease: [0.215, 0.61, 0.355, 1],
-                    }}
-                    className={cn(
-                      'inline-block',
-                      (word === 'Beautiful' || word === 'Complexity') &&
-                        'text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 via-purple-500 to-pink-600 dark:from-violet-400 dark:via-fuchsia-300 dark:to-indigo-400'
-                    )}
-                  >
-                    {word}
-                  </motion.span>
-                ))}
+            {/* Headline */}
+            <h1 className="max-w-2xl font-sans text-3xl font-bold tracking-tight text-zinc-900 dark:text-white sm:text-4xl md:text-5xl md:leading-[1.15]">
+              Build Beautiful Interfaces Without Complexity
             </h1>
 
             {/* Subtitle */}
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.6 }}
-              className="mt-6 max-w-xl text-base md:text-lg leading-relaxed text-zinc-650 dark:text-zinc-400"
-            >
+            <p className="mt-4 max-w-xl text-sm leading-relaxed text-muted-foreground">
               Thoughtfully designed React components for modern applications.
               Inspired by Japanese minimalism and engineered for copy-paste
               ease, customizability, and WCAG accessibility.
-            </motion.p>
+            </p>
 
             {/* Command Install Pill Badge */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.75 }}
-              className="mt-8 flex items-center gap-2.5 rounded-full border border-zinc-200 bg-zinc-100/40 dark:border-zinc-800 dark:bg-zinc-900/40 pl-3.5 pr-2 py-1 font-mono text-[11px] text-zinc-655 dark:text-zinc-400 shadow-xs hover:border-zinc-300 hover:bg-zinc-100/60 dark:hover:border-zinc-700 dark:hover:bg-zinc-900/60 transition-all select-all group"
+            <div
+              onClick={handleCopy}
+              className="mt-6 flex items-center gap-2 rounded-sm border border-line bg-zinc-50/50 dark:bg-zinc-900/30 pl-3 pr-2 py-1 font-mono text-[11px] text-muted-foreground hover:border-zinc-400 dark:hover:border-zinc-700 transition-all select-all cursor-pointer group"
             >
               <span>$</span>
               <span>npx kanso-ui add magnetic-button</span>
               <button
-                onClick={handleCopy}
-                className="ml-2.5 p-1 rounded-full text-zinc-500 hover:text-zinc-900 hover:bg-zinc-200/50 dark:text-zinc-400 dark:hover:text-white dark:hover:bg-zinc-800/50 cursor-pointer transition-colors animate-in fade-in"
+                className="ml-2 p-0.5 text-muted-foreground/60 hover:text-zinc-900 dark:hover:text-white transition-colors cursor-pointer"
                 title="Copy to clipboard"
               >
                 {copied ? (
-                  <CheckIcon className="size-3.5 text-green-500" />
+                  <CheckIcon className="size-3 text-green-500" />
                 ) : (
-                  <CopyIcon className="size-3.5" />
+                  <CopyIcon className="size-3" />
                 )}
               </button>
-            </motion.div>
+            </div>
 
             {/* Action Button Group */}
-            <motion.div
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: 0.9 }}
-              className="mt-8 flex flex-col sm:flex-row gap-4 w-full sm:w-auto items-center"
-            >
+            <div className="mt-8 flex flex-col sm:flex-row gap-3 w-full sm:w-auto items-center">
               <Button
-                className="w-full sm:w-auto px-8 h-11 text-sm font-semibold cursor-pointer shadow-sm rounded-full bg-zinc-900 text-white hover:bg-zinc-800 dark:bg-white dark:text-zinc-950 dark:hover:bg-zinc-200 border-none"
+                size="sm"
+                className="w-full sm:w-auto px-6 h-9 text-xs font-semibold cursor-pointer rounded-sm"
                 render={<Link href="/docs" />}
               >
                 Browse Components
               </Button>
               <GithubButton
-                variantDesign="rainbow"
+                variantDesign="classic"
                 href={GITHUB_URL}
-                className="w-full sm:w-auto h-11 rounded-full font-semibold"
+                className="w-full sm:w-auto h-9 rounded-sm text-xs font-semibold"
               >
                 Star on GitHub
               </GithubButton>
-            </motion.div>
+            </div>
           </div>
 
-          {/* Right Column: LiquidMetalCard Sandbox Mockup */}
-          <div className="lg:col-span-5 flex justify-center w-full relative z-20">
+          {/* Right Column: Sandbox Mockup */}
+          <div className="lg:col-span-5 flex justify-center w-full relative z-10">
             <motion.div
-              initial={{ opacity: 0, y: 20 }}
+              initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.8, delay: 1.1 }}
-              className="w-full max-w-[400px] shrink-0"
-              style={{ perspective: '1000px' }}
+              transition={{ duration: 0.4 }}
+              className="w-full max-w-[340px] shrink-0"
             >
               <LiquidMetalCardRoot
                 ref={heroCardRef}
                 onPointerMove={handleCardPointerMove}
                 onPointerLeave={handleCardPointerLeave}
-                className="w-full rounded-2xl border border-zinc-200/80 bg-white dark:border-zinc-800 dark:bg-background p-5 shadow-2xl backdrop-blur-md relative overflow-hidden group select-none transition-transform duration-300 ease-out"
+                className="w-full rounded-sm border border-line bg-card p-4 relative overflow-hidden group select-none transition-transform duration-300 ease-out"
                 style={{ transformStyle: 'preserve-3d' }}
                 colorTint={resolvedColorTint}
                 distortion={0.5}
@@ -281,22 +235,22 @@ export function Hero() {
                 scale={0.55}
                 image="/Kansologo.png"
               >
-                <div className="flex flex-col gap-4 w-full relative z-10 text-left">
+                <div className="flex flex-col gap-3 w-full relative z-10 text-left">
                   {/* Sandbox Header */}
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-1.5">
-                      <span className="size-2 rounded-full bg-red-400" />
-                      <span className="size-2 rounded-full bg-yellow-400" />
-                      <span className="size-2 rounded-full bg-green-400" />
+                      <span className="size-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+                      <span className="size-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700" />
+                      <span className="size-1.5 rounded-full bg-zinc-300 dark:bg-zinc-700" />
                     </div>
-                    <span className="text-[9px] font-mono text-zinc-500 bg-zinc-100 px-2 py-0.5 rounded-full border border-zinc-200 dark:text-zinc-400 dark:bg-zinc-900 dark:border-zinc-800">
+                    <span className="text-[9px] font-mono text-muted-foreground/60 bg-muted px-2 py-0.5 rounded-sm border border-line">
                       kanso-sandbox.tsx
                     </span>
                   </div>
 
                   {/* Visual metallic logo container */}
                   <LiquidMetalCardVisual
-                    className="h-28 w-full overflow-hidden rounded-xl bg-zinc-950 relative border border-zinc-800/80 flex items-center justify-center"
+                    className="h-24 w-full overflow-hidden rounded-sm bg-zinc-950 relative border border-line flex items-center justify-center"
                     desktopShaderProps={{
                       image: '/Kansologo.png',
                       colorTint: resolvedColorTint,
@@ -308,16 +262,16 @@ export function Hero() {
                   />
 
                   {/* Compact Color Themes row */}
-                  <div className="flex flex-col gap-2 p-3 rounded-xl border border-zinc-200/50 bg-zinc-100/20 dark:border-zinc-800/50 dark:bg-zinc-900/20">
+                  <div className="flex flex-col gap-1.5 p-2.5 rounded-sm border border-line bg-muted/40">
                     <div className="flex items-center justify-between">
-                      <span className="text-[9px] font-bold text-zinc-500 uppercase tracking-widest">
+                      <span className="text-[9px] font-mono font-medium text-muted-foreground/50 uppercase tracking-wider">
                         Ambient Palette Space
                       </span>
-                      <span className="text-xs font-mono text-zinc-600 dark:text-zinc-400 capitalize">
+                      <span className="text-[10px] font-mono text-muted-foreground capitalize">
                         {halftoneParams.themeName}
                       </span>
                     </div>
-                    <div className="flex items-center gap-2 mt-0.5">
+                    <div className="flex items-center gap-1.5 mt-0.5">
                       {COLOR_THEMES.map((themeItem) => (
                         <button
                           key={themeItem.name}
@@ -334,16 +288,16 @@ export function Hero() {
                             }))
                           }
                           className={cn(
-                            'size-5 rounded-full border cursor-pointer transition-all hover:scale-110 flex items-center justify-center shrink-0',
+                            'size-4 rounded-full border border-line cursor-pointer transition-all hover:scale-110 flex items-center justify-center shrink-0',
                             themeItem.colorClass,
                             halftoneParams.themeName === themeItem.name
-                              ? 'border-white ring-2 ring-white/10 scale-105'
-                              : 'border-transparent'
+                              ? 'ring-1 ring-zinc-400 dark:ring-zinc-650'
+                              : ''
                           )}
                           title={themeItem.label}
                         >
                           {halftoneParams.themeName === themeItem.name && (
-                            <CheckIcon className="size-2 text-white mix-blend-difference" />
+                            <CheckIcon className="size-1.5 text-white mix-blend-difference" />
                           )}
                         </button>
                       ))}
@@ -351,75 +305,72 @@ export function Hero() {
                   </div>
 
                   {/* Tactile copy/paste mechanical combo */}
-                  <div className="flex flex-col gap-2 p-3 rounded-xl border border-zinc-200/50 bg-zinc-100/20 dark:border-zinc-800/50 dark:bg-zinc-900/20 relative overflow-hidden">
-                    <div className="flex items-center justify-between text-[9px] font-bold text-zinc-550 dark:text-zinc-400 uppercase tracking-widest">
+                  <div className="flex flex-col gap-1.5 p-2.5 rounded-sm border border-line bg-muted/40 relative overflow-hidden">
+                    <div className="flex items-center justify-between text-[9px] font-mono font-medium text-muted-foreground/50 uppercase tracking-wider">
                       <span>Tactile Copy Code</span>
-                      <span className="font-mono text-zinc-600 dark:text-zinc-400 font-semibold">
-                        {copied ? 'Copied!' : 'Click key combination'}
+                      <span className="font-mono text-muted-foreground/80">
+                        {copied ? 'Copied!' : 'Click key combo'}
                       </span>
                     </div>
-                    <div className="flex items-center justify-center gap-1.5 py-1">
-                      {/* Ctrl Key */}
+                    <div className="flex items-center justify-center gap-1 py-0.5">
                       <KeyboardButton
                         size="sm"
                         variantColor="dark"
                         icon="ctrl"
                         onClick={handleCopy}
-                        className="w-[50px] font-sans font-semibold uppercase tracking-tight"
+                        className="w-[44px] font-mono text-[9px]"
                       >
                         Ctrl
                       </KeyboardButton>
-                      <span className="text-zinc-500 font-bold text-[9px] select-none">
+                      <span className="text-muted-foreground/40 font-mono text-[9px] select-none">
                         +
                       </span>
-                      {/* C Key */}
                       <KeyboardButton
                         size="sm"
                         variantColor="light"
                         icon="copy"
                         onClick={handleCopy}
-                        className="w-[45px] font-sans font-semibold uppercase tracking-tight"
+                        className="w-[36px] font-mono text-[9px]"
                       >
                         C
                       </KeyboardButton>
-                      <span className="text-zinc-500 font-bold text-[9px] select-none">
+                      <span className="text-muted-foreground/40 font-mono text-[9px] select-none">
                         +
                       </span>
-                      {/* V Key */}
                       <KeyboardButton
                         size="sm"
                         variantColor="blue"
                         icon="paste"
                         onClick={handleCopy}
-                        className="w-[45px] font-sans font-semibold uppercase tracking-tight"
+                        className="w-[36px] font-mono text-[9px]"
                       >
                         V
                       </KeyboardButton>
                     </div>
-                    <div className="flex items-center justify-between text-xs text-zinc-650 bg-zinc-200/50 dark:text-zinc-450 dark:bg-black/40 p-1.5 rounded border border-zinc-350 dark:border-zinc-800">
-                      <span className="font-mono text-zinc-700 dark:text-zinc-400 select-all">
-                        npx kanso-ui add magnetic-button
+                    <div className="flex items-center justify-between text-[10px] text-muted-foreground bg-muted p-1 rounded-sm border border-line">
+                      <span className="font-mono select-all">
+                        add magnetic-button
                       </span>
                       <button
                         onClick={handleCopy}
-                        className="text-zinc-800 hover:text-zinc-955 dark:text-zinc-300 dark:hover:text-white cursor-pointer font-sans font-semibold transition-colors"
+                        className="text-foreground hover:text-zinc-950 dark:hover:text-white cursor-pointer font-mono font-medium transition-colors"
                       >
-                        {copied ? 'Copied' : 'Copy'}
+                        {copied ? 'Done' : 'Copy'}
                       </button>
                     </div>
                   </div>
 
                   {/* Footer Section */}
-                  <div className="pt-2 border-t border-zinc-200 dark:border-zinc-800/60 flex justify-between items-center text-[9px] text-zinc-500 font-mono">
-                    <span>Interactive Sandbox</span>
-                    <span className="font-sans font-medium">v1.0.0</span>
+                  <div className="pt-2 border-t border-line flex justify-between items-center text-[9px] text-muted-foreground/50 font-mono">
+                    <span>REF.01 / HERO_DEMO</span>
+                    <span>v1.0.0</span>
                   </div>
                 </div>
               </LiquidMetalCardRoot>
             </motion.div>
           </div>
         </div>
-      </div>
-    </section>
+      </PanelContent>
+    </Panel>
   );
 }

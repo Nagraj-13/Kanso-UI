@@ -26,38 +26,38 @@ export function Header() {
   }, []);
 
   return (
-    <header className="fixed top-0 left-0 right-0 z-50 w-full border-b border-border  backdrop-blur-md ">
-      <div className="mx-auto flex h-16 items-center justify-between px-6 md:px-8">
+    <header className="sticky top-0 z-50 w-full bg-background px-2 pt-2">
+      <div className="screen-line-top screen-line-bottom mx-auto flex h-14 w-full max-w-5xl items-center justify-between gap-4 border-x border-line bg-background px-4 lg:max-w-6xl">
         <div className="flex items-center gap-3">
           <Image
             src="/Kansologo.png"
             alt="Kanso UI Logo"
-            width={24}
-            height={24}
-            className="dark:invert"
+            width={20}
+            height={20}
+            className="dark:invert object-contain"
           />
-          <span className="font-sans text-base font-semibold tracking-tight">
+          <span className="font-sans text-sm font-semibold tracking-tight text-zinc-900 dark:text-white">
             Kanso UI
           </span>
         </div>
 
         {/* Desktop Nav */}
-        <nav className="hidden items-center gap-8 md:flex">
+        <nav className="hidden items-center gap-6 md:flex">
           <a
             href="#features"
-            className="text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+            className="text-xs font-mono font-normal text-muted-foreground transition-colors hover:text-zinc-900 dark:hover:text-zinc-50"
           >
             Features
           </a>
           <a
             href="#showcase"
-            className="text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+            className="text-xs font-mono font-normal text-muted-foreground transition-colors hover:text-zinc-900 dark:hover:text-zinc-50"
           >
             Showcase
           </a>
           <Link
             href="/docs"
-            className="text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+            className="text-xs font-mono font-normal text-muted-foreground transition-colors hover:text-zinc-900 dark:hover:text-zinc-50"
           >
             Docs
           </Link>
@@ -65,29 +65,29 @@ export function Header() {
             href={GITHUB_URL}
             target="_blank"
             rel="noreferrer"
-            className="flex items-center gap-1.5 text-sm font-medium text-zinc-500 transition-colors hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+            className="flex items-center gap-1 text-xs font-mono font-normal text-muted-foreground transition-colors hover:text-zinc-900 dark:hover:text-zinc-50"
           >
             GitHub <ArrowUpRightIcon className="size-3" />
           </a>
         </nav>
 
-        <div className="hidden items-center gap-4 md:flex">
+        <div className="hidden items-center gap-3 md:flex">
           <Button
             variant="ghost"
             size="icon-sm"
             onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
             aria-label="Toggle theme"
-            className="text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
+            className="text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-55"
           >
             {!mounted ? (
-              <div className="size-4 rounded-full bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+              <div className="size-3.5 rounded-full bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
             ) : theme === 'dark' ? (
-              <SunIcon className="size-4" />
+              <SunIcon className="size-3.5" />
             ) : (
-              <MoonIcon className="size-4" />
+              <MoonIcon className="size-3.5" />
             )}
           </Button>
-          <Button size="sm" render={<Link href="/docs" />}>
+          <Button size="xs" render={<Link href="/docs" />}>
             Get Started
           </Button>
         </div>
@@ -96,13 +96,13 @@ export function Header() {
         <Button
           variant="ghost"
           size="icon-sm"
-          className="flex items-center justify-center p-2 text-zinc-500 hover:text-zinc-900 md:hidden dark:text-zinc-400 dark:hover:text-zinc-50"
+          className="flex items-center justify-center p-2 text-zinc-500 hover:text-zinc-900 md:hidden dark:text-zinc-400 dark:hover:text-zinc-55"
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
         >
           {mobileMenuOpen ? (
-            <XIcon className="size-5" />
+            <XIcon className="size-4" />
           ) : (
-            <MenuIcon className="size-5" />
+            <MenuIcon className="size-4" />
           )}
         </Button>
       </div>
@@ -111,30 +111,30 @@ export function Header() {
       <AnimatePresence>
         {mobileMenuOpen && (
           <motion.div
-            initial={{ opacity: 0, y: -10 }}
+            initial={{ opacity: 0, y: -5 }}
             animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            transition={{ duration: 0.15 }}
-            className="border-b border-zinc-200 bg-white px-6 py-6 md:hidden dark:border-zinc-800 dark:bg-zinc-950"
+            exit={{ opacity: 0, y: -5 }}
+            transition={{ duration: 0.1 }}
+            className="mx-auto w-full max-w-5xl border-x border-b border-line bg-background px-4 py-4 md:hidden lg:max-w-6xl"
           >
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-4">
               <a
                 href="#features"
-                className="text-sm font-medium text-zinc-600 dark:text-zinc-400"
+                className="text-xs font-mono font-normal text-zinc-600 dark:text-zinc-400"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Features
               </a>
               <a
                 href="#showcase"
-                className="text-sm font-medium text-zinc-600 dark:text-zinc-400"
+                className="text-xs font-mono font-normal text-zinc-600 dark:text-zinc-400"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Showcase
               </a>
               <Link
                 href="/docs"
-                className="text-sm font-medium text-zinc-600 dark:text-zinc-400"
+                className="text-xs font-mono font-normal text-zinc-600 dark:text-zinc-400"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 Docs
@@ -143,14 +143,14 @@ export function Header() {
                 href={GITHUB_URL}
                 target="_blank"
                 rel="noreferrer"
-                className="flex items-center gap-1.5 text-sm font-medium text-zinc-600 dark:text-zinc-400"
+                className="flex items-center gap-1.5 text-xs font-mono font-normal text-zinc-600 dark:text-zinc-400"
                 onClick={() => setMobileMenuOpen(false)}
               >
                 GitHub <ArrowUpRightIcon className="size-3" />
               </a>
-              <hr className="border-zinc-150 dark:border-zinc-800" />
+              <hr className="border-line" />
               <div className="flex items-center justify-between py-1 px-1">
-                <span className="text-sm font-medium text-zinc-600 dark:text-zinc-400">
+                <span className="text-xs font-mono font-normal text-zinc-650 dark:text-zinc-400">
                   Theme
                 </span>
                 <Button
@@ -158,21 +158,21 @@ export function Header() {
                   size="icon-sm"
                   onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}
                   aria-label="Toggle theme"
-                  className="text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-50"
+                  className="text-zinc-500 hover:bg-zinc-100 hover:text-zinc-900 dark:text-zinc-400 dark:hover:bg-zinc-900 dark:hover:text-zinc-55"
                 >
                   {!mounted ? (
-                    <div className="size-4 rounded-full bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
+                    <div className="size-3.5 rounded-full bg-zinc-200 dark:bg-zinc-800 animate-pulse" />
                   ) : theme === 'dark' ? (
-                    <SunIcon className="size-4" />
+                    <SunIcon className="size-3.5" />
                   ) : (
-                    <MoonIcon className="size-4" />
+                    <MoonIcon className="size-3.5" />
                   )}
                 </Button>
               </div>
-              <hr className="border-zinc-150 dark:border-zinc-800" />
+              <hr className="border-line" />
               <div className="flex flex-col gap-3">
                 <Button
-                  className="w-full"
+                  className="w-full text-xs"
                   render={<Link href="/docs" />}
                   onClick={() => setMobileMenuOpen(false)}
                 >

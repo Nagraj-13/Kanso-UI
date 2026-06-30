@@ -57,49 +57,59 @@ function AnimatedCounter({
   );
 }
 
+import {
+  Panel,
+  PanelHeader,
+  PanelTitle,
+  PanelContent,
+} from '@/components/landing/panel';
+
 export function Statistics() {
   return (
-    <section className="border-t border-b border-dashed border-border  relative">
-      <SectionDivider />
-      <div className="mx-auto max-w-7xl border-r border-l border-dashed border-border px-6 py-24 md:px-8">
-        <div className="grid gap-12 text-center sm:grid-cols-2 lg:grid-cols-4">
-          <div className="flex flex-col items-center">
-            <span className="text-4xl font-bold tracking-tight text-foreground">
+    <Panel id="metrics">
+      <PanelHeader className="sr-only">
+        <PanelTitle>Metrics</PanelTitle>
+      </PanelHeader>
+
+      <PanelContent className="bg-background py-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-4 divide-y sm:divide-y-0 sm:divide-x divide-line text-center">
+          <div className="flex flex-col items-center py-4">
+            <span className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white font-mono">
               <AnimatedCounter value="50" suffix="+" />
             </span>
-            <span className="mt-2 text-sm font-medium text-muted-foreground">
+            <span className="mt-1 text-[10px] font-mono font-medium text-muted-foreground/60 uppercase tracking-wider">
               Components
             </span>
           </div>
 
-          <div className="flex flex-col items-center">
-            <span className="text-4xl font-bold tracking-tight text-foreground">
+          <div className="flex flex-col items-center py-4 sm:border-t-0">
+            <span className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white font-mono">
               <AnimatedCounter value="100" suffix="%" />
             </span>
-            <span className="mt-2 text-sm font-medium text-muted-foreground">
+            <span className="mt-1 text-[10px] font-mono font-medium text-muted-foreground/60 uppercase tracking-wider">
               TypeScript Coverage
             </span>
           </div>
 
-          <div className="flex flex-col items-center">
-            <span className="text-4xl font-bold tracking-tight text-foreground">
+          <div className="flex flex-col items-center py-4 sm:border-t-0">
+            <span className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white font-mono">
               WCAG
             </span>
-            <span className="mt-2 text-sm font-medium text-muted-foreground">
-              Accessible by Default
+            <span className="mt-1 text-[10px] font-mono font-medium text-muted-foreground/60 uppercase tracking-wider">
+              Accessible By Default
             </span>
           </div>
 
-          <div className="flex flex-col items-center">
-            <span className="text-4xl font-bold tracking-tight text-foreground">
+          <div className="flex flex-col items-center py-4 sm:border-t-0">
+            <span className="text-2xl font-semibold tracking-tight text-zinc-900 dark:text-white font-mono">
               MIT
             </span>
-            <span className="mt-2 text-sm font-medium text-muted-foreground">
+            <span className="mt-1 text-[10px] font-mono font-medium text-muted-foreground/60 uppercase tracking-wider">
               Open Source
             </span>
           </div>
         </div>
-      </div>
-    </section>
+      </PanelContent>
+    </Panel>
   );
 }

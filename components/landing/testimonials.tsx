@@ -1,94 +1,95 @@
 import * as React from 'react';
-import { Card, CardContent } from '@/components/ui/card';
+import {
+  Panel,
+  PanelHeader,
+  PanelTitle,
+  PanelDescription,
+  PanelContent,
+} from '@/components/landing/panel';
 
 export function Testimonials() {
   return (
-    <section className="border-t border-dashed border-zinc-200/50 py-28 dark:border-zinc-900/40 dark:bg-zinc-950/20 relative">
-      <div className="mx-auto max-w-7xl px-6 md:px-8">
-        <div className="flex flex-col items-center text-center gap-4">
-          <h2 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-white">
-            Trusted by Frontend Engineers
-          </h2>
-          <p className="max-w-xl text-base text-zinc-500 dark:text-zinc-400">
-            Read what designers and developers say about building interfaces
-            with Kanso UI.
-          </p>
+    <Panel id="testimonials">
+      <PanelHeader>
+        <div className="flex items-center gap-1.5 font-mono text-[9px] text-muted-foreground/50 uppercase select-none">
+          <span>§07 / SOCIAL</span>
         </div>
+        <PanelTitle>Trusted by Frontend Engineers</PanelTitle>
+        <PanelDescription>
+          Read what designers and developers say about building interfaces with
+          Kanso UI.
+        </PanelDescription>
+      </PanelHeader>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <PanelContent className="bg-background">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
           {/* Testimonial 1 */}
-          <Card className="border border-border bg-card dark:bg-card/40 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 p-6 shadow-xs hover:shadow-sm hover:-translate-y-0.5">
-            <CardContent className="p-0">
-              <p className="text-sm leading-relaxed text-foreground text-left">
-                {
-                  '"The layout rules and visual patterns in Kanso UI match exactly what we need for modern enterprise platforms. Simplicity is indeed engineered directly in."'
-                }
-              </p>
-              <div className="mt-6 flex items-center gap-3">
-                <div className="size-8 rounded-full bg-muted border border-border flex items-center justify-center font-bold text-xs text-muted-foreground select-none">
-                  AB
-                </div>
-                <div className="text-left">
-                  <h5 className="text-xs font-semibold text-foreground">
-                    Alexander Boyd
-                  </h5>
-                  <p className="text-[11px] text-muted-foreground">
-                    Design Engineer, Linear
-                  </p>
-                </div>
+          <div className="border border-line bg-card p-4 rounded-sm flex flex-col justify-between relative overflow-hidden group">
+            <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400 text-left">
+              {
+                '"The layout rules and visual patterns in Kanso UI match exactly what we need for modern enterprise platforms. Simplicity is indeed engineered directly in."'
+              }
+            </p>
+            <div className="mt-4 flex items-center gap-3">
+              <div className="size-6 rounded-sm border border-line bg-muted flex items-center justify-center font-mono text-[9px] text-muted-foreground select-none">
+                AB
               </div>
-            </CardContent>
-          </Card>
+              <div className="text-left">
+                <h5 className="text-[11px] font-semibold text-zinc-900 dark:text-white leading-none">
+                  Alexander Boyd
+                </h5>
+                <p className="text-[9px] font-mono text-muted-foreground mt-0.5">
+                  Design Engineer, Linear
+                </p>
+              </div>
+            </div>
+          </div>
 
           {/* Testimonial 2 */}
-          <Card className="border border-border bg-card dark:bg-card/40 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 p-6 shadow-xs hover:shadow-sm hover:-translate-y-0.5">
-            <CardContent className="p-0">
-              <p className="text-sm leading-relaxed text-foreground text-left">
-                {
-                  '"Having WCAG accessibility compliant outlines right out of the box saved us weeks of audit fixing. The styling is perfectly minimal."'
-                }
-              </p>
-              <div className="mt-6 flex items-center gap-3">
-                <div className="size-8 rounded-full bg-muted border border-border flex items-center justify-center font-bold text-xs text-muted-foreground select-none">
-                  MK
-                </div>
-                <div className="text-left">
-                  <h5 className="text-xs font-semibold text-foreground">
-                    Mia Koyama
-                  </h5>
-                  <p className="text-[11px] text-muted-foreground">
-                    Lead Frontend, Stripe
-                  </p>
-                </div>
+          <div className="border border-line bg-card p-4 rounded-sm flex flex-col justify-between relative overflow-hidden group">
+            <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400 text-left">
+              {
+                '"Having WCAG accessibility compliant outlines right out of the box saved us weeks of audit fixing. The styling is perfectly minimal."'
+              }
+            </p>
+            <div className="mt-4 flex items-center gap-3">
+              <div className="size-6 rounded-sm border border-line bg-muted flex items-center justify-center font-mono text-[9px] text-muted-foreground select-none">
+                MK
               </div>
-            </CardContent>
-          </Card>
+              <div className="text-left">
+                <h5 className="text-[11px] font-semibold text-zinc-900 dark:text-white leading-none">
+                  Mia Koyama
+                </h5>
+                <p className="text-[9px] font-mono text-muted-foreground mt-0.5">
+                  Lead Frontend, Stripe
+                </p>
+              </div>
+            </div>
+          </div>
 
           {/* Testimonial 3 */}
-          <Card className="border border-border bg-card dark:bg-card/40 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 p-6 shadow-xs hover:shadow-sm hover:-translate-y-0.5">
-            <CardContent className="p-0">
-              <p className="text-sm leading-relaxed text-foreground text-left">
-                {
-                  '"Copy-paste setup means I don\'t need to add another complex library bundle. I copy precisely the components I need, modify the props, and build."'
-                }
-              </p>
-              <div className="mt-6 flex items-center gap-3">
-                <div className="size-8 rounded-full bg-muted border border-border flex items-center justify-center font-bold text-xs text-muted-foreground select-none">
-                  DR
-                </div>
-                <div className="text-left">
-                  <h5 className="text-xs font-semibold text-foreground">
-                    David Ross
-                  </h5>
-                  <p className="text-[11px] text-muted-foreground">
-                    CTO, Vercel Templates
-                  </p>
-                </div>
+          <div className="border border-line bg-card p-4 rounded-sm flex flex-col justify-between relative overflow-hidden group">
+            <p className="text-xs leading-relaxed text-zinc-600 dark:text-zinc-400 text-left">
+              {
+                '"Copy-paste setup means I don\'t need to add another complex library bundle. I copy precisely the components I need, modify the props, and build."'
+              }
+            </p>
+            <div className="mt-4 flex items-center gap-3">
+              <div className="size-6 rounded-sm border border-line bg-muted flex items-center justify-center font-mono text-[9px] text-muted-foreground select-none">
+                DR
               </div>
-            </CardContent>
-          </Card>
+              <div className="text-left">
+                <h5 className="text-[11px] font-semibold text-zinc-900 dark:text-white leading-none">
+                  David Ross
+                </h5>
+                <p className="text-[9px] font-mono text-muted-foreground mt-0.5">
+                  CTO, Vercel Templates
+                </p>
+              </div>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </PanelContent>
+    </Panel>
   );
 }

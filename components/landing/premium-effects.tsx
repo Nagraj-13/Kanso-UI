@@ -5,13 +5,12 @@ import Link from 'next/link';
 import { ArrowUpRightIcon } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from '@/components/ui/card';
+  Panel,
+  PanelHeader,
+  PanelTitle,
+  PanelDescription,
+  PanelContent,
+} from '@/components/landing/panel';
 import { MagneticButton } from '@/components/kanso/magnetic-button';
 import { ShimmerBorder } from '@/components/kanso/shimmer-border';
 import { TextReveal } from '@/components/kanso/text-reveal';
@@ -19,135 +18,144 @@ import { HalftoneImage } from '@/components/kanso/halftone-image';
 
 export function PremiumEffects() {
   return (
-    <section id="premium-components" className="py-28">
-      <div className="mx-auto max-w-7xl px-6 md:px-8">
-        <div className="flex flex-col items-start gap-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            ✦ Zen Interactions
-          </div>
-          <h2 className="text-3xl font-semibold tracking-tight text-foreground">
-            Premium Kanso Effects
-          </h2>
-          <p className="max-w-xl text-base text-muted-foreground">
-            Add polish to your interface with our copy-paste motion effects.
-            Experience the interactive previews below and click to view
-            installation guides.
-          </p>
+    <Panel id="premium-components">
+      <PanelHeader>
+        <div className="flex items-center gap-1.5 font-mono text-[9px] text-muted-foreground/50 uppercase select-none">
+          <span>§03 / EFFECTS</span>
         </div>
+        <PanelTitle>Premium Kanso Effects</PanelTitle>
+        <PanelDescription>
+          Add polish to your interface with our copy-paste motion effects.
+          Experience the interactive previews below and click to view
+          installation guides.
+        </PanelDescription>
+      </PanelHeader>
 
-        <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <PanelContent className="bg-background">
+        <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {/* Card 1: Magnetic Button */}
-          <Card className="flex flex-col justify-between border border-border bg-card shadow-xs hover:shadow-md transition-all duration-300 dark:bg-card/40 hover:-translate-y-0.5">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base font-semibold text-foreground">
-                Magnetic Button
-              </CardTitle>
-              <CardDescription className="text-xs text-muted-foreground leading-relaxed min-h-[40px]">
+          <div className="flex flex-col justify-between border border-line bg-card p-4 rounded-sm relative overflow-hidden group">
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between items-center">
+                <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
+                  Magnetic Button
+                </h3>
+                <span className="text-[9px] font-mono text-muted-foreground/45 select-none">
+                  REF.03 / 01
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed min-h-[48px]">
                 Attracts elements smoothly to the user&apos;s cursor on hover.
                 Built with spring physics for natural, responsive movement.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="mt-2">
-              <div className="flex h-40 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 dark:bg-muted/15 relative overflow-hidden group">
-                <div className="absolute inset-0 pointer-events-none opacity-30 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,var(--color-primary),transparent)]" />
-                <MagneticButton className="relative z-10 shadow-sm">
+              </p>
+              <div className="flex h-32 items-center justify-center rounded-sm border border-dashed border-line bg-muted/20 relative overflow-hidden">
+                <MagneticButton className="relative z-10 text-xs">
                   Hover Magnet
                 </MagneticButton>
               </div>
-            </CardContent>
-            <CardFooter className="mt-4 flex justify-end pb-4">
+            </div>
+            <div className="mt-4 flex justify-end">
               <Button
                 variant="link"
                 size="sm"
-                className="gap-1.5 px-0 text-foreground cursor-pointer"
+                className="gap-1 px-0 text-xs font-mono text-muted-foreground hover:text-foreground cursor-pointer"
                 render={
                   <Link href="/docs/components/buttons/magnetic-button" />
                 }
               >
-                View Installation <ArrowUpRightIcon className="size-3.5" />
+                View guide <ArrowUpRightIcon className="size-3" />
               </Button>
-            </CardFooter>
-          </Card>
+            </div>
+          </div>
 
           {/* Card 2: Shimmer Border */}
-          <Card className="flex flex-col justify-between border border-border bg-card shadow-xs hover:shadow-md transition-all duration-300 dark:bg-card/40 hover:-translate-y-0.5">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base font-semibold text-foreground">
-                Shimmer Border
-              </CardTitle>
-              <CardDescription className="text-xs text-muted-foreground leading-relaxed min-h-[40px]">
+          <div className="flex flex-col justify-between border border-line bg-card p-4 rounded-sm relative overflow-hidden group">
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between items-center">
+                <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
+                  Shimmer Border
+                </h3>
+                <span className="text-[9px] font-mono text-muted-foreground/45 select-none">
+                  REF.03 / 02
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed min-h-[48px]">
                 An elegant border lighting outline that cycles continuously.
                 Leverages GPU-accelerated CSS conic-gradients for optimal
                 performance.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="mt-2">
-              <div className="flex h-40 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 dark:bg-muted/15 relative overflow-hidden">
-                <ShimmerBorder borderRadius={8}>
-                  <div className="px-5 py-3 text-xs font-semibold bg-card text-foreground rounded-[6px] shadow-xs">
+              </p>
+              <div className="flex h-32 items-center justify-center rounded-sm border border-dashed border-line bg-muted/20 relative overflow-hidden">
+                <ShimmerBorder borderRadius={4}>
+                  <div className="px-3 py-1.5 text-xs font-semibold bg-card text-foreground rounded-sm">
                     Shimmer Border
                   </div>
                 </ShimmerBorder>
               </div>
-            </CardContent>
-            <CardFooter className="mt-4 flex justify-end pb-4">
+            </div>
+            <div className="mt-4 flex justify-end">
               <Button
                 variant="link"
                 size="sm"
-                className="gap-1.5 px-0 text-foreground cursor-pointer"
+                className="gap-1 px-0 text-xs font-mono text-muted-foreground hover:text-foreground cursor-pointer"
                 render={<Link href="/docs/components/effects/shimmer-border" />}
               >
-                View Installation <ArrowUpRightIcon className="size-3.5" />
+                View guide <ArrowUpRightIcon className="size-3" />
               </Button>
-            </CardFooter>
-          </Card>
+            </div>
+          </div>
 
           {/* Card 3: Text Reveal */}
-          <Card className="flex flex-col justify-between border border-border bg-card shadow-xs hover:shadow-md transition-all duration-300 dark:bg-card/40 hover:-translate-y-0.5">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base font-semibold text-foreground">
-                Text Reveal
-              </CardTitle>
-              <CardDescription className="text-xs text-muted-foreground leading-relaxed min-h-[40px]">
+          <div className="flex flex-col justify-between border border-line bg-card p-4 rounded-sm relative overflow-hidden group">
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between items-center">
+                <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
+                  Text Reveal
+                </h3>
+                <span className="text-[9px] font-mono text-muted-foreground/45 select-none">
+                  REF.03 / 03
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed min-h-[48px]">
                 Fades in text character-by-character as it scrolls into
                 viewport. Uses staggering and subtle blur overrides for
                 readability.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="mt-2">
-              <div className="flex h-40 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 dark:bg-muted/15 p-6 text-center">
+              </p>
+              <div className="flex h-32 items-center justify-center rounded-sm border border-dashed border-line bg-muted/20 p-4 text-center">
                 <TextReveal
-                  text="Zen focus. Pure clarity. Kanso UI."
-                  className="text-xs font-semibold text-foreground tracking-tight text-center leading-relaxed"
+                  text="Zen focus. Pure clarity."
+                  className="text-xs font-mono text-foreground tracking-tight text-center leading-relaxed"
                 />
               </div>
-            </CardContent>
-            <CardFooter className="mt-4 flex justify-end pb-4">
+            </div>
+            <div className="mt-4 flex justify-end">
               <Button
                 variant="link"
                 size="sm"
-                className="gap-1.5 px-0 text-foreground cursor-pointer"
+                className="gap-1 px-0 text-xs font-mono text-muted-foreground hover:text-foreground cursor-pointer"
                 render={<Link href="/docs/components/typography/text-reveal" />}
               >
-                View Installation <ArrowUpRightIcon className="size-3.5" />
+                View guide <ArrowUpRightIcon className="size-3" />
               </Button>
-            </CardFooter>
-          </Card>
+            </div>
+          </div>
 
           {/* Card 4: Halftone Image */}
-          <Card className="flex flex-col justify-between border border-border bg-card shadow-xs hover:shadow-md transition-all duration-300 dark:bg-card/40 hover:-translate-y-0.5">
-            <CardHeader className="pb-2">
-              <CardTitle className="text-base font-semibold text-foreground">
-                Halftone Image
-              </CardTitle>
-              <CardDescription className="text-xs text-muted-foreground leading-relaxed min-h-[40px]">
+          <div className="flex flex-col justify-between border border-line bg-card p-4 rounded-sm relative overflow-hidden group">
+            <div className="flex flex-col gap-2">
+              <div className="flex justify-between items-center">
+                <h3 className="text-sm font-semibold text-zinc-900 dark:text-white">
+                  Halftone Image
+                </h3>
+                <span className="text-[9px] font-mono text-muted-foreground/45 select-none">
+                  REF.03 / 04
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground leading-relaxed min-h-[48px]">
                 Converts images into custom halftone illustrations. Includes
-                real-time mouse dither warp distortions.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="mt-2">
-              <div className="flex h-40 items-center justify-center rounded-lg border border-dashed border-border bg-muted/30 dark:bg-muted/15">
-                <div className="size-24 rounded-2xl overflow-hidden border border-border bg-card flex items-center justify-center shadow-xs">
+                real-time dither warp distortions on hover.
+              </p>
+              <div className="flex h-32 items-center justify-center rounded-sm border border-dashed border-line bg-muted/20">
+                <div className="size-16 rounded-sm overflow-hidden border border-line bg-card flex items-center justify-center">
                   <HalftoneImage
                     src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&q=80&w=200&h=200"
                     dotSpacing={5}
@@ -158,20 +166,20 @@ export function PremiumEffects() {
                   />
                 </div>
               </div>
-            </CardContent>
-            <CardFooter className="mt-4 flex justify-end pb-4">
+            </div>
+            <div className="mt-4 flex justify-end">
               <Button
                 variant="link"
                 size="sm"
-                className="gap-1.5 px-0 text-foreground cursor-pointer"
+                className="gap-1 px-0 text-xs font-mono text-muted-foreground hover:text-foreground cursor-pointer"
                 render={<Link href="/docs/components/effects/halftone-image" />}
               >
-                View Installation <ArrowUpRightIcon className="size-3.5" />
+                View guide <ArrowUpRightIcon className="size-3" />
               </Button>
-            </CardFooter>
-          </Card>
+            </div>
+          </div>
         </div>
-      </div>
-    </section>
+      </PanelContent>
+    </Panel>
   );
 }
