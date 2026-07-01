@@ -44,7 +44,13 @@ import { HalftoneImage } from '@/components/kanso/halftone-image';
 import { MagicRings } from '@/components/kanso/magic-rings';
 import { Antigravity } from '@/components/kanso/antigravity';
 import { CodeBlock } from '@/components/docs/code-block';
-import { SectionDivider } from '@/components/landing/editorial-grid';
+import {
+  Panel,
+  PanelHeader,
+  PanelTitle,
+  PanelDescription,
+  PanelContent,
+} from '@/components/kanso/panel';
 
 interface ComponentShowcaseProps {
   showcaseHtmls: Record<string, string>;
@@ -71,23 +77,17 @@ export function ComponentShowcase({
   >('preview');
 
   return (
-    <section
-      id="showcase"
-      className="border-t border-b border-dashed border-border  relative"
-    >
-      <SectionDivider />
-      <div className="mx-auto max-w-7xl border-l border-r border-dashed border-border px-6 py-28 md:px-8">
-        <div className="flex flex-col items-start gap-4">
-          <h2 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-white">
-            Component Showcase
-          </h2>
-          <p className="max-w-xl text-base text-zinc-500 dark:text-zinc-400">
-            Inspect and interact with premium components. See the exact code
-            that builds them.
-          </p>
-        </div>
+    <Panel id="showcase">
+      <PanelHeader>
+        <PanelTitle>Component Showcase</PanelTitle>
+        <PanelDescription>
+          Inspect and interact with premium components. See the exact code that
+          builds them.
+        </PanelDescription>
+      </PanelHeader>
 
-        <div className="mt-16 grid items-start gap-8 lg:grid-cols-12 w-full min-w-0">
+      <PanelContent>
+        <div className="grid items-start gap-8 lg:grid-cols-12 w-full min-w-0">
           {/* Left selector menu styled as IDE workspace */}
           <div className="lg:col-span-3 w-full flex flex-col gap-4">
             <div className="flex flex-col border border-border bg-card dark:bg-card/45 rounded-2xl overflow-hidden shadow-xs">
@@ -476,7 +476,7 @@ export function ComponentShowcase({
             </div>
           </div>
         </div>
-      </div>
-    </section>
+      </PanelContent>
+    </Panel>
   );
 }

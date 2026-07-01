@@ -1,7 +1,7 @@
 'use client';
 
 import * as React from 'react';
-import { SectionDivider } from '@/components/landing/editorial-grid';
+import { Panel, PanelContent } from '@/components/kanso/panel';
 
 function AnimatedCounter({
   value,
@@ -59,10 +59,9 @@ function AnimatedCounter({
 
 export function Statistics() {
   return (
-    <section className="border-t border-b border-dashed border-border  relative">
-      <SectionDivider />
-      <div className="mx-auto max-w-7xl border-r border-l border-dashed border-border px-6 py-24 md:px-8">
-        <div className="grid gap-12 text-center sm:grid-cols-2 lg:grid-cols-4">
+    <Panel id="statistics">
+      <PanelContent>
+        <div className="grid gap-12 text-center sm:grid-cols-2 lg:grid-cols-4 w-full min-w-0">
           <div className="flex flex-col items-center">
             <span className="text-4xl font-bold tracking-tight text-foreground">
               <AnimatedCounter value="50" suffix="+" />
@@ -99,7 +98,7 @@ export function Statistics() {
             </span>
           </div>
         </div>
-      </div>
-    </section>
+      </PanelContent>
+    </Panel>
   );
 }
