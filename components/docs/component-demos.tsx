@@ -41,8 +41,16 @@ import { NoiseCard } from '@/components/kanso/noise-card';
 import { BrowserLoader } from '@/components/kanso/browser-loader';
 import { TelemetryGrid } from '@/components/kanso/telemetry-widgets';
 import { MagicTree } from '@/components/kanso/magic-tree';
+import {
+  Panel,
+  PanelHeader,
+  PanelTitle,
+  PanelContent,
+  StripeDivider,
+} from '@/components/kanso/panel';
 import { Volume2, VolumeX } from 'lucide-react';
 import { RayCard } from '@/components/kanso/ray-card';
+import { ScrollRevealList } from '@/components/kanso/scroll-reveal-list';
 import {
   ColorPicker,
   ColorPickerSelection,
@@ -107,6 +115,32 @@ function DialKitSlider({
  */
 
 const demos: Record<string, React.ComponentType> = {
+  panel: function PanelDemo() {
+    return (
+      <div className="flex flex-col w-full max-w-xl">
+        <Panel className="w-full">
+          <PanelHeader>
+            <PanelTitle>ACID Panel Layout</PanelTitle>
+          </PanelHeader>
+          <PanelContent>
+            <p className="text-sm text-zinc-655 dark:text-zinc-400">
+              This layout is framed inside two vertical border rails. You can
+              place headers, descriptions, and content blocks in it.
+            </p>
+          </PanelContent>
+        </Panel>
+        <StripeDivider />
+        <Panel className="w-full">
+          <PanelContent>
+            <p className="text-sm text-zinc-655 dark:text-zinc-400">
+              Sections can be separated cleanly by a StripeDivider that
+              maintains the continuous vertical rails.
+            </p>
+          </PanelContent>
+        </Panel>
+      </div>
+    );
+  },
   'magic-tree': function MagicTreeDemo() {
     return (
       <div className="flex flex-col items-center gap-8 w-full max-w-sm">
@@ -3723,6 +3757,191 @@ const demos: Record<string, React.ComponentType> = {
             </div>
           </div>
         </GlowCard>
+      </div>
+    );
+  },
+  'scroll-reveal-list': function ScrollRevealListDemo() {
+    const scrollContainerRef = React.useRef<HTMLDivElement>(null);
+    const [preset, setPreset] = React.useState<
+      'capabilities' | 'tech' | 'philosophy'
+    >('capabilities');
+    const [hueStart, setHueStart] = React.useState(0);
+    const [hueEnd, setHueEnd] = React.useState(360);
+    const [baseChroma, setBaseChroma] = React.useState(0.25);
+    const [snap, setSnap] = React.useState(true);
+
+    const presets = {
+      capabilities: {
+        stickyPrefix: 'you can ',
+        headerText: 'you can\nscroll.',
+        footerText: 'fin.',
+        items: [
+          'design.',
+          'prototype.',
+          'solve.',
+          'build.',
+          'develop.',
+          'debug.',
+          'learn.',
+          'cook.',
+          'ship.',
+          'prompt.',
+          'collaborate.',
+          'create.',
+          'inspire.',
+          'do it.',
+        ],
+      },
+      tech: {
+        stickyPrefix: 'we love ',
+        headerText: 'our modern\nstack.',
+        footerText: 'build.',
+        items: [
+          'React.',
+          'Next.js 16.',
+          'TypeScript.',
+          'Tailwind v4.',
+          'Framer Motion.',
+          'Base UI.',
+          'Shiki.',
+          'Lucide.',
+          'Minimalism.',
+          'Accessibility.',
+          'Speed.',
+          'Clean APIs.',
+        ],
+      },
+      philosophy: {
+        stickyPrefix: 'try to ',
+        headerText: 'zen\nphilosophy.',
+        footerText: 'peace.',
+        items: [
+          'observe.',
+          'simplify.',
+          'breathe.',
+          'focus.',
+          'let go.',
+          'appreciate.',
+          'listen.',
+          'be present.',
+          'reduce clutter.',
+          'find stillness.',
+          'connect.',
+        ],
+      },
+    };
+
+    const currentPreset = presets[preset];
+
+    return (
+      <div className="flex flex-col items-center gap-8 w-full max-w-4xl">
+        {/* Real-time Config Panel (DialKit) */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full p-6 rounded-xl border border-zinc-200 bg-white dark:border-zinc-850 dark:bg-zinc-900/30 text-left">
+          <div className="md:col-span-3 text-[10px] font-semibold text-zinc-400 uppercase tracking-widest mb-1 font-sans">
+            Real-time Config Kit (Props)
+          </div>
+
+          <div className="flex flex-col gap-2">
+            <span className="text-[11px] font-semibold text-zinc-405 dark:text-zinc-400 uppercase tracking-widest">
+              Preset Content
+            </span>
+            <div className="flex flex-col gap-1.5">
+              {(['capabilities', 'tech', 'philosophy'] as const).map((p) => (
+                <button
+                  key={p}
+                  type="button"
+                  onClick={() => setPreset(p)}
+                  className={cn(
+                    'text-left text-xs font-mono py-1.5 px-3 rounded-md transition-all cursor-pointer border border-zinc-200/50 dark:border-zinc-800/80',
+                    preset === p
+                      ? 'bg-zinc-950 text-white dark:bg-white dark:text-zinc-950 font-semibold'
+                      : 'text-zinc-500 hover:text-zinc-900 dark:hover:text-zinc-200 hover:bg-zinc-100/50 dark:hover:bg-zinc-800/30'
+                  )}
+                >
+                  {p === 'capabilities' && 'Capabilities (you can...)'}
+                  {p === 'tech' && 'Tech Stack (we love...)'}
+                  {p === 'philosophy' && 'Zen Philosophy (try to...)'}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          <div className="flex flex-col gap-4">
+            <DialKitSlider
+              label="Hue Start"
+              min={0}
+              max={360}
+              step={5}
+              value={hueStart}
+              onChange={setHueStart}
+            />
+            <DialKitSlider
+              label="Hue End"
+              min={0}
+              max={720}
+              step={5}
+              value={hueEnd}
+              onChange={setHueEnd}
+            />
+          </div>
+
+          <div className="flex flex-col gap-4 justify-between">
+            <DialKitSlider
+              label="Chroma"
+              min={0.0}
+              max={0.4}
+              step={0.05}
+              value={baseChroma}
+              onChange={setBaseChroma}
+            />
+            <label className="flex items-center gap-3.5 mt-2 text-xs font-semibold text-zinc-500 uppercase tracking-wider select-none cursor-pointer">
+              <input
+                type="checkbox"
+                checked={snap}
+                onChange={(e) => setSnap(e.target.checked)}
+                className="size-4 rounded border-zinc-300 text-purple-650 focus:ring-purple-500 cursor-pointer"
+              />
+              <span>Scroll Snapping</span>
+            </label>
+          </div>
+        </div>
+
+        {/* Scrollable Mock Device Frame */}
+        <div className="relative w-full rounded-2xl border border-zinc-200/80 dark:border-zinc-800/80 bg-zinc-50/50 dark:bg-zinc-950/40 p-2 shadow-xl">
+          {/* Top Bar Decoration */}
+          <div className="absolute top-4 left-6 flex items-center gap-1.5 z-20 pointer-events-none">
+            <div className="size-2.5 rounded-full bg-rose-500/80" />
+            <div className="size-2.5 rounded-full bg-amber-500/80" />
+            <div className="size-2.5 rounded-full bg-emerald-500/80" />
+            <span className="text-[10px] font-mono text-zinc-400 dark:text-zinc-500 ml-2">
+              scroll-device-viewport
+            </span>
+          </div>
+
+          {/* Indicator label overlay */}
+          <div className="absolute right-6 top-4 text-[9px] font-mono font-semibold tracking-wider text-purple-500 dark:text-purple-400 z-20 pointer-events-none animate-pulse">
+            ↕ SCROLL INSIDE THIS WINDOW
+          </div>
+
+          {/* Device viewport container */}
+          <div
+            ref={scrollContainerRef}
+            className="w-full h-[550px] overflow-y-auto rounded-xl border border-zinc-200 dark:border-zinc-800 bg-white dark:bg-zinc-950 relative scrollbar-none"
+          >
+            <ScrollRevealList
+              key={`${preset}-${hueStart}-${hueEnd}-${baseChroma}-${snap}`}
+              items={currentPreset.items}
+              stickyPrefix={currentPreset.stickyPrefix}
+              headerText={currentPreset.headerText}
+              footerText={currentPreset.footerText}
+              hueStart={hueStart}
+              hueEnd={hueEnd}
+              baseChroma={baseChroma}
+              snap={snap}
+              containerRef={scrollContainerRef}
+            />
+          </div>
+        </div>
       </div>
     );
   },

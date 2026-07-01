@@ -34,7 +34,8 @@ export interface RegistryComponent {
     | 'layout'
     | 'typography'
     | 'feedback'
-    | 'data-display';
+    | 'data-display'
+    | 'scroll';
   /** npm dependencies required */
   dependencies: string[];
   /** Internal Kanso files this component depends on */
@@ -61,6 +62,60 @@ export interface RegistryComponent {
  * 4. The docs page at `/docs/components/[name]` auto-generates
  */
 export const registry: RegistryComponent[] = [
+  {
+    name: 'panel',
+    title: 'ACID Panel Layout',
+    description:
+      'Architectural Layout wrappers (Panel and StripeDivider) utilizing full-bleed hairline rules, diagonal stripes, and vertical border rails.',
+    category: 'layout',
+    dependencies: [],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/panel.tsx',
+    tags: ['layout', 'divider', 'panel', 'border', 'lines', 'acid'],
+    usage: `import { Panel, PanelHeader, PanelTitle, PanelContent, StripeDivider } from "@/components/kanso/panel"
+
+export default function LayoutDemo() {
+  return (
+    <div className="max-w-xl mx-auto flex flex-col">
+      <Panel>
+        <PanelHeader>
+          <PanelTitle>Section Header</PanelTitle>
+        </PanelHeader>
+        <PanelContent>
+          <p>Main content area inside layout rails.</p>
+        </PanelContent>
+      </Panel>
+      <StripeDivider />
+      <Panel>
+        <PanelContent>
+          <p>Another section separated by a diagonal-stripe band.</p>
+        </PanelContent>
+      </Panel>
+    </div>
+  )
+}`,
+    props: [
+      {
+        name: 'noLineBottom',
+        type: 'boolean',
+        default: 'false',
+        description: 'Opt-out of drawing the bottom hairline border.',
+      },
+      {
+        name: 'lineTop',
+        type: 'boolean',
+        default: 'false',
+        description: 'Add a top hairline border to the panel.',
+      },
+      {
+        name: 'withRails',
+        type: 'boolean',
+        default: 'true',
+        description:
+          'Ensure vertical rail borders remain continuous through StripeDivider (only for StripeDivider).',
+      },
+    ],
+  },
   {
     name: 'magic-tree',
     title: 'Magic Tree',
@@ -2328,6 +2383,86 @@ export default function GlowCardDemo() {
         name: 'className',
         type: 'string',
         description: 'Additional class names to apply to the card container.',
+      },
+    ],
+  },
+  {
+    name: 'scroll-reveal-list',
+    title: 'Scroll Reveal List',
+    description:
+      'A premium scroll-driven text list component that keeps a prefix fixed while highlighting scrolling items in a shifting OKLCH gradient hue.',
+    category: 'scroll',
+    dependencies: ['framer-motion'],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/scroll-reveal-list.tsx',
+    tags: [
+      'scroll',
+      'reveal',
+      'typography',
+      'framer-motion',
+      'gradient',
+      'text',
+    ],
+    usage: `import { ScrollRevealList } from "@/components/kanso/scroll-reveal-list"
+
+export default function ScrollRevealListDemo() {
+  return (
+    <ScrollRevealList
+      stickyPrefix="you can "
+      items={["design.", "prototype.", "ship."]}
+    />
+  )
+}`,
+    props: [
+      {
+        name: 'items',
+        type: 'string[]',
+        description:
+          'The list of items/words that scroll through the viewport.',
+      },
+      {
+        name: 'stickyPrefix',
+        type: 'string',
+        default: '"you can "',
+        description:
+          'Sticky prefix text rendered next to the scrolling words list.',
+      },
+      {
+        name: 'headerText',
+        type: 'string',
+        default: '"you can scroll."',
+        description: 'Large title text for the opening header section.',
+      },
+      {
+        name: 'footerText',
+        type: 'string',
+        default: '"fin."',
+        description: 'Title text for the final ending section.',
+      },
+      {
+        name: 'hueStart',
+        type: 'number',
+        default: '0',
+        description:
+          'Starting hue for the OKLCH color spectrum shift (0-360+).',
+      },
+      {
+        name: 'hueEnd',
+        type: 'number',
+        default: '360',
+        description: 'Ending hue for the OKLCH color spectrum shift (0-360+).',
+      },
+      {
+        name: 'baseChroma',
+        type: 'number',
+        default: '0.25',
+        description: 'Base chroma value for the OKLCH color range.',
+      },
+      {
+        name: 'snap',
+        type: 'boolean',
+        default: 'true',
+        description: 'Enables scroll snapping to list items.',
       },
     ],
   },
