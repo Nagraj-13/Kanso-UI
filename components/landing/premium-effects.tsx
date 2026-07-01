@@ -16,26 +16,31 @@ import { MagneticButton } from '@/components/kanso/magnetic-button';
 import { ShimmerBorder } from '@/components/kanso/shimmer-border';
 import { TextReveal } from '@/components/kanso/text-reveal';
 import { HalftoneImage } from '@/components/kanso/halftone-image';
+import {
+  Panel,
+  PanelHeader,
+  PanelTitle,
+  PanelDescription,
+  PanelContent,
+} from '@/components/kanso/panel';
 
 export function PremiumEffects() {
   return (
-    <section id="premium-components" className="py-28">
-      <div className="mx-auto max-w-7xl px-6 md:px-8">
-        <div className="flex flex-col items-start gap-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground">
-            ✦ Zen Interactions
-          </div>
-          <h2 className="text-3xl font-semibold tracking-tight text-foreground">
-            Premium Kanso Effects
-          </h2>
-          <p className="max-w-xl text-base text-muted-foreground">
-            Add polish to your interface with our copy-paste motion effects.
-            Experience the interactive previews below and click to view
-            installation guides.
-          </p>
+    <Panel id="premium-components">
+      <PanelHeader>
+        <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mt-6">
+          ✦ Zen Interactions
         </div>
+        <PanelTitle>Premium Kanso Effects</PanelTitle>
+        <PanelDescription>
+          Add polish to your interface with our copy-paste motion effects.
+          Experience the interactive previews below and click to view
+          installation guides.
+        </PanelDescription>
+      </PanelHeader>
 
-        <div className="mt-16 grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
+      <PanelContent>
+        <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-4">
           {/* Card 1: Magnetic Button */}
           <Card className="flex flex-col justify-between border border-border bg-card shadow-xs hover:shadow-md transition-all duration-300 dark:bg-card/40 hover:-translate-y-0.5">
             <CardHeader className="pb-2">
@@ -171,7 +176,7 @@ export function PremiumEffects() {
             </CardFooter>
           </Card>
         </div>
-      </div>
-    </section>
+      </PanelContent>
+    </Panel>
   );
 }

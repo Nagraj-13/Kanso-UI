@@ -1,21 +1,28 @@
 import * as React from 'react';
 import { Card, CardContent } from '@/components/ui/card';
+import {
+  Panel,
+  PanelHeader,
+  PanelTitle,
+  PanelDescription,
+  PanelContent,
+} from '@/components/kanso/panel';
 
 export function Testimonials() {
   return (
-    <section className="border-t border-dashed border-zinc-200/50 py-28 dark:border-zinc-900/40 dark:bg-zinc-950/20 relative">
-      <div className="mx-auto max-w-7xl px-6 md:px-8">
-        <div className="flex flex-col items-center text-center gap-4">
-          <h2 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-white">
-            Trusted by Frontend Engineers
-          </h2>
-          <p className="max-w-xl text-base text-zinc-500 dark:text-zinc-400">
-            Read what designers and developers say about building interfaces
-            with Kanso UI.
-          </p>
-        </div>
+    <Panel id="testimonials">
+      <PanelHeader>
+        <PanelTitle className="text-center">
+          Trusted by Frontend Engineers
+        </PanelTitle>
+        <PanelDescription className="text-center mx-auto">
+          Read what designers and developers say about building interfaces with
+          Kanso UI.
+        </PanelDescription>
+      </PanelHeader>
 
-        <div className="mt-16 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+      <PanelContent>
+        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {/* Testimonial 1 */}
           <Card className="border border-border bg-card dark:bg-card/40 hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 p-6 shadow-xs hover:shadow-sm hover:-translate-y-0.5">
             <CardContent className="p-0">
@@ -88,7 +95,7 @@ export function Testimonials() {
             </CardContent>
           </Card>
         </div>
-      </div>
-    </section>
+      </PanelContent>
+    </Panel>
   );
 }

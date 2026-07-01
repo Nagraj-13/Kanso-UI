@@ -2,7 +2,7 @@ import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { GITHUB_URL } from '@/lib/constants';
-import { SectionDivider } from '@/components/landing/editorial-grid';
+import { Panel, PanelContent } from '@/components/kanso/panel';
 
 function GithubIcon(props: React.ComponentProps<'svg'>) {
   return (
@@ -40,9 +40,8 @@ function DiscordIcon(props: React.ComponentProps<'svg'>) {
 
 export function Footer() {
   return (
-    <footer className="border-t border-dashed border-border py-16  relative">
-      <SectionDivider />
-      <div className="mx-auto max-w-7xl px-6 md:px-8">
+    <Panel id="footer" className="line-bottom-none">
+      <PanelContent className="py-16 px-6 md:px-8 w-full">
         <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:grid-cols-6">
           <div className="col-span-2 flex flex-col gap-4 text-left">
             <div className="flex items-center">
@@ -139,7 +138,7 @@ export function Footer() {
             License.
           </span>
         </div>
-      </div>
-    </footer>
+      </PanelContent>
+    </Panel>
   );
 }

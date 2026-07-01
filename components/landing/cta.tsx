@@ -3,13 +3,12 @@ import Link from 'next/link';
 import { Button } from '@/components/ui/button';
 import { GithubButton } from '@/components/kanso/github-button';
 import { GITHUB_URL } from '@/lib/constants';
-import { SectionDivider } from '@/components/landing/editorial-grid';
+import { Panel, PanelContent } from '@/components/kanso/panel';
 
 export function CTA() {
   return (
-    <section className="border-t border-b border-border border-dashed  text-center  relative">
-      <SectionDivider />
-      <div className="mx-auto max-w-4xl px-6 md:px-8 border-r border-l border-border border-dashed py-32">
+    <Panel id="cta" className="text-center">
+      <PanelContent className="py-24 px-6 md:px-8 w-full">
         <h2 className="text-4xl font-semibold tracking-tight text-foreground sm:text-5xl">
           Build Faster. Design Less.
         </h2>
@@ -34,7 +33,7 @@ export function CTA() {
             Star Kanso UI
           </GithubButton>
         </div>
-      </div>
-    </section>
+      </PanelContent>
+    </Panel>
   );
 }
