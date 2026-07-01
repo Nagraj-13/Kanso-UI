@@ -11,7 +11,7 @@ import { Statistics } from '@/components/landing/statistics';
 import { Testimonials } from '@/components/landing/testimonials';
 import { CTA } from '@/components/landing/cta';
 import { Footer } from '@/components/landing/footer';
-import { Panel, StripeDivider } from '@/components/kanso/panel';
+import { StripeDivider } from '@/components/kanso/panel';
 
 interface LandingPageClientProps {
   showcaseHtmls: Record<string, string>;
@@ -28,69 +28,43 @@ export default function LandingPageClient({
 }: LandingPageClientProps) {
   return (
     <div className="min-h-screen relative bg-[#fafafa] text-zinc-900 font-sans antialiased selection:bg-zinc-900 selection:text-white dark:bg-zinc-950 dark:text-zinc-50 dark:selection:bg-zinc-50 dark:selection:text-zinc-950">
-      <div className="max-w-7xl mx-auto w-full flex flex-col">
+      {/* Background Grid */}
+      <div className="pointer-events-none fixed inset-0 z-0 bg-[linear-gradient(to_right,var(--stripe-line)_1px,transparent_1px),linear-gradient(to_bottom,var(--stripe-line)_1px,transparent_1px)] bg-[size:4rem_4rem] [mask-image:radial-gradient(ellipse_60%_50%_at_50%_0%,#000_70%,transparent_100%)] opacity-20" />
+
+      <div className="max-w-7xl mx-auto w-full flex flex-col relative z-10">
         <div className="sticky top-0 z-50 bg-[#fafafa]/80 dark:bg-zinc-950/80 backdrop-blur-md">
-          <Panel>
-            <Header />
-          </Panel>
+          <Header />
         </div>
 
         <StripeDivider />
-
-        <Panel>
-          <Hero />
-        </Panel>
+        <Hero />
 
         <StripeDivider />
-
-        <Panel>
-          <Features />
-        </Panel>
+        <Features />
 
         <StripeDivider />
-
-        <Panel>
-          <PremiumEffects />
-        </Panel>
+        <PremiumEffects />
 
         <StripeDivider />
-
-        <Panel>
-          <ComponentShowcase
-            showcaseHtmls={showcaseHtmls}
-            showcaseRaws={showcaseRaws}
-          />
-        </Panel>
+        <ComponentShowcase
+          showcaseHtmls={showcaseHtmls}
+          showcaseRaws={showcaseRaws}
+        />
 
         <StripeDivider />
-
-        <Panel>
-          <DeveloperExperience dxHtml={dxHtml} dxRaw={dxRaw} />
-        </Panel>
+        <DeveloperExperience dxHtml={dxHtml} dxRaw={dxRaw} />
 
         <StripeDivider />
-
-        <Panel>
-          <Statistics />
-        </Panel>
+        <Statistics />
 
         <StripeDivider />
-
-        <Panel>
-          <Testimonials />
-        </Panel>
+        <Testimonials />
 
         <StripeDivider />
-
-        <Panel>
-          <CTA />
-        </Panel>
+        <CTA />
 
         <StripeDivider />
-
-        <Panel noLineBottom>
-          <Footer />
-        </Panel>
+        <Footer />
       </div>
     </div>
   );

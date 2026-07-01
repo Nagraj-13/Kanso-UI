@@ -1,5 +1,6 @@
 import * as React from 'react';
 import { CodeBlock, TerminalBlock } from '@/components/docs/code-block';
+import { Panel, PanelContent } from '@/components/kanso/panel';
 
 interface DeveloperExperienceProps {
   dxHtml: string;
@@ -11,8 +12,8 @@ export function DeveloperExperience({
   dxRaw,
 }: DeveloperExperienceProps) {
   return (
-    <div className="py-24 px-6 md:px-8 w-full">
-      <div className="grid gap-12 lg:grid-cols-2 lg:gap-16 w-full min-w-0">
+    <Panel id="developer-experience">
+      <PanelContent className="grid gap-12 lg:grid-cols-2 lg:gap-16 w-full min-w-0">
         {/* Dx Left Text */}
         <div className="flex flex-col justify-center text-left">
           <h2 className="text-3xl font-semibold tracking-tight text-foreground">
@@ -68,7 +69,7 @@ export function DeveloperExperience({
             collapsible={false}
           />
         </div>
-      </div>
-    </div>
+      </PanelContent>
+    </Panel>
   );
 }

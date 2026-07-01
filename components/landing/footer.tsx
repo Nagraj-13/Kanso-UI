@@ -2,6 +2,7 @@ import * as React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { GITHUB_URL } from '@/lib/constants';
+import { Panel, PanelContent } from '@/components/kanso/panel';
 
 function GithubIcon(props: React.ComponentProps<'svg'>) {
   return (
@@ -39,103 +40,105 @@ function DiscordIcon(props: React.ComponentProps<'svg'>) {
 
 export function Footer() {
   return (
-    <div className="py-16 px-6 md:px-8 w-full">
-      <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:grid-cols-6">
-        <div className="col-span-2 flex flex-col gap-4 text-left">
-          <div className="flex items-center">
-            <Image
-              src="/KansoUiCompletelogo.png"
-              alt="Kanso UI Complete Logo"
-              width={140}
-              height={32}
-              className="dark:invert object-contain"
-            />
+    <Panel id="footer" className="line-bottom-none">
+      <PanelContent className="py-16 px-6 md:px-8 w-full">
+        <div className="grid grid-cols-2 gap-8 sm:grid-cols-4 lg:grid-cols-6">
+          <div className="col-span-2 flex flex-col gap-4 text-left">
+            <div className="flex items-center">
+              <Image
+                src="/KansoUiCompletelogo.png"
+                alt="Kanso UI Complete Logo"
+                width={140}
+                height={32}
+                className="dark:invert object-contain"
+              />
+            </div>
+            <p className="text-xs text-muted-foreground leading-relaxed max-w-[200px]">
+              A design system built with React 19, Next.js 16, and Tailwind CSS
+              v4.
+            </p>
           </div>
-          <p className="text-xs text-muted-foreground leading-relaxed max-w-[200px]">
-            A design system built with React 19, Next.js 16, and Tailwind CSS
-            v4.
-          </p>
+
+          <div className="text-left">
+            <h6 className="text-xs font-semibold text-foreground uppercase tracking-wider">
+              Library
+            </h6>
+            <ul className="mt-4 space-y-2 text-xs">
+              <li>
+                <a
+                  href="#showcase"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Components
+                </a>
+              </li>
+              <li>
+                <a
+                  href="#showcase"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Registry
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div className="text-left">
+            <h6 className="text-xs font-semibold text-foreground uppercase tracking-wider">
+              Resources
+            </h6>
+            <ul className="mt-4 space-y-2 text-xs">
+              <li>
+                <Link
+                  href="/docs"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Documentation
+                </Link>
+              </li>
+              <li>
+                <a
+                  href="https://nextjs.org"
+                  className="text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Next.js Docs
+                </a>
+              </li>
+            </ul>
+          </div>
+
+          <div className="text-left">
+            <h6 className="text-xs font-semibold text-foreground uppercase tracking-wider">
+              Community
+            </h6>
+            <ul className="mt-4 space-y-2 text-xs text-left">
+              <li>
+                <a
+                  href={GITHUB_URL}
+                  className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  GitHub <GithubIcon className="size-3" />
+                </a>
+              </li>
+              <li>
+                <a
+                  href="https://discord.com"
+                  className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
+                >
+                  Discord <DiscordIcon className="size-3" />
+                </a>
+              </li>
+            </ul>
+          </div>
         </div>
 
-        <div className="text-left">
-          <h6 className="text-xs font-semibold text-foreground uppercase tracking-wider">
-            Library
-          </h6>
-          <ul className="mt-4 space-y-2 text-xs">
-            <li>
-              <a
-                href="#showcase"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Components
-              </a>
-            </li>
-            <li>
-              <a
-                href="#showcase"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Registry
-              </a>
-            </li>
-          </ul>
+        <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row">
+          <span className="text-[11px] text-muted-foreground">
+            &copy; {new Date().getFullYear()} Kanso UI. Open Source under MIT
+            License.
+          </span>
         </div>
-
-        <div className="text-left">
-          <h6 className="text-xs font-semibold text-foreground uppercase tracking-wider">
-            Resources
-          </h6>
-          <ul className="mt-4 space-y-2 text-xs">
-            <li>
-              <Link
-                href="/docs"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Documentation
-              </Link>
-            </li>
-            <li>
-              <a
-                href="https://nextjs.org"
-                className="text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Next.js Docs
-              </a>
-            </li>
-          </ul>
-        </div>
-
-        <div className="text-left">
-          <h6 className="text-xs font-semibold text-foreground uppercase tracking-wider">
-            Community
-          </h6>
-          <ul className="mt-4 space-y-2 text-xs text-left">
-            <li>
-              <a
-                href={GITHUB_URL}
-                className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
-              >
-                GitHub <GithubIcon className="size-3" />
-              </a>
-            </li>
-            <li>
-              <a
-                href="https://discord.com"
-                className="flex items-center gap-1 text-muted-foreground hover:text-foreground transition-colors"
-              >
-                Discord <DiscordIcon className="size-3" />
-              </a>
-            </li>
-          </ul>
-        </div>
-      </div>
-
-      <div className="mt-16 flex flex-col items-center justify-between gap-4 border-t border-border pt-8 sm:flex-row">
-        <span className="text-[11px] text-muted-foreground">
-          &copy; {new Date().getFullYear()} Kanso UI. Open Source under MIT
-          License.
-        </span>
-      </div>
-    </div>
+      </PanelContent>
+    </Panel>
   );
 }

@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { Panel, PanelContent } from '@/components/kanso/panel';
 
 function AnimatedCounter({
   value,
@@ -58,44 +59,46 @@ function AnimatedCounter({
 
 export function Statistics() {
   return (
-    <div className="py-24 px-6 md:px-8 w-full">
-      <div className="grid gap-12 text-center sm:grid-cols-2 lg:grid-cols-4">
-        <div className="flex flex-col items-center">
-          <span className="text-4xl font-bold tracking-tight text-foreground">
-            <AnimatedCounter value="50" suffix="+" />
-          </span>
-          <span className="mt-2 text-sm font-medium text-muted-foreground">
-            Components
-          </span>
-        </div>
+    <Panel id="statistics">
+      <PanelContent>
+        <div className="grid gap-12 text-center sm:grid-cols-2 lg:grid-cols-4 w-full min-w-0">
+          <div className="flex flex-col items-center">
+            <span className="text-4xl font-bold tracking-tight text-foreground">
+              <AnimatedCounter value="50" suffix="+" />
+            </span>
+            <span className="mt-2 text-sm font-medium text-muted-foreground">
+              Components
+            </span>
+          </div>
 
-        <div className="flex flex-col items-center">
-          <span className="text-4xl font-bold tracking-tight text-foreground">
-            <AnimatedCounter value="100" suffix="%" />
-          </span>
-          <span className="mt-2 text-sm font-medium text-muted-foreground">
-            TypeScript Coverage
-          </span>
-        </div>
+          <div className="flex flex-col items-center">
+            <span className="text-4xl font-bold tracking-tight text-foreground">
+              <AnimatedCounter value="100" suffix="%" />
+            </span>
+            <span className="mt-2 text-sm font-medium text-muted-foreground">
+              TypeScript Coverage
+            </span>
+          </div>
 
-        <div className="flex flex-col items-center">
-          <span className="text-4xl font-bold tracking-tight text-foreground">
-            WCAG
-          </span>
-          <span className="mt-2 text-sm font-medium text-muted-foreground">
-            Accessible by Default
-          </span>
-        </div>
+          <div className="flex flex-col items-center">
+            <span className="text-4xl font-bold tracking-tight text-foreground">
+              WCAG
+            </span>
+            <span className="mt-2 text-sm font-medium text-muted-foreground">
+              Accessible by Default
+            </span>
+          </div>
 
-        <div className="flex flex-col items-center">
-          <span className="text-4xl font-bold tracking-tight text-foreground">
-            MIT
-          </span>
-          <span className="mt-2 text-sm font-medium text-muted-foreground">
-            Open Source
-          </span>
+          <div className="flex flex-col items-center">
+            <span className="text-4xl font-bold tracking-tight text-foreground">
+              MIT
+            </span>
+            <span className="mt-2 text-sm font-medium text-muted-foreground">
+              Open Source
+            </span>
+          </div>
         </div>
-      </div>
-    </div>
+      </PanelContent>
+    </Panel>
   );
 }

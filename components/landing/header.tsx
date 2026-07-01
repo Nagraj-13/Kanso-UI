@@ -14,6 +14,7 @@ import {
 import { useTheme } from 'next-themes';
 import { Button } from '@/components/ui/button';
 import { GITHUB_URL } from '@/lib/constants';
+import { Panel } from '@/components/kanso/panel';
 
 export function Header() {
   const { theme, setTheme } = useTheme();
@@ -26,7 +27,7 @@ export function Header() {
   }, []);
 
   return (
-    <header className="w-full relative">
+    <Panel className="w-full relative line-top line-bottom-none border-b-0">
       <div className="flex h-16 items-center justify-between px-6 md:px-8">
         <div className="flex items-center gap-3">
           <Image
@@ -183,6 +184,6 @@ export function Header() {
           </motion.div>
         )}
       </AnimatePresence>
-    </header>
+    </Panel>
   );
 }

@@ -9,6 +9,7 @@ import { Button } from '@/components/ui/button';
 import { GITHUB_URL } from '@/lib/constants';
 import { GithubButton } from '@/components/kanso/github-button';
 import { KeyboardButton } from '@/components/kanso/keyboard-button';
+import { Panel } from '@/components/kanso/panel';
 import {
   LiquidMetalCardRoot,
   LiquidMetalCardVisual,
@@ -149,7 +150,10 @@ export function Hero() {
   }, [theme, halftoneParams.themeName, halftoneParams.ringColor]);
 
   return (
-    <section className="relative w-full pt-10 pb-6 overflow-hidden  text-foreground">
+    <Panel
+      id="hero"
+      className="relative w-full pt-10 pb-6 overflow-hidden text-foreground"
+    >
       <div className="relative m-4 md:m-6 py-12 md:py-20 rounded-3xl overflow-hidden bg-[linear-gradient(to_bottom,_var(--background)_30%,_#6d18ff_75%,_#9569fe_100%)]">
         <div className="absolute left-1/2 top-1/3 -translate-x-1/2 -translate-y-1/2 w-[90%] h-[95%] bg-[var(--background)] blur-3xl rounded-full z-0" />
 
@@ -420,6 +424,6 @@ export function Hero() {
           </div>
         </div>
       </div>
-    </section>
+    </Panel>
   );
 }
