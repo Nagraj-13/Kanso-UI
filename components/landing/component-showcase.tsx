@@ -50,6 +50,7 @@ import {
   PanelTitle,
   PanelDescription,
   PanelContent,
+  LineDivider,
 } from '@/components/kanso/panel';
 
 interface ComponentShowcaseProps {
@@ -80,13 +81,14 @@ export function ComponentShowcase({
     <Panel id="showcase">
       <PanelHeader>
         <PanelTitle>Component Showcase</PanelTitle>
+        <LineDivider />
         <PanelDescription>
           Inspect and interact with premium components. See the exact code that
           builds them.
         </PanelDescription>
       </PanelHeader>
 
-      <PanelContent>
+      <PanelContent className="p-2 md:p-2">
         <div className="grid items-start gap-8 lg:grid-cols-12 w-full min-w-0">
           {/* Left selector menu styled as IDE workspace */}
           <div className="lg:col-span-3 w-full flex flex-col gap-4">
