@@ -421,8 +421,7 @@ html.dark .docs-sidebar-link[data-active='true']::before {
   top: 0;
   left: -100vw;
   width: 200vw;
-  height: 1px;
-  background: var(--line);
+  border-top: 1px solid var(--line);
   z-index: 30;
   pointer-events: none;
 }
@@ -433,8 +432,7 @@ html.dark .docs-sidebar-link[data-active='true']::before {
   bottom: 0;
   left: -100vw;
   width: 200vw;
-  height: 1px;
-  background: var(--line);
+  border-bottom: 1px solid var(--line);
   z-index: 30;
   pointer-events: none;
 }
