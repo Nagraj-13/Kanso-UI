@@ -1,7 +1,13 @@
 'use client';
 
 import * as React from 'react';
-import { Panel, PanelContent } from '@/components/kanso/panel';
+import {
+  Panel,
+  PanelContent,
+  GapDivider,
+  VerticalGapDivider,
+  VerticalLineDivider,
+} from '@/components/kanso/panel';
 
 function AnimatedCounter({
   value,
@@ -60,9 +66,9 @@ function AnimatedCounter({
 export function Statistics() {
   return (
     <Panel id="statistics">
-      <PanelContent>
-        <div className="grid gap-12 text-center sm:grid-cols-2 lg:grid-cols-4 w-full min-w-0">
-          <div className="flex flex-col items-center">
+      <PanelContent className="p-0 md:p-0">
+        <div className="flex flex-col lg:flex-row w-full overflow-hidden">
+          <div className="flex flex-col items-center justify-center py-12 flex-1">
             <span className="text-4xl font-bold tracking-tight text-foreground">
               <AnimatedCounter value="50" suffix="+" />
             </span>
@@ -71,7 +77,10 @@ export function Statistics() {
             </span>
           </div>
 
-          <div className="flex flex-col items-center">
+          <VerticalLineDivider className="hidden lg:block shrink-0" />
+          <div className="block lg:hidden w-full h-px bg-[var(--line)]" />
+
+          <div className="flex flex-col items-center justify-center py-12 flex-1">
             <span className="text-4xl font-bold tracking-tight text-foreground">
               <AnimatedCounter value="100" suffix="%" />
             </span>
@@ -80,7 +89,10 @@ export function Statistics() {
             </span>
           </div>
 
-          <div className="flex flex-col items-center">
+          <VerticalLineDivider className="hidden lg:block shrink-0" />
+          <div className="block lg:hidden w-full h-px bg-[var(--line)]" />
+
+          <div className="flex flex-col items-center justify-center py-12 flex-1">
             <span className="text-4xl font-bold tracking-tight text-foreground">
               WCAG
             </span>
@@ -89,7 +101,10 @@ export function Statistics() {
             </span>
           </div>
 
-          <div className="flex flex-col items-center">
+          <VerticalLineDivider className="hidden lg:block shrink-0" />
+          <div className="block lg:hidden w-full h-px bg-[var(--line)]" />
+
+          <div className="flex flex-col items-center justify-center py-12 flex-1">
             <span className="text-4xl font-bold tracking-tight text-foreground">
               MIT
             </span>
