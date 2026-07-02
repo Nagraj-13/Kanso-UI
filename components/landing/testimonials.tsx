@@ -6,6 +6,7 @@ import {
   PanelTitle,
   PanelDescription,
   PanelContent,
+  GapDivider,
 } from '@/components/kanso/panel';
 
 export function Testimonials() {

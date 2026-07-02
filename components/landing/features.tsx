@@ -19,7 +19,6 @@ import {
   PanelHeader,
   PanelTitle,
   PanelContent,
-  StripeDivider,
 } from '@/components/kanso/panel';
 
 export function Features() {
@@ -32,7 +31,7 @@ export function Features() {
       <PanelContent className="p-0 md:p-0">
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 w-full">
           {/* Card 1: Minimalist Aesthetics (2 Columns - Row 1 Left) */}
-          <Card className="rounded-none border-0 border-b border-[var(--line)] bg-transparent hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 sm:col-span-2 sm:border-r flex flex-col relative group overflow-hidden shadow-none">
+          <Card className="rounded-none   bg-transparent hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 sm:col-span-2 sm:border-r flex flex-col relative group overflow-hidden shadow-none">
             {/* Aesthetic Graphic Background */}
             <div className="absolute inset-0 z-0 pointer-events-none">
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 size-64 rounded-full bg-zinc-400 dark:bg-zinc-600 opacity-10 blur-3xl group-hover:opacity-20 transition-opacity duration-500" />
@@ -56,7 +55,7 @@ export function Features() {
           </Card>
 
           {/* Card 2: Copy-Paste Components (1 Column - Row 1 Middle) */}
-          <Card className="rounded-none border-0 border-b border-[var(--line)] bg-transparent hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 sm:col-span-1 lg:border-r flex flex-col shadow-none">
+          <Card className="rounded-none  bg-transparent hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 sm:col-span-1 lg:border-r flex flex-col shadow-none">
             <CardHeader className="pb-2 p-6">
               <div className="flex size-10 items-center justify-center rounded-lg border border-[var(--line)] bg-muted/50 dark:bg-muted/20">
                 <CopyIcon className="size-5 text-muted-foreground" />
@@ -74,7 +73,7 @@ export function Features() {
           </Card>
 
           {/* Card 3: Accessible by Default (1 Column - Row 1 Right) */}
-          <Card className="rounded-none border-0 border-b border-[var(--line)] bg-transparent hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 sm:col-span-1 flex flex-col shadow-none">
+          <Card className="rounded-none    bg-transparent hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 sm:col-span-1 flex flex-col shadow-none">
             <CardHeader className="pb-2 p-6">
               <div className="flex size-10 items-center justify-center rounded-lg border border-[var(--line)] bg-muted/50 dark:bg-muted/20">
                 <AccessibilityIcon className="size-5 text-muted-foreground" />
@@ -92,7 +91,7 @@ export function Features() {
           </Card>
 
           {/* Card 4: TypeScript First (1 Column - Row 2 Left) */}
-          <Card className="rounded-none border-0 border-b lg:border-b-0 border-[var(--line)] bg-transparent hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 sm:col-span-1 sm:border-r flex flex-col shadow-none">
+          <Card className="rounded-none border bg-transparent hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 sm:col-span-1 sm:border-r flex flex-col shadow-none">
             <CardHeader className="pb-2 p-6">
               <div className="flex size-10 items-center justify-center rounded-lg border border-[var(--line)] bg-muted/50 dark:bg-muted/20">
                 <Code2Icon className="size-5 text-muted-foreground" />
@@ -110,7 +109,7 @@ export function Features() {
           </Card>
 
           {/* Card 5: Dark Mode Ready (1 Column - Row 2 Middle) */}
-          <Card className="rounded-none border-0 border-b sm:border-b-0 lg:border-b-0 border-[var(--line)] bg-transparent hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 sm:col-span-1 lg:border-r flex flex-col shadow-none">
+          <Card className="rounded-none border bg-transparent hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 sm:col-span-1 lg:border-r flex flex-col shadow-none">
             <CardHeader className="pb-2 p-6">
               <div className="flex size-10 items-center justify-center rounded-lg border border-[var(--line)] bg-muted/50 dark:bg-muted/20">
                 <MoonIcon className="size-5 text-muted-foreground" />
@@ -128,7 +127,7 @@ export function Features() {
           </Card>
 
           {/* Card 6: Production Ready (2 Columns - Row 2 Right) */}
-          <Card className="rounded-none border-0 border-b lg:border-b-0 border-[var(--line)] bg-transparent hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 sm:col-span-2 flex flex-col relative group overflow-hidden shadow-none">
+          <Card className="rounded-none border bg-transparent hover:bg-zinc-50/50 dark:hover:bg-zinc-900/30 transition-all duration-300 sm:col-span-2 flex flex-col relative group overflow-hidden shadow-none">
             {/* Aesthetic Graphic Background */}
             <div className="absolute inset-0 z-0 pointer-events-none">
               <div className="absolute -bottom-1/2 -right-1/4 w-full h-full rounded-full bg-zinc-300 dark:bg-zinc-600 opacity-10 blur-[80px] group-hover:opacity-20 group-hover:-translate-y-4 transition-all duration-700" />

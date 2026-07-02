@@ -9,10 +9,7 @@ export function Panel({
   return (
     <section
       data-slot="panel"
-      className={cn(
-        'line-top line-bottom border-x border-[var(--line)]',
-        className
-      )}
+      className={cn(' border-x border-[var(--line)]', className)}
       {...props}
     />
   );
@@ -25,10 +22,7 @@ export function PanelHeader({
   return (
     <header
       data-slot="panel-header"
-      className={cn(
-        'line-bottom px-4 has-data-[slot=panel-description]:*:data-[slot=panel-title]:line-bottom',
-        className
-      )}
+      className={cn('px-4 line-top line-bottom my-4 py-2', className)}
       {...props}
     />
   );
@@ -95,7 +89,7 @@ export function PanelContent({
   return (
     <div
       data-slot="panel-body"
-      className={cn('p-4 md:p-6', className)}
+      className={cn('p-4 md:p-6 my-4 py-2 line-top line-bottom', className)}
       {...props}
     />
   );
@@ -103,6 +97,27 @@ export function PanelContent({
 
 export interface StripeDividerProps extends React.ComponentProps<'div'> {
   withRails?: boolean;
+}
+
+export function GapDivider({
+  className,
+  withRails = false,
+  ...props
+}: StripeDividerProps) {
+  return (
+    <div
+      data-slot="gap-divider"
+      className={cn(
+        'relative h-5',
+        withRails && 'border-x border-[var(--line)]',
+        className
+      )}
+      {...props}
+    >
+      <div className="absolute top-0 left-[-100vw] w-[200vw] border-t border-[var(--line)] z-30 pointer-events-none" />
+      <div className="absolute bottom-0 left-[-100vw] w-[200vw] border-t border-[var(--line)] z-30 pointer-events-none" />
+    </div>
+  );
 }
 
 export function StripeDivider({
@@ -115,31 +130,61 @@ export function StripeDivider({
       data-slot="stripe-divider"
       className={cn(
         'stripe-divider line-bottom relative',
-        withRails && 'border-x border-[var(--line)]',
+        withRails && 'border-x border-[var(--line)] ',
         className
       )}
       {...props}
     >
-      {withRails && (
-        <>
-          <div
-            className="absolute top-[-4px] left-[-4px] z-20 flex size-[7px] border border-[var(--line)] bg-background"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute top-[-4px] right-[-4px] z-20 flex size-[7px] border border-[var(--line)] bg-background"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute bottom-[-4px] left-[-4px] z-20 flex size-[7px] border border-[var(--line)] bg-background"
-            aria-hidden="true"
-          />
-          <div
-            className="absolute bottom-[-4px] right-[-4px] z-20 flex size-[7px] border border-[var(--line)] bg-background"
-            aria-hidden="true"
-          />
-        </>
+      {/* Explicit top line because .stripe-divider uses ::before for the striped background */}
+      <div className="absolute top-0 left-[-100vw] w-[200vw] border-t border-[var(--line)] z-30 pointer-events-none" />
+    </div>
+  );
+}
+
+export function LineDivider({
+  className,
+  withRails = true,
+  ...props
+}: StripeDividerProps) {
+  return (
+    <div
+      data-slot="stripe-divider"
+      className={cn(
+        ' line-bottom line-top relative',
+        'border-x border-[var(--line)]',
+        className
       )}
+      {...props}
+    ></div>
+  );
+}
+
+export function VerticalLineDivider({
+  className,
+  ...props
+}: React.ComponentProps<'div'>) {
+  return (
+    <div
+      data-slot="vertical-line-divider"
+      className={cn('w-px bg-[var(--line)] relative', className)}
+      {...props}
+    >
+      <div className="absolute top-[-100vh] left-0 w-px h-[200vh] bg-[var(--line)] z-30 pointer-events-none" />
+    </div>
+  );
+}
+export function VerticalGapDivider({
+  className,
+  ...props
+}: React.ComponentProps<'div'>) {
+  return (
+    <div
+      data-slot="vertical-gap-divider"
+      className={cn('w-5 relative', className)}
+      {...props}
+    >
+      <div className="absolute top-[-100vh] left-0 w-[1px] border-l border-[var(--line)] h-[200vh] z-30 pointer-events-none" />
+      <div className="absolute top-[-100vh] right-0 w-[1px] border-r border-[var(--line)] h-[200vh] z-30 pointer-events-none" />
     </div>
   );
 }
