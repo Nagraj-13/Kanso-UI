@@ -63,60 +63,6 @@ export interface RegistryComponent {
  */
 export const registry: RegistryComponent[] = [
   {
-    name: 'panel',
-    title: 'ACID Panel Layout',
-    description:
-      'Architectural Layout wrappers (Panel and StripeDivider) utilizing full-bleed hairline rules, diagonal stripes, and vertical border rails.',
-    category: 'layout',
-    dependencies: [],
-    internalDeps: ['lib/utils'],
-    filePath: 'components/kanso/panel.tsx',
-    tags: ['layout', 'divider', 'panel', 'border', 'lines', 'acid'],
-    usage: `import { Panel, PanelHeader, PanelTitle, PanelContent, StripeDivider } from "@/components/kanso/panel"
-
-export default function LayoutDemo() {
-  return (
-    <div className="max-w-xl mx-auto flex flex-col">
-      <Panel>
-        <PanelHeader>
-          <PanelTitle>Section Header</PanelTitle>
-        </PanelHeader>
-        <PanelContent>
-          <p>Main content area inside layout rails.</p>
-        </PanelContent>
-      </Panel>
-      <StripeDivider />
-      <Panel>
-        <PanelContent>
-          <p>Another section separated by a diagonal-stripe band.</p>
-        </PanelContent>
-      </Panel>
-    </div>
-  )
-}`,
-    props: [
-      {
-        name: 'noLineBottom',
-        type: 'boolean',
-        default: 'false',
-        description: 'Opt-out of drawing the bottom hairline border.',
-      },
-      {
-        name: 'lineTop',
-        type: 'boolean',
-        default: 'false',
-        description: 'Add a top hairline border to the panel.',
-      },
-      {
-        name: 'withRails',
-        type: 'boolean',
-        default: 'true',
-        description:
-          'Ensure vertical rail borders remain continuous through StripeDivider (only for StripeDivider).',
-      },
-    ],
-  },
-  {
     name: 'magic-tree',
     title: 'Magic Tree',
     description:

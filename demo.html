@@ -23,7 +23,7 @@
             --font-sans: 'Inter', sans-serif;
             --font-mono: 'JetBrains Mono', monospace;
             
-            /* Cube geometry variables */
+            /* Box Geometry Variables */
             --cube-size: 80px;
             --cube-depth: 40px;
         }
@@ -43,10 +43,8 @@
         }
 
         .layout-container {
-            position: relative;
-            z-index: 1;
-            max-width: 1200px;
-            margin: 0 auto;
+            position: relative; z-index: 1;
+            max-width: 1200px; margin: 0 auto;
             border-left: 1px solid var(--border);
             border-right: 1px solid var(--border);
             background-color: var(--bg);
@@ -85,8 +83,6 @@
         }
 
         .nav-links { display: flex; justify-content: center; gap: 32px; }
-        
-        /* Micro-interaction: Nav Link Underlines */
         .nav-links a { 
             color: var(--text-muted); text-decoration: none; 
             font-size: 13px; font-weight: 500;
@@ -133,7 +129,7 @@
         .hero-graphic {
             position: relative; display: flex; align-items: center; justify-content: center;
             background: radial-gradient(circle at center, #080808 0%, var(--bg) 70%);
-            overflow: visible; perspective: 2000px; /* Essential for deep 3D */
+            overflow: visible; perspective: 2000px; 
         }
 
         /* --- TERMINAL WITH BLINKER --- */
@@ -157,10 +153,10 @@
         @keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
 
         /* =========================================
-           SOLID 3D ISOMETRIC BENTO GRID
+           FLAWLESS PACKED 3x3 SOLID BENTO GRID
            ========================================= */
         .bento-wrapper {
-            transition: transform 0.1s ease-out; /* Controlled by JS Parallax */
+            transition: transform 0.1s ease-out; /* For JS Parallax */
             transform-style: preserve-3d;
         }
 
@@ -171,7 +167,7 @@
             gap: 16px;
             transform: rotateX(60deg) rotateZ(-45deg);
             transform-style: preserve-3d;
-            animation: float-iso 6s ease-in-out infinite;
+            /* animation: float-iso 6s ease-in-out infinite; */
         }
 
         @keyframes float-iso {
@@ -179,103 +175,139 @@
             50% { transform: translateY(-12px) rotateX(60deg) rotateZ(-45deg); }
         }
 
+        /* PERFECT 6-BLOCK PACKING 
+           1 large 2x2 block, 5 small 1x1 blocks.
+        */
+        .block-1 { grid-area: 1 / 1 / 3 / 3; } /* Large Core */
+        .block-2 { grid-area: 1 / 3 / 2 / 4; } /* Top Right */
+        .block-3 { grid-area: 2 / 3 / 3 / 4; } /* Mid Right */
+        .block-4 { grid-area: 3 / 1 / 4 / 2; } /* Bottom Left */
+        .block-5 { grid-area: 3 / 2 / 4 / 3; } /* Bottom Mid */
+        .block-6 { grid-area: 3 / 3 / 4 / 4; } /* Bottom Right */
+
         .bento-block {
             position: relative; width: 100%; height: 100%;
             transform-style: preserve-3d;
-            transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            cursor: pointer;
+            transition: transform 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: default;
         }
         
-        /* The pop-out hover effect */
-        .bento-block:hover { transform: translateZ(24px); }
+        /* The pop-out hover effect is disabled */
 
-        /* Solid Faces Construction */
+        /* SOLID SEALED FACES (No standard borders to prevent gaps) */
         .bento-face {
             position: absolute;
-            border: 1px solid var(--border-highlight);
-            transition: all 0.4s ease;
+            transition: background 0.4s ease;
             overflow: hidden;
             display: flex; align-items: center; justify-content: center;
         }
 
-        /* 1. TOP FACE (The Roof) */
+        /* Top Face */
         .bento-face.top {
             width: 100%; height: 100%;
-            background: var(--surface);
-            transform: translateZ(var(--cube-depth));
-            background-image: 
-                linear-gradient(to right, rgba(255,255,255,0.03) 1px, transparent 1px),
-                linear-gradient(to bottom, rgba(255,255,255,0.03) 1px, transparent 1px);
-            background-size: 10px 10px;
+            background: #111111; 
+            /* transform: translateZ(var(--cube-depth)); */
+            box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08); /* Replaces borders */
+            background-image: radial-gradient(circle at center, rgba(255,255,255,0.03) 1px, transparent 1px);
+            background-size: 8px 8px;
         }
 
-        /* 2. FRONT-LEFT WALL (South in 2D space) */
+        /* Bottom Face (Seals the block when lifted) */
+        .bento-face.bottom {
+            width: 100%; height: 100%;
+            background: #1616160f;
+            transform: translateZ(0);
+            box-shadow: 0 0 20px rgba(0,0,0,0.8);
+        }
+
+        /* South Wall (Front-Left) */
         .bento-face.front-left {
             width: 100%; height: var(--cube-depth); 
-            background: #060606; /* Darker for shadow */
-            top: 100%; transform-origin: top; 
+            background: linear-gradient(to bottom, #0a0a0a, #161616); 
+            top: 100%; left: 0;
+            transform-origin: top; 
             transform: rotateX(-90deg);
+            border: 1px dashed rgba(255, 255, 255, 0.25);
         }
 
-        /* 3. FRONT-RIGHT WALL (East in 2D space) */
+        /* East Wall (Front-Right) */
         .bento-face.front-right {
             width: var(--cube-depth); height: 100%;
-            background: #030303; /* Darkest for deep shadow */
-            left: 100%; transform-origin: left; 
+            background: linear-gradient(to right, #080808, #141414); 
+            top: 0; left: 100%;
+            transform-origin: left; 
             transform: rotateY(90deg);
+            border: 1px dashed rgba(255, 255, 255, 0.2);
         }
 
-        /* Block Hover Glows */
-        .bento-block:hover .bento-face { border-color: #555; }
-        .bento-block:hover .bento-face.top { background-color: #151515; }
-        .bento-block:hover .bento-face.front-left { background-color: #0a0a0a; }
-        .bento-block:hover .bento-face.front-right { background-color: #070707; }
-
-        /* Floor shadow (wireframe left behind) */
-        .bento-shadow {
-            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
-            border: 1px dashed var(--border-highlight);
-            transform: translateZ(0); opacity: 0;
-            transition: opacity 0.4s ease;
+        /* North Wall (Back-Right) */
+        .bento-face.back-right {
+            width: 100%; height: var(--cube-depth); 
+            background: linear-gradient(to bottom, #080808, #121212); 
+            top: 0; left: 0;
+            transform-origin: top; 
+            transform: rotateX(-90deg);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
         }
-        .bento-block:hover .bento-shadow { opacity: 1; }
 
-        /* Labels on top faces */
+        /* West Wall (Back-Left) */
+        .bento-face.back-left {
+            width: var(--cube-depth); height: 100%;
+            background: linear-gradient(to right, #060606, #101010); 
+            top: 0; left: 0;
+            transform-origin: left; 
+            transform: rotateY(90deg);
+            border: 1px dashed rgba(255, 255, 255, 0.15);
+        }
+
+        /* Lighting effects on hover */
+        .bento-block:hover .bento-face.top { background-color: #1a1a1a; box-shadow: inset 0 0 0 1px rgba(255,255,255,0.2); }
+        .bento-block:hover .bento-face.front-left { background-color: #0c0c0c; }
+        .bento-block:hover .bento-face.front-right { background-color: #080808; }
+
         .block-label {
-            position: absolute; bottom: 6px; left: 8px;
+            position: absolute; bottom: 8px; left: 10px;
             font-family: var(--font-mono); font-size: 10px; font-weight: 500;
             color: var(--text-muted); transition: color 0.3s ease; z-index: 10;
         }
         .bento-block:hover .block-label { color: var(--text-main); }
 
-        /* --- UNIQUE ANIMATED ELEMENTS (With Hover Accelerations) --- */
+        /* --- MICRO-INTERACTION ANIMATIONS --- */
 
-        /* Block 1: Data Wave */
-        .data-wave { width: 100%; height: 100%; position: absolute; top: 0; left: 0; opacity: 0.7; transition: opacity 0.3s; }
-        .bento-block:hover .data-wave { opacity: 1; }
-        .data-wave path { stroke-dasharray: 6 4; animation: dash 4s linear infinite; }
-        .bento-block:hover .data-wave path { animation-duration: 1.5s; stroke: #fff; }
-        @keyframes dash { to { stroke-dashoffset: -100; } }
+        /* Block 1: Cipher Ring (Large Core) */
+        .cipher-ring {
+            width: 60px; height: 60px; border-radius: 50%;
+            border: 2px dashed rgba(255,255,255,0.1);
+            position: relative; display: flex; align-items: center; justify-content: center;
+            animation: spin 8s linear infinite;
+        }
+        .cipher-ring::before {
+            content: ''; position: absolute;
+            width: 30px; height: 30px; border-radius: 50%;
+            border: 2px solid var(--blue-dot); border-top-color: transparent;
+            animation: spin 3s linear infinite reverse;
+        }
+        .bento-block:hover .cipher-ring { border-color: rgba(0, 112, 243, 0.4); animation-duration: 4s; }
+        .bento-block:hover .cipher-ring::before { box-shadow: 0 0 15px var(--blue-dot); }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
 
-        /* Block 2: Radar */
+        /* Block 2: Server Racks */
+        .server-rack { display: flex; flex-direction: column; gap: 6px; width: 60%; }
+        .server-node { width: 100%; height: 12px; border: 1px solid var(--border-highlight); display: flex; align-items: center; padding: 0 6px; background: #000; }
+        .server-node .led { width: 4px; height: 4px; border-radius: 50%; background: var(--blue-dot); }
+        .led-1 { animation: blink-led 1s infinite alternate; }
+        .led-2 { animation: blink-led 0.6s infinite alternate-reverse; background: var(--text-muted); }
+        .bento-block:hover .led { animation-duration: 0.2s !important; background: var(--accent) !important; box-shadow: 0 0 6px #fff !important; }
+        @keyframes blink-led { 0%, 20% { opacity: 0.2; } 80%, 100% { opacity: 1; } }
+
+        /* Block 3: Radar */
         .radar {
             width: 40px; height: 40px; border-radius: 50%;
             border: 1px solid var(--border-highlight);
-            border-top: 1.5px solid var(--blue-dot);
+            background: conic-gradient(from 0deg, transparent 70%, rgba(255,255,255,0.1) 100%);
             animation: spin 3s linear infinite;
         }
-        .bento-block:hover .radar { animation-duration: 0.8s; box-shadow: 0 0 15px rgba(0, 112, 243, 0.4); }
-        @keyframes spin { 100% { transform: rotate(360deg); } }
-
-        /* Block 3: Server Racks */
-        .server-rack { display: flex; flex-direction: column; gap: 8px; width: 60%; }
-        .server-node { width: 100%; height: 16px; border: 1px solid var(--border-highlight); display: flex; align-items: center; padding: 0 6px; background: #080808; }
-        .server-node .led { width: 4px; height: 4px; border-radius: 50%; background: var(--blue-dot); box-shadow: 0 0 4px var(--blue-dot); }
-        .led-1 { animation: blink-led 1.2s infinite alternate; }
-        .led-2 { animation: blink-led 0.8s infinite alternate-reverse; background: var(--text-muted); box-shadow: none; }
-        .led-3 { animation: blink-led 2s infinite; }
-        .bento-block:hover .led { animation-duration: 0.2s !important; background: var(--accent) !important; box-shadow: 0 0 8px #fff !important; }
-        @keyframes blink-led { 0%, 20% { opacity: 0.2; } 80%, 100% { opacity: 1; } }
+        .bento-block:hover .radar { background: conic-gradient(from 0deg, transparent 70%, rgba(0, 112, 243, 0.4) 100%); animation-duration: 1s; }
 
         /* Block 4: Activity Graph */
         .activity-graph { display: flex; align-items: flex-end; gap: 4px; height: 30px; width: 80%; }
@@ -283,24 +315,16 @@
         .bar:nth-child(1) { height: 40%; animation-delay: 0.1s; }
         .bar:nth-child(2) { height: 80%; animation-delay: 0.3s; background: var(--blue-dot); }
         .bar:nth-child(3) { height: 60%; animation-delay: 0.2s; }
-        .bar:nth-child(4) { height: 100%; animation-delay: 0.5s; }
-        .bar:nth-child(5) { height: 30%; animation-delay: 0.4s; }
         .bento-block:hover .bar { animation-duration: 0.4s; background: #fff; }
         .bento-block:hover .bar:nth-child(2) { background: var(--neon-green); box-shadow: 0 0 8px var(--neon-green); }
         @keyframes equalize { 0% { transform: scaleY(0.3); } 100% { transform: scaleY(1); } }
 
-        /* Block 5: Cipher Shield */
-        .cipher-shield {
-            width: 30px; height: 30px; border: 1px solid var(--text-muted);
-            display: grid; place-items: center; transform: rotate(45deg); transition: all 0.3s;
-        }
-        .cipher-shield::after {
-            content: ''; width: 14px; height: 14px; background: var(--text-muted);
-            animation: pulse-core 3s infinite;
-        }
-        .bento-block:hover .cipher-shield { border-color: var(--accent); transform: rotate(135deg); }
-        .bento-block:hover .cipher-shield::after { animation-duration: 0.6s; background: var(--accent); box-shadow: 0 0 10px #fff; }
-        @keyframes pulse-core { 0%, 100% { transform: scale(0.8); opacity: 0.5; } 50% { transform: scale(1.1); opacity: 1; } }
+        /* Block 5: Data Wave */
+        .data-wave { width: 100%; height: 100%; position: absolute; top: 0; left: 0; opacity: 0.7; transition: opacity 0.3s; }
+        .bento-block:hover .data-wave { opacity: 1; }
+        .data-wave path { stroke-dasharray: 6 4; animation: dash 4s linear infinite; }
+        .bento-block:hover .data-wave path { animation-duration: 1.5s; stroke: #fff; }
+        @keyframes dash { to { stroke-dashoffset: -100; } }
 
         /* Block 6: Root Key */
         .root-key-core {
@@ -321,7 +345,6 @@
         
         .features-grid { display: grid; grid-template-columns: repeat(3, 1fr); border-bottom: 1px solid var(--border); }
         
-        /* Micro-interaction: Card Lift */
         .feature-card {
             padding: 40px; border-right: 1px solid var(--border); border-bottom: 1px solid var(--border);
             position: relative; cursor: default; background-color: transparent;
@@ -332,10 +355,8 @@
         .feature-card:nth-child(3n) { border-right: none; }
         
         .feature-card:hover {
-            background-color: #050505;
-            border-color: var(--border-highlight);
-            transform: translateY(-4px);
-            z-index: 10;
+            background-color: #050505; border-color: var(--border-highlight);
+            transform: translateY(-4px); z-index: 10;
             box-shadow: 0 20px 40px rgba(0,0,0,0.8);
         }
 
@@ -415,73 +436,84 @@
                 <div class="bento-wrapper" id="bento-wrapper">
                     <div class="iso-bento">
                         
-                        <div class="bento-block" style="grid-column: 1 / 3; grid-row: 1 / 2;">
-                            <div class="bento-shadow"></div>
+                        <div class="bento-block block-1">
+                            <div class="bento-face bottom"></div>
+                            <div class="bento-face back-right"></div>
+                            <div class="bento-face back-left"></div>
+                            <div class="bento-face front-left"></div>
+                            <div class="bento-face front-right"></div>
                             <div class="bento-face top">
-                                <svg class="data-wave" viewBox="0 0 176 80" preserveAspectRatio="none">
-                                    <path d="M 0,40 Q 22,10 44,40 T 88,40 T 132,40 T 176,40" fill="none" stroke="#0070f3" stroke-width="2"/>
-                                </svg>
+                                <div class="cipher-ring"></div>
                                 <span class="block-label">CORE_01</span>
                             </div>
-                            <div class="bento-face front-left"></div>
-                            <div class="bento-face front-right"></div>
                         </div>
                         
-                        <div class="bento-block" style="grid-column: 3 / 4; grid-row: 1 / 2;">
-                            <div class="bento-shadow"></div>
-                            <div class="bento-face top">
-                                <div class="radar"></div>
-                                <span class="block-label">SYS</span>
-                            </div>
+                        <div class="bento-block block-2">
+                            <div class="bento-face bottom"></div>
+                            <div class="bento-face back-right"></div>
+                            <div class="bento-face back-left"></div>
                             <div class="bento-face front-left"></div>
                             <div class="bento-face front-right"></div>
-                        </div>
-                        
-                        <div class="bento-block" style="grid-column: 1 / 2; grid-row: 2 / 4;">
-                            <div class="bento-shadow"></div>
                             <div class="bento-face top">
                                 <div class="server-rack">
                                     <div class="server-node"><div class="led led-1"></div></div>
                                     <div class="server-node"><div class="led led-2"></div></div>
-                                    <div class="server-node"><div class="led led-3"></div></div>
                                     <div class="server-node"><div class="led led-1"></div></div>
                                 </div>
-                                <span class="block-label">ENV_NTR</span>
+                                <span class="block-label">SYS</span>
                             </div>
-                            <div class="bento-face front-left"></div>
-                            <div class="bento-face front-right"></div>
                         </div>
                         
-                        <div class="bento-block" style="grid-column: 2 / 4; grid-row: 2 / 3;">
-                            <div class="bento-shadow"></div>
+                        <div class="bento-block block-3">
+                            <div class="bento-face bottom"></div>
+                            <div class="bento-face back-right"></div>
+                            <div class="bento-face back-left"></div>
+                            <div class="bento-face front-left"></div>
+                            <div class="bento-face front-right"></div>
+                            <div class="bento-face top">
+                                <div class="radar"></div>
+                                <span class="block-label">NET</span>
+                            </div>
+                        </div>
+                        
+                        <div class="bento-block block-4">
+                            <div class="bento-face bottom"></div>
+                            <div class="bento-face back-right"></div>
+                            <div class="bento-face back-left"></div>
+                            <div class="bento-face front-left"></div>
+                            <div class="bento-face front-right"></div>
                             <div class="bento-face top">
                                 <div class="activity-graph">
-                                    <div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div><div class="bar"></div>
+                                    <div class="bar"></div><div class="bar"></div><div class="bar"></div>
                                 </div>
-                                <span class="block-label">MEM_L2_LOAD</span>
+                                <span class="block-label">MEM_L2</span>
                             </div>
-                            <div class="bento-face front-left"></div>
-                            <div class="bento-face front-right"></div>
                         </div>
                         
-                        <div class="bento-block" style="grid-column: 2 / 3; grid-row: 3 / 4;">
-                            <div class="bento-shadow"></div>
+                        <div class="bento-block block-5">
+                            <div class="bento-face bottom"></div>
+                            <div class="bento-face back-right"></div>
+                            <div class="bento-face back-left"></div>
+                            <div class="bento-face front-left"></div>
+                            <div class="bento-face front-right"></div>
                             <div class="bento-face top">
-                                <div class="cipher-shield"></div>
-                                <span class="block-label">AUTH</span>
+                                <svg class="data-wave" viewBox="0 0 80 80" preserveAspectRatio="none">
+                                    <path d="M 0,40 Q 20,10 40,40 T 80,40" fill="none" stroke="#0070f3" stroke-width="2"/>
+                                </svg>
+                                <span class="block-label">FLOW</span>
                             </div>
-                            <div class="bento-face front-left"></div>
-                            <div class="bento-face front-right"></div>
                         </div>
                         
-                        <div class="bento-block" style="grid-column: 3 / 4; grid-row: 3 / 4;">
-                            <div class="bento-shadow"></div>
+                        <div class="bento-block block-6">
+                            <div class="bento-face bottom"></div>
+                            <div class="bento-face back-right"></div>
+                            <div class="bento-face back-left"></div>
+                            <div class="bento-face front-left"></div>
+                            <div class="bento-face front-right"></div>
                             <div class="bento-face top">
                                 <div class="root-key-core"></div>
                                 <span class="block-label">KEY_0</span>
                             </div>
-                            <div class="bento-face front-left"></div>
-                            <div class="bento-face front-right"></div>
                         </div>
 
                     </div>
@@ -560,7 +592,7 @@
     </div>
 
     <script>
-        // 1. Mouse-Tracking Glow on Cards
+        // Mouse-Tracking Glow on Cards
         const cards = document.querySelectorAll('.feature-card, .info-cell, .hero-content');
         document.addEventListener('mousemove', (e) => {
             cards.forEach(card => {
@@ -570,31 +602,9 @@
                 if (x > -50 && x < rect.width + 50 && y > -50 && y < rect.height + 50) {
                     card.style.background = `radial-gradient(800px circle at ${x}px ${y}px, rgba(255,255,255,0.03), transparent 40%)`;
                 } else {
-                    card.style.background = ''; // Reverts to CSS hover states naturally
+                    card.style.background = '';
                 }
             });
-        });
-
-        // 2. 3D Parallax Tilt for Bento Grid
-        const heroArea = document.getElementById('hero-area');
-        const bentoWrapper = document.getElementById('bento-wrapper');
-        
-        heroArea.addEventListener('mousemove', (e) => {
-            const rect = heroArea.getBoundingClientRect();
-            // Calculate mouse position relative to the center of the hero graphic area
-            const x = e.clientX - rect.left - (rect.width / 2);
-            const y = e.clientY - rect.top - (rect.height / 2);
-            
-            // Dampen the effect so it tilts subtly
-            const tiltX = -(y / 25);
-            const tiltY = (x / 25);
-            
-            bentoWrapper.style.transform = `rotateX(${tiltX}deg) rotateY(${tiltY}deg)`;
-        });
-
-        heroArea.addEventListener('mouseleave', () => {
-            // Smoothly reset when mouse leaves
-            bentoWrapper.style.transform = `rotateX(0deg) rotateY(0deg)`;
         });
     </script>
 </body>

@@ -88,7 +88,7 @@ export function ComponentShowcase({
         </PanelDescription>
       </PanelHeader>
 
-      <PanelContent className="p-2 md:p-2">
+      <PanelContent className="p-2 py-6 ">
         <div className="grid items-start gap-8 lg:grid-cols-12 w-full min-w-0">
           {/* Left selector menu styled as IDE workspace */}
           <div className="lg:col-span-3 w-full flex flex-col gap-4">
