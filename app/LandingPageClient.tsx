@@ -55,7 +55,7 @@ export default function LandingPageClient({
         <Hero />
         <StripeDivider />
         <Features />
-
+        {/* <GapDivider/> */}
         <StripeDivider />
         <Panel id="dimensions">
           <PanelHeader>
