@@ -3,218 +3,336 @@
 import * as React from 'react';
 
 export function ZenIsometric() {
-  const sceneRef = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    let mouseX = 0;
-    let mouseY = 0;
-    let currentX = 0;
-    let currentY = 0;
-    let frameId: number;
-
-    const handleMouseMove = (e: MouseEvent) => {
-      // Normalize mouse coordinates from -1 to 1 based on screen center
-      mouseX = (e.clientX / window.innerWidth) * 2 - 1;
-      mouseY = (e.clientY / window.innerHeight) * 2 - 1;
-    };
-
-    const handleMouseLeave = () => {
-      mouseX = 0;
-      mouseY = 0;
-    };
-
-    window.addEventListener('mousemove', handleMouseMove);
-    document.addEventListener('mouseleave', handleMouseLeave);
-
-    const animate = () => {
-      // Lerp (Linear Interpolation) for smooth drag effect
-      currentX += (mouseX - currentX) * 0.05;
-      currentY += (mouseY - currentY) * 0.05;
-
-      // Apply the rotation (limited to subtle angles for the 3D effect)
-      const rotateX = currentY * -12; // Max tilt up/down
-      const rotateY = currentX * 12; // Max tilt left/right
-
-      if (sceneRef.current) {
-        sceneRef.current.style.transform = `rotateX(${rotateX}deg) rotateY(${rotateY}deg)`;
-      }
-
-      frameId = requestAnimationFrame(animate);
-    };
-
-    animate();
-
-    return () => {
-      window.removeEventListener('mousemove', handleMouseMove);
-      document.removeEventListener('mouseleave', handleMouseLeave);
-      cancelAnimationFrame(frameId);
-    };
-  }, []);
-
   return (
-    <div className="relative w-full h-[500px] flex items-center justify-center overflow-visible bg-transparent">
-      <div ref={sceneRef} className="zen-scene">
-        <div className="isometric-grid">
-          {/* Floor grid */}
-          <div className="floor" />
+    <div
+      className="relative w-full h-[550px] flex items-center justify-center overflow-visible bg-transparent cursor-default select-none"
+      style={{ perspective: '1500px', transformStyle: 'preserve-3d' }}
+    >
+      <style>{`
+        .zen-scene {
+          position: relative;
+          width: 600px;
+          height: 600px;
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          transform-style: preserve-3d;
+          pointer-events: none;
+        }
 
-          {/* Connection rails */}
-          <div className="connection conn-1" />
-          <div className="connection conn-2" />
+        .zen-grid {
+          position: relative;
+          width: 600px;
+          height: 600px;
+          transform-style: preserve-3d;
+          transform: rotateX(60deg) rotateZ(-45deg);
+        }
 
-          {/* Component 1: Main Server */}
-          <div className="zen-component comp-main group">
-            {/* Construction Lines */}
-            <div className="absolute top-0 left-0 w-px h-0 group-hover:h-[120px] origin-top [transform:rotateX(-90deg)] border-l border-dashed border-zinc-300 dark:border-zinc-700 transition-all duration-500 ease-out z-0" />
-            <div className="absolute top-0 right-0 w-px h-0 group-hover:h-[120px] origin-top [transform:rotateX(-90deg)] border-l border-dashed border-zinc-300 dark:border-zinc-700 transition-all duration-500 ease-out z-0" />
-            <div className="absolute bottom-0 left-0 w-px h-0 group-hover:h-[120px] origin-top [transform:rotateX(-90deg)] border-l border-dashed border-zinc-300 dark:border-zinc-700 transition-all duration-500 ease-out z-0" />
-            <div className="absolute bottom-0 right-0 w-px h-0 group-hover:h-[120px] origin-top [transform:rotateX(-90deg)] border-l border-dashed border-zinc-300 dark:border-zinc-700 transition-all duration-500 ease-out z-0" />
 
-            <div className="zen-layer layer-base" />
-            <div className="zen-layer layer-core">
-              <svg
-                className="w-16 h-16 text-zinc-900 dark:text-zinc-100"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
-                <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
-                <line x1="12" y1="22.08" x2="12" y2="12" />
-              </svg>
-            </div>
-            <div className="zen-layer layer-glass" />
-            <div className="zen-layer layer-ui">
-              <div className="flex items-start justify-between w-full">
-                <span className="text-sm font-bold text-foreground select-none">
-                  Core Engine
-                </span>
-                <span className="text-[10px] font-mono font-bold text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-2 py-0.5 rounded select-none">
-                  v2.4.0
-                </span>
+        .zen-comp {
+          position: absolute;
+          transform-style: preserve-3d;
+          cursor: pointer;
+          pointer-events: auto;
+        }
+
+        .zen-comp-main { top: 250px; left: 250px; width: 200px; height: 200px; }
+        .zen-comp-node-1 { top: 40px; left: 280px; width: 140px; height: 140px; }
+        .zen-comp-node-2 { top: 280px; left: 40px; width: 140px; height: 140px; }
+
+        .zen-connection {
+          position: absolute;
+          background: rgba(99, 102, 241, 0.2);
+          box-shadow: 0 0 12px rgba(99, 102, 241, 0.1);
+          transform: translateZ(-5px);
+          pointer-events: none;
+        }
+
+        .dark .zen-connection {
+          background: rgba(255, 255, 255, 0.08);
+          box-shadow: 0 0 8px rgba(255, 255, 255, 0.02);
+        }
+
+        .zen-conn-1 { top: 110px; left: 350px; width: 4px; height: 140px; }
+        .zen-conn-2 { top: 350px; left: 110px; width: 140px; height: 4px; }
+
+        .zen-layer {
+          position: absolute;
+          inset: 0;
+          border-radius: 16px;
+          transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+          box-sizing: border-box;
+          display: flex;
+          flex-direction: column;
+          transform-style: preserve-3d;
+        }
+
+        .zen-layer-base {
+          background: #ffffff;
+          border: 1px solid rgba(0, 0, 0, 0.06);
+          transform: translateZ(0px);
+          box-shadow: 15px 15px 30px rgba(0, 0, 0, 0.04);
+        }
+
+        .dark .zen-layer-base {
+          background: #09090b;
+          border: 1px solid rgba(255, 255, 255, 0.05);
+          box-shadow: 20px 20px 40px rgba(0, 0, 0, 0.8);
+        }
+
+        .zen-layer-core {
+          background: rgba(250, 250, 250, 0.95);
+          border: 1px solid rgba(0, 0, 0, 0.06);
+          transform: translateZ(10px); 
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          overflow: hidden;
+        }
+
+        .dark .zen-layer-core {
+          background: rgba(9, 9, 11, 0.9);
+          border: 1px solid rgba(255, 255, 255, 0.05);
+        }
+
+        .zen-layer-glass {
+          background: rgba(255, 255, 255, 0.6); 
+          backdrop-filter: blur(12px);
+          -webkit-backdrop-filter: blur(12px);
+          border: 1px solid rgba(0, 0, 0, 0.08);
+          transform: translateZ(20px); 
+          box-shadow: inset 0 0 30px rgba(0, 0, 0, 0.01);
+        }
+
+        .dark .zen-layer-glass {
+          background: rgba(20, 20, 23, 0.7); 
+          border: 1px solid rgba(255, 255, 255, 0.1);
+          box-shadow: inset 0 0 30px rgba(255, 255, 255, 0.01);
+        }
+
+        .zen-layer-ui {
+          background: transparent;
+          border: 1px solid rgba(0, 0, 0, 0.1);
+          transform: translateZ(30px); 
+          padding: 20px;
+          pointer-events: none; 
+        }
+
+        .dark .zen-layer-ui {
+          border-color: rgba(255, 255, 255, 0.15);
+        }
+
+        .zen-comp-main:hover .zen-layer-base { 
+          transform: translateZ(0px); 
+          box-shadow: 25px 25px 50px rgba(0, 0, 0, 0.08); 
+        }
+        .dark .zen-comp-main:hover .zen-layer-base { 
+          box-shadow: 30px 30px 60px rgba(0,0,0,1); 
+        }
+
+        .zen-comp-main:hover .zen-layer-core { 
+          transform: translateZ(50px); 
+          box-shadow: 0 10px 35px rgba(99, 102, 241, 0.15); 
+          border-color: rgba(99, 102, 241, 0.4); 
+        }
+        .dark .zen-comp-main:hover .zen-layer-core { 
+          box-shadow: 0 10px 40px rgba(99, 102, 241, 0.35); 
+          border-color: #6366f1; 
+        }
+
+        .zen-comp-main:hover .zen-layer-glass { 
+          transform: translateZ(100px); 
+          background: rgba(255, 255, 255, 0.2); 
+          border-color: rgba(0, 0, 0, 0.15); 
+        }
+        .dark .zen-comp-main:hover .zen-layer-glass { 
+          background: rgba(20, 20, 23, 0.3); 
+          border-color: rgba(255, 255, 255, 0.25); 
+        }
+
+        .zen-comp-main:hover .zen-layer-ui { 
+          transform: translateZ(150px); 
+        }
+
+        .zen-comp-node-1:hover .zen-layer-core { 
+          transform: translateZ(40px); 
+          box-shadow: 0 10px 30px rgba(16, 185, 129, 0.15); 
+          border-color: rgba(16, 185, 129, 0.4); 
+        }
+        .dark .zen-comp-node-1:hover .zen-layer-core { 
+          box-shadow: 0 10px 40px rgba(16, 185, 129, 0.35); 
+          border-color: #10b981; 
+        }
+
+        .zen-comp-node-1:hover .zen-layer-glass { 
+          transform: translateZ(80px); 
+          background: rgba(255, 255, 255, 0.2); 
+        }
+        .dark .zen-comp-node-1:hover .zen-layer-glass { 
+          background: rgba(20, 20, 23, 0.3); 
+        }
+
+        .zen-comp-node-1:hover .zen-layer-ui { 
+          transform: translateZ(120px); 
+        }
+
+        .zen-comp-node-2:hover .zen-layer-core { 
+          transform: translateZ(40px); 
+          box-shadow: 0 10px 30px rgba(6, 182, 212, 0.15); 
+          border-color: rgba(6, 182, 212, 0.4); 
+        }
+        .dark .zen-comp-node-2:hover .zen-layer-core { 
+          box-shadow: 0 10px 40px rgba(6, 182, 212, 0.35); 
+          border-color: #06b6d4; 
+        }
+
+        .zen-comp-node-2:hover .zen-layer-glass { 
+          transform: translateZ(80px); 
+          background: rgba(255, 255, 255, 0.2); 
+        }
+        .dark .zen-comp-node-2:hover .zen-layer-glass { 
+          background: rgba(20, 20, 23, 0.3); 
+        }
+
+        .zen-comp-node-2:hover .zen-layer-ui { 
+          transform: translateZ(120px); 
+        }
+      `}</style>
+      <div
+        className="scale-[0.5] sm:scale-[0.7] md:scale-[0.8] lg:scale-[0.7] xl:scale-[0.85] transition-transform duration-500 transform-gpu"
+        style={{ transformStyle: 'preserve-3d' }}
+      >
+        <div className="zen-scene">
+          <div className="zen-grid">
+            {/* Connection Lines */}
+            <div className="zen-connection zen-conn-1" />
+            <div className="zen-connection zen-conn-2" />
+
+            {/* Kanso Core (comp-main) */}
+            <div className="zen-comp zen-comp-main group">
+              <div className="zen-layer zen-layer-base" />
+              <div className="zen-layer zen-layer-core">
+                <svg
+                  className="w-[60%] h-[60%] text-indigo-500 dark:text-indigo-400 filter drop-shadow-[0_0_8px_rgba(99,102,241,0.4)]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                >
+                  <polygon points="12 2 2 7 12 12 22 7 12 2"></polygon>
+                  <polyline points="2 17 12 22 22 17"></polyline>
+                  <polyline points="2 12 12 17 22 12"></polyline>
+                  <circle cx="12" cy="12" r="3" fill="currentColor"></circle>
+                </svg>
               </div>
-              <p className="text-xs text-muted-foreground leading-snug mt-2 select-none text-left">
-                Main processing unit handling all state logic.
-              </p>
-              <div className="flex items-center gap-4 mt-auto pt-3 border-t border-border/60">
-                <div className="flex flex-col text-left">
-                  <span className="font-mono text-sm font-semibold text-foreground">
-                    14.2
-                    <span className="text-[10px] text-muted-foreground ml-0.5">
-                      ms
+              <div className="zen-layer zen-layer-glass" />
+              <div className="zen-layer zen-layer-ui">
+                <div className="flex justify-between items-start mb-3">
+                  <h2 className="text-[1.1rem] font-semibold text-zinc-900 dark:text-white leading-none">
+                    Kanso Core
+                  </h2>
+                  <span className="font-mono text-[9px] font-bold px-2 py-0.5 rounded text-indigo-600 bg-indigo-500/10 border border-indigo-500/20 dark:text-indigo-400">
+                    v1.0.0
+                  </span>
+                </div>
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-normal mb-auto">
+                  Minimalist component engine. Copy-paste React primitives.
+                </p>
+                <div className="flex gap-4 mt-auto pt-3 border-t border-zinc-200/50 dark:border-zinc-800/50">
+                  <div className="flex flex-col">
+                    <span className="font-mono text-[13px] font-bold text-zinc-800 dark:text-zinc-200">
+                      0kb
                     </span>
-                  </span>
-                  <span className="text-[8px] uppercase tracking-wider text-muted-foreground font-medium">
-                    Latency
-                  </span>
-                </div>
-                <div className="flex flex-col text-left">
-                  <span className="font-mono text-sm font-semibold text-foreground">
-                    99.9
-                    <span className="text-[10px] text-muted-foreground ml-0.5">
-                      %
+                    <span className="text-[8px] font-bold tracking-wider text-zinc-400 dark:text-zinc-500 uppercase">
+                      Overhead
                     </span>
-                  </span>
-                  <span className="text-[8px] uppercase tracking-wider text-muted-foreground font-medium">
-                    Uptime
-                  </span>
+                  </div>
+                  <div className="flex flex-col">
+                    <span className="font-mono text-[13px] font-bold text-zinc-800 dark:text-zinc-200">
+                      100%
+                    </span>
+                    <span className="text-[8px] font-bold tracking-wider text-zinc-400 dark:text-zinc-500 uppercase">
+                      Custom
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Component 2: Node 1 (Cache Node) */}
-          <div className="zen-component comp-node-1 group">
-            {/* Construction Lines */}
-            <div className="absolute top-0 left-0 w-px h-0 group-hover:h-[80px] origin-top [transform:rotateX(-90deg)] border-l border-dashed border-zinc-300 dark:border-zinc-700 transition-all duration-500 ease-out z-0" />
-            <div className="absolute top-0 right-0 w-px h-0 group-hover:h-[80px] origin-top [transform:rotateX(-90deg)] border-l border-dashed border-zinc-300 dark:border-zinc-700 transition-all duration-500 ease-out z-0" />
-            <div className="absolute bottom-0 left-0 w-px h-0 group-hover:h-[80px] origin-top [transform:rotateX(-90deg)] border-l border-dashed border-zinc-300 dark:border-zinc-700 transition-all duration-500 ease-out z-0" />
-            <div className="absolute bottom-0 right-0 w-px h-0 group-hover:h-[80px] origin-top [transform:rotateX(-90deg)] border-l border-dashed border-zinc-300 dark:border-zinc-700 transition-all duration-500 ease-out z-0" />
-
-            <div className="zen-layer layer-base" />
-            <div className="zen-layer layer-core">
-              <svg
-                className="w-10 h-10 text-zinc-900 dark:text-zinc-100"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <ellipse cx="12" cy="5" rx="9" ry="3" />
-                <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3" />
-                <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5" />
-              </svg>
-            </div>
-            <div className="zen-layer layer-glass" />
-            <div className="zen-layer layer-ui">
-              <div className="flex items-start justify-between w-full">
-                <span className="text-[11px] font-bold text-foreground select-none">
-                  Cache Node
-                </span>
-                <span className="text-[8px] font-mono font-bold text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-1.5 py-0.5 rounded select-none">
-                  DB_L1
-                </span>
+            {/* Base UI (comp-node-1) */}
+            <div className="zen-comp zen-comp-node-1 group">
+              <div className="zen-layer zen-layer-base" />
+              <div className="zen-layer zen-layer-core">
+                <svg
+                  className="w-[60%] h-[60%] text-emerald-500 dark:text-emerald-400 filter drop-shadow-[0_0_8px_rgba(16,185,129,0.4)]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                >
+                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                  <circle cx="12" cy="11" r="3" />
+                  <path d="M12 14v4" />
+                </svg>
               </div>
-              <p className="text-[10px] text-muted-foreground leading-snug mt-1 select-none text-left">
-                In-memory fast state.
-              </p>
-              <div className="flex items-center gap-4 mt-auto pt-2 border-t border-border/60">
-                <div className="flex flex-col text-left">
-                  <span className="font-mono text-xs font-semibold text-foreground">
-                    99.8%
-                  </span>
-                  <span className="text-[8px] uppercase tracking-wider text-muted-foreground font-medium">
-                    Hit Rate
-                  </span>
+              <div className="zen-layer zen-layer-glass" />
+              <div className="zen-layer zen-layer-ui">
+                <div className="flex justify-between items-start mb-2">
+                  <h2 className="text-[14px] font-semibold text-zinc-900 dark:text-white leading-none">
+                    Base UI
+                  </h2>
+                </div>
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-normal mb-auto">
+                  Unstyled structural layers. Built-in ARIA.
+                </p>
+                <div className="flex gap-4 mt-auto pt-3 border-t border-zinc-200/50 dark:border-zinc-800/50">
+                  <div className="flex flex-col">
+                    <span className="font-mono text-[13px] font-bold text-zinc-800 dark:text-zinc-200">
+                      100%
+                    </span>
+                    <span className="text-[8px] font-bold tracking-wider text-zinc-400 dark:text-zinc-500 uppercase">
+                      A11y
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
 
-          {/* Component 3: Node 2 (Edge Proxy) */}
-          <div className="zen-component comp-node-2 group">
-            {/* Construction Lines */}
-            <div className="absolute top-0 left-0 w-px h-0 group-hover:h-[80px] origin-top [transform:rotateX(-90deg)] border-l border-dashed border-zinc-300 dark:border-zinc-700 transition-all duration-500 ease-out z-0" />
-            <div className="absolute top-0 right-0 w-px h-0 group-hover:h-[80px] origin-top [transform:rotateX(-90deg)] border-l border-dashed border-zinc-300 dark:border-zinc-700 transition-all duration-500 ease-out z-0" />
-            <div className="absolute bottom-0 left-0 w-px h-0 group-hover:h-[80px] origin-top [transform:rotateX(-90deg)] border-l border-dashed border-zinc-300 dark:border-zinc-700 transition-all duration-500 ease-out z-0" />
-            <div className="absolute bottom-0 right-0 w-px h-0 group-hover:h-[80px] origin-top [transform:rotateX(-90deg)] border-l border-dashed border-zinc-300 dark:border-zinc-700 transition-all duration-500 ease-out z-0" />
-
-            <div className="zen-layer layer-base" />
-            <div className="zen-layer layer-core">
-              <svg
-                className="w-10 h-10 text-zinc-900 dark:text-zinc-100"
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.5"
-              >
-                <path d="M18 10h-1.26A8 8 0 1 0 9 20h9a5 5 0 0 0 0-10z" />
-                <polyline points="15 13 18 16 21 13" />
-                <line x1="18" y1="16" x2="18" y2="10" />
-              </svg>
-            </div>
-            <div className="zen-layer layer-glass" />
-            <div className="zen-layer layer-ui">
-              <div className="flex items-start justify-between w-full">
-                <span className="text-[11px] font-bold text-foreground select-none">
-                  Edge Proxy
-                </span>
-                <span className="text-[8px] font-mono font-bold text-zinc-600 dark:text-zinc-400 bg-zinc-100 dark:bg-zinc-800 border border-zinc-200 dark:border-zinc-700 px-1.5 py-0.5 rounded select-none">
-                  CDN
-                </span>
+            {/* Framer Motion (comp-node-2) */}
+            <div className="zen-comp zen-comp-node-2 group">
+              <div className="zen-layer zen-layer-base" />
+              <div className="zen-layer zen-layer-core">
+                <svg
+                  className="w-[60%] h-[60%] text-cyan-500 dark:text-cyan-400 filter drop-shadow-[0_0_8px_rgba(6,182,212,0.4)]"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="1.5"
+                >
+                  <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z" />
+                  <polyline points="3.27 6.96 12 12.01 20.73 6.96" />
+                  <line x1="12" y1="22.08" x2="12" y2="12" />
+                </svg>
               </div>
-              <p className="text-[10px] text-muted-foreground leading-snug mt-1 select-none text-left">
-                Global Edge Routing.
-              </p>
-              <div className="flex items-center gap-4 mt-auto pt-2 border-t border-border/60">
-                <div className="flex flex-col text-left">
-                  <span className="font-mono text-xs font-semibold text-foreground">
-                    12ms
-                  </span>
-                  <span className="text-[8px] uppercase tracking-wider text-muted-foreground font-medium">
-                    Ping
-                  </span>
+              <div className="zen-layer zen-layer-glass" />
+              <div className="zen-layer zen-layer-ui">
+                <div className="flex justify-between items-start mb-2">
+                  <h2 className="text-[14px] font-semibold text-zinc-900 dark:text-white leading-none">
+                    Motion
+                  </h2>
+                </div>
+                <p className="text-[11px] text-zinc-500 dark:text-zinc-400 leading-normal mb-auto">
+                  Fluid micro-interactions and tactile 3D physics.
+                </p>
+                <div className="flex gap-4 mt-auto pt-3 border-t border-zinc-200/50 dark:border-zinc-800/50">
+                  <div className="flex flex-col">
+                    <span className="font-mono text-[13px] font-bold text-zinc-800 dark:text-zinc-200">
+                      60fps
+                    </span>
+                    <span className="text-[8px] font-bold tracking-wider text-zinc-400 dark:text-zinc-500 uppercase">
+                      Smooth
+                    </span>
+                  </div>
                 </div>
               </div>
             </div>

@@ -173,18 +173,33 @@ export function VerticalLineDivider({
     </div>
   );
 }
+export interface VerticalGapDividerProps extends React.ComponentProps<'div'> {
+  bleed?: boolean;
+}
+
 export function VerticalGapDivider({
   className,
+  bleed = true,
   ...props
-}: React.ComponentProps<'div'>) {
+}: VerticalGapDividerProps) {
   return (
     <div
       data-slot="vertical-gap-divider"
       className={cn('w-5 relative', className)}
       {...props}
     >
-      <div className="absolute top-[-100vh] left-0 w-[1px] border-l border-[var(--line)] h-[200vh] z-30 pointer-events-none" />
-      <div className="absolute top-[-100vh] right-0 w-[1px] border-r border-[var(--line)] h-[200vh] z-30 pointer-events-none" />
+      <div
+        className={cn(
+          'absolute left-0 w-[1px] border-l border-[var(--line)] z-30 pointer-events-none',
+          bleed ? 'top-[-100vh] h-[200vh]' : 'top-0 bottom-0'
+        )}
+      />
+      <div
+        className={cn(
+          'absolute right-0 w-[1px] border-r border-[var(--line)] z-30 pointer-events-none',
+          bleed ? 'top-[-100vh] h-[200vh]' : 'top-0 bottom-0'
+        )}
+      />
     </div>
   );
 }

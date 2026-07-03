@@ -23,6 +23,7 @@ import {
   PanelTitle,
   PanelDescription,
   PanelContent,
+  VerticalGapDivider,
 } from '@/components/kanso/panel';
 
 interface LandingPageClientProps {
@@ -59,25 +60,34 @@ export default function LandingPageClient({
         <Panel id="dimensions">
           <PanelHeader>
             <div className="inline-flex items-center gap-2 rounded-full border border-border bg-muted px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-muted-foreground mt-6">
-              ✦ Zen Dimensions
+              ✦ Kanso Principles
             </div>
-            <PanelTitle>Interactive Space</PanelTitle>
+
+            <PanelTitle>Built From Structure, Not Decoration</PanelTitle>
+
             <PanelDescription>
-              Experience tactile depth through Kanso UI layout paradigms.
-              Interact with the modular 3D Bento Space and explore the 3D
-              Exploded Engine.
+              Kanso UI is a system of spatial relationships, layered depth, and
+              intentional motion. Every interface is composed from consistent
+              construction rules where hierarchy, rhythm, and interaction emerge
+              from geometry rather than visual noise.
             </PanelDescription>
           </PanelHeader>
 
-          <PanelContent className="p-0">
-            <div className="grid grid-cols-1 lg:grid-cols-2 w-full border-b border-border">
+          <PanelContent className="p-0 my-0 md:p-0 md:my-0">
+            <div className="flex flex-col lg:flex-row w-full  border-border">
               {/* Left Column: 3D Bento Cube Grid */}
-              <div className="flex flex-col items-center justify-center p-6 md:p-12 border-b lg:border-b-0 lg:border-r border-border overflow-hidden min-h-[500px]">
+              <div className="flex flex-1 flex-col items-center justify-center p-6 md:p-12 overflow-hidden min-h-[300px]">
                 <Bento3DCube />
               </div>
 
+              {/* Vertical Divider for Desktop, Horizontal line for Mobile */}
+              <div className="hidden lg:block self-stretch">
+                <VerticalGapDivider className="h-full" bleed={false} />
+              </div>
+              <div className="block lg:hidden w-full border-b border-border" />
+
               {/* Right Column: 3D Exploded Isometric Block */}
-              <div className="flex flex-col items-center justify-center p-6 md:p-12 overflow-hidden min-h-[500px]">
+              <div className="flex flex-1 flex-col items-center justify-center p-6 md:p-12 overflow-hidden min-h-[300px]">
                 <ZenIsometric />
               </div>
             </div>
