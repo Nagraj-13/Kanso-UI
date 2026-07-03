@@ -27,7 +27,7 @@ export function Header() {
   }, []);
 
   return (
-    <Panel className="w-full relative line-top line-bottom-none border-b-0">
+    <Panel className="w-full relative line-top line-bottom border-b-0">
       <div className="flex h-16 items-center justify-between px-6 md:px-8">
         <div className="flex items-center gap-3">
           <Image

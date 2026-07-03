@@ -1,6 +1,7 @@
 'use client';
 
 import * as React from 'react';
+import { motion } from 'framer-motion';
 import { cn } from '@/lib/utils';
 
 interface BlurRevealCodeProps extends React.HTMLAttributes<HTMLDivElement> {
@@ -86,16 +87,21 @@ function BlurRevealCode({
               }}
               onFocus={() => setHoveredIndex(i)}
             >
-              <span
+              <motion.span
                 className="inline-block text-5xl sm:text-7xl font-bold text-zinc-900 dark:text-zinc-50 drop-shadow-sm"
-                style={{
-                  transform: `scale(${active + 0.5})`,
+                initial={false}
+                animate={{
+                  scale: active + 0.5,
                   filter: `blur(${(1 - active) * 1.5}rem)`,
-                  transition: `transform ${(1 - active + 0.2) * 1}s cubic-bezier(0.2, 0.8, 0.2, 1), filter ${(1 - active + 0.2) * 1}s cubic-bezier(0.2, 0.8, 0.2, 1)`,
+                }}
+                transition={{
+                  type: 'tween',
+                  ease: [0.2, 0.8, 0.2, 1],
+                  duration: 0.5 + (1 - active) * 0.5, // 0.5s for active, up to 1.0s for inactive
                 }}
               >
                 {char}
-              </span>
+              </motion.span>
             </li>
           );
         })}
