@@ -41,6 +41,7 @@ import { NoiseCard } from '@/components/kanso/noise-card';
 import { BrowserLoader } from '@/components/kanso/browser-loader';
 import { TelemetryGrid } from '@/components/kanso/telemetry-widgets';
 import { MagicTree } from '@/components/kanso/magic-tree';
+import { InfinityCanvas } from '@/components/kanso/infinity-canvas';
 import {
   Panel,
   PanelHeader,
@@ -3486,6 +3487,148 @@ const demos: Record<string, React.ComponentType> = {
             mouse up/down to tilt perspective. Keyboard Focus support: select
             container and use ArrowLeft/Right to manually step, Space to toggle
             Autospin.
+          </div>
+        </div>
+      </div>
+    );
+  },
+  'infinity-canvas': function InfinityCanvasDemo() {
+    const [density, setDensity] = React.useState(5);
+    const [imageWidth, setImageWidth] = React.useState(150);
+    const [imageHeight, setImageHeight] = React.useState(150);
+    const [rounded, setRounded] = React.useState(6);
+    const [dragSpeed, setDragSpeed] = React.useState(20);
+    const [driftAmount, setDriftAmount] = React.useState(12);
+    const [friction, setFriction] = React.useState(10);
+    const [bgColor, setBgColor] = React.useState('transparent');
+
+    const bgMap: Record<string, string> = {
+      transparent: 'transparent',
+      'dark-zinc': '#09090b',
+      black: '#000000',
+      'light-zinc': '#fafafa',
+    };
+
+    return (
+      <div className="flex flex-col gap-8 w-full max-w-5xl items-center">
+        {/* The Live Canvas Wrapper */}
+        <div className="w-full h-[500px] rounded-xl overflow-hidden border border-zinc-200 dark:border-zinc-800 relative bg-zinc-950/5 dark:bg-zinc-950/40 shadow-inner flex items-center justify-center">
+          {/* Subtle instructions overlay */}
+          <div className="absolute top-4 right-4 z-50 pointer-events-none select-none rounded-md bg-zinc-900/80 px-2 py-1 text-[10px] font-mono text-zinc-100 backdrop-blur-xs border border-zinc-700/35">
+            DRAG TO MOVE • WHEEL TO ZOOM
+          </div>
+
+          <InfinityCanvas
+            density={density}
+            imageWidth={imageWidth}
+            imageHeight={imageHeight}
+            rounded={rounded}
+            dragSpeed={dragSpeed}
+            driftAmount={driftAmount}
+            friction={friction}
+            backgroundColor={bgMap[bgColor]}
+            className="size-full bg-transparent"
+          />
+        </div>
+
+        {/* Adjust controls */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 w-full p-6 rounded-xl border border-zinc-200 bg-white dark:border-zinc-800 dark:bg-zinc-900/30">
+          <div className="col-span-1 md:col-span-2 text-[10px] font-bold text-zinc-400 dark:text-zinc-500 uppercase tracking-widest mb-1 font-sans">
+            Adjust Infinity Canvas Parameters
+          </div>
+
+          <div className="flex flex-col gap-5">
+            <DialKitSlider
+              label="Density (Images per cell)"
+              min={1}
+              max={15}
+              step={1}
+              value={density}
+              onChange={setDensity}
+            />
+            <DialKitSlider
+              label="Image Tile Width"
+              min={80}
+              max={250}
+              step={10}
+              value={imageWidth}
+              onChange={setImageWidth}
+              suffix="px"
+            />
+            <DialKitSlider
+              label="Image Tile Height"
+              min={80}
+              max={250}
+              step={10}
+              value={imageHeight}
+              onChange={setImageHeight}
+              suffix="px"
+            />
+            <DialKitSlider
+              label="Border Radius"
+              min={0}
+              max={20}
+              step={1}
+              value={rounded}
+              onChange={setRounded}
+              suffix="/20"
+            />
+          </div>
+
+          <div className="flex flex-col gap-5 justify-between">
+            <DialKitSlider
+              label="Drag & Zoom Speed"
+              min={5}
+              max={100}
+              step={5}
+              value={dragSpeed}
+              onChange={setDragSpeed}
+            />
+            <DialKitSlider
+              label="Parallax Drift Amount"
+              min={0}
+              max={20}
+              step={1}
+              value={driftAmount}
+              onChange={setDriftAmount}
+            />
+            <DialKitSlider
+              label="Inertia Friction"
+              min={1}
+              max={20}
+              step={1}
+              value={friction}
+              onChange={setFriction}
+            />
+
+            <div className="flex items-center justify-between pt-2 border-t border-zinc-150 dark:border-zinc-800">
+              <span className="text-[10px] font-semibold text-zinc-400 dark:text-zinc-500 uppercase tracking-wider">
+                Canvas Background
+              </span>
+              <div className="flex gap-1">
+                {Object.keys(bgMap).map((mode) => (
+                  <button
+                    key={mode}
+                    type="button"
+                    onClick={() => setBgColor(mode)}
+                    className={cn(
+                      'px-2 py-1 text-[9px] font-mono border rounded-md transition-all cursor-pointer capitalize',
+                      bgColor === mode
+                        ? 'bg-zinc-900 text-white border-zinc-900 dark:bg-white dark:text-zinc-900 dark:border-white font-medium'
+                        : 'border-zinc-200 text-zinc-500 hover:bg-zinc-50 dark:border-zinc-800 dark:text-zinc-400 dark:hover:bg-zinc-900'
+                    )}
+                  >
+                    {mode.replace('-', ' ')}
+                  </button>
+                ))}
+              </div>
+            </div>
+          </div>
+
+          <div className="col-span-1 md:col-span-2 text-[9px] text-zinc-400/85 dark:text-zinc-500/85 italic text-center font-mono leading-normal border-t border-zinc-150 dark:border-zinc-800 pt-3">
+            * Drag to navigate the infinite 2D plane with momentum. Scroll the
+            mouse wheel to seamlessly zoom in/out of infinite octave layers.
+            Mouse movements trigger subtle layout parallax drift.
           </div>
         </div>
       </div>
