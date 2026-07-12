@@ -1155,6 +1155,91 @@ export default function ThreeDPhotoCarouselDemo() {
     ],
   },
   {
+    name: 'infinity-canvas',
+    title: 'Infinity Canvas',
+    description:
+      'A flat-plane infinite photo gallery canvas with continuous zooming, physics-based drag inertia, and mouse parallax drift.',
+    category: 'data-display',
+    dependencies: ['framer-motion'],
+    internalDeps: ['lib/utils'],
+    filePath: 'components/kanso/infinity-canvas.tsx',
+    tags: [
+      'canvas',
+      'gallery',
+      'infinite',
+      'zoom',
+      'parallax',
+      'drag',
+      'inertia',
+      'interactive',
+    ],
+    usage: `import { InfinityCanvas } from "@/components/kanso/infinity-canvas"
+
+export default function InfinityCanvasDemo() {
+  return (
+    <div className="w-full h-[500px] border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden bg-zinc-950/5 dark:bg-zinc-950/40">
+      <InfinityCanvas />
+    </div>
+  )
+}`,
+    props: [
+      {
+        name: 'images',
+        type: 'GalleryImage[]',
+        description:
+          'Array of images with src, srcSet, and alt tags to scatter.',
+      },
+      {
+        name: 'density',
+        type: 'number',
+        default: '5',
+        description: 'Density of scattered images per grid cell (1 to 15).',
+      },
+      {
+        name: 'imageWidth',
+        type: 'number',
+        default: '150',
+        description: 'Rendered width of each image tile in pixels.',
+      },
+      {
+        name: 'imageHeight',
+        type: 'number',
+        default: '150',
+        description: 'Rendered height of each image tile in pixels.',
+      },
+      {
+        name: 'rounded',
+        type: 'number',
+        default: '3',
+        description: 'Border radius level for image tiles (0 to 20).',
+      },
+      {
+        name: 'dragSpeed',
+        type: 'number',
+        default: '20',
+        description: 'Speed multiplier for dragging and wheel zooming.',
+      },
+      {
+        name: 'driftAmount',
+        type: 'number',
+        default: '20',
+        description: 'Strength of the mouse parallax drift effect.',
+      },
+      {
+        name: 'friction',
+        type: 'number',
+        default: '10',
+        description: 'Physics friction for drag retention (1 to 20).',
+      },
+      {
+        name: 'backgroundColor',
+        type: 'string',
+        default: '"transparent"',
+        description: 'Background color of the canvas container.',
+      },
+    ],
+  },
+  {
     name: 'shimmer-border',
     title: 'Shimmer Border',
     description:
