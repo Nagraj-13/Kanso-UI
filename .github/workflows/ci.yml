@@ -1,0 +1,69 @@
+name: CI
+
+on:
+  pull_request:
+    branches:
+      - main
+      - dev
+  push:
+    branches:
+      - dev
+
+jobs:
+  ci:
+    name: CI Pipeline
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0 # Required to compare branches and check changesets
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@v3
+        with:
+          version: 9
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: pnpm
+
+      - name: Install Dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify Changeset Presence (PR only)
+        if: github.event_name == 'pull_request'
+        shell: bash
+        run: |
+          # Fetch the target base branch to ensure git diff works
+          git fetch origin ${{ github.base_ref }}:${{ github.base_ref }} --depth=100
+          
+          # Check if source files are modified
+          SRC_CHANGES=$(git diff --name-only ${{ github.base_ref }}...HEAD | grep -E '^(app|components|lib|hooks)/' || true)
+          if [ -n "$SRC_CHANGES" ]; then
+            # Check if a changeset markdown file is added/modified
+            CHANGESET_CHANGES=$(git diff --name-only ${{ github.base_ref }}...HEAD | grep -E '^\.changeset/.*\.md$' || true)
+            if [ -z "$CHANGESET_CHANGES" ]; then
+              echo "::error::Source files changed but no changeset found! Please run 'pnpm changeset' to add a changeset description."
+              exit 1
+            else
+              echo "Changeset verified."
+            fi
+          else
+            echo "No source files changed. Skipping changeset check."
+          fi
+
+      - name: Run Lint
+        run: pnpm lint
+
+      - name: Run Typecheck
+        run: pnpm type-check
+
+      - name: Run Tests
+        run: pnpm test run
+
+      - name: Run Build
+        run: pnpm build
